@@ -7,10 +7,15 @@ import { dirname, resolve } from 'node:path';
 export async function syncDirectory(directory: string): Promise<void> {
   try {
     const handle = await fs.open(directory, constants.O_RDONLY | constants.O_DIRECTORY);
-    try { await handle.sync(); }
-    finally { await handle.close(); }
+    try {
+      await handle.sync();
+    } finally {
+      await handle.close();
+    }
   } catch {
-    throw new Error('Private storage could not be synchronized. Check report status before trying again.');
+    throw new Error(
+      'Private storage could not be synchronized. Check report status before trying again.',
+    );
   }
 }
 

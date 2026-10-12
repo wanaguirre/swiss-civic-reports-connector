@@ -5,6 +5,30 @@ Telegram bridge and consuming applications use the same core. Fix shared logic
 here, then update consumers to a tested release. A new release does not silently
 change deployed applications.
 
+Read the [architecture](ARCHITECTURE.md) for module boundaries, reporting
+invariants, resource limits and recovery behavior.
+
+## Local checks
+
+```sh
+npm ci
+npm run check
+```
+
+`check` runs pinned Prettier formatting checks, a clean TypeScript build, behavior
+tests and package verification. TypeScript enables strict mode, unused-code checks
+and no output on compilation errors. Use `npm run format:write` to format edits.
+During development, build once and run a focused `node --test test/NAME.test.mjs`;
+run the complete check before submitting the final change.
+
+The package verifier checks compiled modules against current source files,
+declared exports, required documentation and relative links inside the archive.
+It inspects the already-tested build without rerunning lifecycle scripts. A clean
+build prevents removed source files from surviving in `dist` and later releases.
+
+CI tests Node 22 and 24 on Linux; local verification also runs on macOS. Windows
+filesystem durability and installation have not been verified.
+
 ## Package API
 
 ```js
@@ -27,8 +51,8 @@ Restore the versioned release dependency before committing the consumer.
 ## Release
 
 1. Update the package version and lockfile together. Align protocol version
-   strings in `src/server.ts`, `src/city.ts` and `src/telegram.ts`.
-2. Run `npm ci`, `npm test` and `npm pack --dry-run`. Inspect the source and runtime
+   strings in `src/server.ts`, `src/city.ts`, `src/places.ts` and `src/telegram.ts`.
+2. Run `npm ci` and `npm run check`. Inspect the source and runtime
    inventories; exclude credentials, reports and consumer application code.
 3. Run `npm pack`, install that archive in an empty directory and in affected
    consumers, then run their tests. Check the actual packaged CLI, not only the
@@ -40,3 +64,5 @@ Restore the versioned release dependency before committing the consumer.
 
 GitHub source, package release, client registration and application deployment
 are separate operations. No npm registry publication is configured.
+`private: true` in `package.json` prevents accidental npm publication; it does
+not make the GitHub source or release downloads private.

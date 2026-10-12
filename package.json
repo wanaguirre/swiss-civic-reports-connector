@@ -24,16 +24,23 @@
     "README.md",
     "LICENSE",
     "SECURITY.md",
-    "docs/SETUP.md"
+    "docs/SETUP.md",
+    "CONTRIBUTING.md",
+    "docs/DEVELOPMENT.md",
+    "docs/ARCHITECTURE.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node scripts/clean-build.mjs && tsc",
     "test": "npm run build && node --test test/*.test.mjs",
     "start": "node dist/cli.js",
     "doctor": "node dist/cli.js doctor",
     "telegram": "node --env-file=.env dist/cli.js telegram",
     "verify:installation": "node scripts/verify-installation.mjs",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "format": "prettier --check \"{src,test,scripts}/**/*.{ts,mjs}\" \"*.json\" \".github/workflows/*.yml\"",
+    "format:write": "prettier --write \"{src,test,scripts}/**/*.{ts,mjs}\" \"*.json\" \".github/workflows/*.yml\"",
+    "check": "npm run format && npm test && npm run verify:package",
+    "verify:package": "node scripts/verify-package.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "1.7.5",
@@ -46,6 +53,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
+    "prettier": "3.9.10",
     "typescript": "^5.9.3"
   },
   "private": true,
