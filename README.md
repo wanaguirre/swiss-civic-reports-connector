@@ -50,5 +50,14 @@ municipal writes. `scripts/` and `docs/` provide installation and verification.
 GitHub Actions runs tests on Node 22 and 24. Releases include an installable package;
 this package is not published to npm.
 
-[Development](docs/DEVELOPMENT.md) · [Contributing](CONTRIBUTING.md) ·
-[Security](SECURITY.md) · [MIT license](LICENSE)
+Run `npm run check` before contributing. It checks formatting, compiles strict
+TypeScript, runs tests and validates the release package.
+
+[Architecture](docs/ARCHITECTURE.md) · [Development](docs/DEVELOPMENT.md) ·
+[Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
+
+## License
+
+[MIT](LICENSE). You may use, modify and redistribute the code, including
+commercially, provided you retain its copyright and license notices. The software
+is provided without warranty. This license does not imply municipal endorsement.
