@@ -1,0 +1,17 @@
+node_modules/
+dist/
+*.tgz
+*.zip
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+coverage/
+.local-data/
+
+# Python recovery tooling
+__pycache__/
+
+test-results/
+playwright-report/

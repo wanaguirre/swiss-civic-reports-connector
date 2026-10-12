@@ -1,0 +1,54 @@
+# Swiss Civic Reports
+
+Prepare public-space maintenance reports through your AI assistant or your own
+Telegram bot. Confirm the location, review the photos and text, then approve the
+exact report before sending.
+
+| Interface | Use it when |
+| --- | --- |
+| **MCP** | You want your existing AI assistant to use the reporting tools. No Telegram account is needed. |
+| **Telegram** | You want to report from a private bot on your phone. Run the bot on your computer or server; no separate MCP client or server setup is needed. |
+| **Shared core** | You are building an application that needs the same location, photo, preview and reporting logic. |
+
+Telegram uses the MCP tools internally in the same process. Automatic Telegram
+drafting optionally uses your Codex login; manual drafting needs no AI account.
+The bot's host must stay online.
+
+## Install
+
+Requires **Node.js 22+** and npm.
+
+```sh
+git clone https://github.com/wanaguirre/swiss-civic-reports-connector.git
+cd swiss-civic-reports-connector
+npm ci
+npm test
+```
+
+Follow the [setup guide](docs/SETUP.md#set-up-mcp) for MCP or
+[Telegram setup](docs/SETUP.md#set-up-telegram) for your bot.
+`npm run doctor` and `npm run verify:installation` perform live read-only checks.
+
+## Scope
+
+This repository owns the shared reporting core, MCP and Telegram. Applications
+consume its [versioned package API](docs/DEVELOPMENT.md); do not copy the core
+into another project. Browser interfaces, account services and deployments are
+separate consumers and are not included here.
+
+The connector checks support at the selected location. The current adapter is
+Zürich; other municipalities are not yet connected. This is an independent,
+unofficial project. Direct submission is experimental and **off by default**;
+the official municipal form is the fallback. A real Telegram exchange and an
+accepted municipal submission still need verification; passing tests do not
+establish those live journeys.
+
+## Develop
+
+`src/` contains the core and transports; `test/` covers behavior with mocked
+municipal writes. `scripts/` and `docs/` provide installation and verification.
+GitHub Actions runs tests on Node 22 and 24. Releases include an installable package;
+this package is not published to npm.
+
+[Development](docs/DEVELOPMENT.md) · [Contributing](CONTRIBUTING.md) ·
+[Security](SECURITY.md) · [MIT license](LICENSE)

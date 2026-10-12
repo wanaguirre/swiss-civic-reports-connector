@@ -1,0 +1,6 @@
+interface:
+  display_name: "Zürich Reports"
+  short_description: "Prepare and track Zürich reports from photos"
+  default_prompt: "Use $zurich-reports to prepare a Zürich city report from my photo and show me a preview before submitting."
+policy:
+  allow_implicit_invocation: true
