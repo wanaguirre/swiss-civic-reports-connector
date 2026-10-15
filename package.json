@@ -27,7 +27,8 @@
     "docs/SETUP.md",
     "CONTRIBUTING.md",
     "docs/DEVELOPMENT.md",
-    "docs/ARCHITECTURE.md"
+    "docs/ARCHITECTURE.md",
+    "docs/ANTHRAZIT.md"
   ],
   "scripts": {
     "build": "node scripts/clean-build.mjs && tsc",
@@ -47,6 +48,7 @@
     "@modelcontextprotocol/sdk": "1.32.0",
     "exifr": "^7.1.3",
     "express": "^5.2.1",
+    "parse5": "8.0.0",
     "sharp": "^0.35.5",
     "zod": "3.25.76"
   },
@@ -141,6 +143,14 @@
     "./run-cli": {
       "types": "./dist/run-cli.d.ts",
       "import": "./dist/run-cli.js"
+    },
+    "./anthrazit": {
+      "types": "./dist/anthrazit.d.ts",
+      "import": "./dist/anthrazit.js"
+    },
+    "./municipalities": {
+      "types": "./dist/municipalities.d.ts",
+      "import": "./dist/municipalities.js"
     }
   }
 }

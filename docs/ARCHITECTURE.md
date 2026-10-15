@@ -9,7 +9,7 @@ Importing the package has no server-starting side effects.
 | Modules | Responsibility |
 | --- | --- |
 | `model`, `reporting-draft`, `reporting-guidance` | Input schemas, shared records, model-output validation and sourced drafting guidance. |
-| `city`, `places` | Municipal API calls, geographic lookup and supported-adapter identification. |
+| `city`, `anthrazit`, `municipalities`, `places` | Municipal API calls, geographic lookup and supported-adapter identification. |
 | `photos` | Bounded image import, normalization and thumbnails. |
 | `service` | Live rule validation, preparation, approval checks and submission orchestration. |
 | `store`, `storage-budget`, `durable-files` | Private persistence, storage limits, atomic publication and duplicate prevention. |
@@ -18,10 +18,12 @@ Importing the package has no server-starting side effects.
 | `telegram-api`, `telegram-bot`, `telegram`, `telegram-draft` | Telegram requests, the conversation controller, sequential polling and optional Codex drafting. |
 | `run-cli`, `cli`, `index` | Explicit process startup and package exports. |
 
-`ReportService` currently uses the Zürich `CityClient`. `SwissPlaces` can identify
-other municipalities and return official reporting links, but that does not add
-an operational reporting adapter. Adding a municipality also requires connecting
-its category/rule, delivery-language, preview and submission behavior end to end.
+`ReportService` accepts a `ReportingAdapter`: Zürich `CityClient` or the experimental
+[Anthrazit adapter](ANTHRAZIT.md). Consumers select an adapter from the authoritative
+BFS boundary result. Previews and receipts bind BFS plus service identity; records
+without a destination belong only to the original Zürich service. Terms are frozen
+and integrity-checked separately from the payload identity used to prevent duplicate
+sends. Adding an adapter does not enable it in a consuming application.
 
 ## Reporting flow and invariants
 
@@ -29,9 +31,9 @@ its category/rule, delivery-language, preview and submission behavior end to end
    unsupported inputs, normalizes images and removes EXIF. GPS is a suggestion.
 2. Confirm the issue location, load live categories and requirements, and validate
    the draft. Searching for an address does not confirm it.
-3. Save an immutable preview of the input and exact photo hashes. Previews expire
+3. Save an immutable preview of the destination, input, terms and exact photo hashes. Previews expire
    after one hour; changing a Telegram draft invalidates its approval button.
-4. Require submission opt-in and approval of that preview. Recheck current city
+4. Require submission opt-in, approval of that preview and any municipal terms acceptance. Recheck current city
    rules, then durably create an exclusive claim for the payload fingerprint.
 5. Dispatch once. Persist acceptance, rejection or uncertainty. A crash or timeout
    never authorizes replay: the claim survives restart and equivalent new previews.

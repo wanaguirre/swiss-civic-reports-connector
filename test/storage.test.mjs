@@ -130,6 +130,9 @@ test('missing or corrupted referenced media prevents municipal dispatch', async 
   let posts = 0;
   const service = new ReportService(
     {
+      submissionMode: 'direct',
+      bfsId: 261,
+      serviceId: 'zurich-fixmystreet',
       requirements: async () => ({ Waste: { extra_fields: [] } }),
       submit: async () => {
         posts++;

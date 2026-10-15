@@ -36,8 +36,10 @@ consume its [versioned package API](docs/DEVELOPMENT.md); do not copy the core
 into another project. Browser interfaces, account services and deployments are
 separate consumers and are not included here.
 
-The connector checks support at the selected location. The current adapter is
-Zürich; other municipalities are not yet connected. This is an independent,
+The installed CLI and Telegram use Zürich. The shared package also exports an
+experimental [Anthrazit adapter](docs/ANTHRAZIT.md) for Winterthur and Schlieren.
+Their category/location reads are verified; municipal acceptance is not.
+Schlieren direct sending remains unavailable pending its final-flow investigation. This is an independent,
 unofficial project. Direct submission is experimental and **off by default**;
 the official municipal form is the fallback. A real Telegram exchange and an
 accepted municipal submission still need verification; passing tests do not
