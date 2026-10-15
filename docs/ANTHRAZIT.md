@@ -54,8 +54,9 @@ const server = createServer(service);
 ```
 
 Choose the adapter from the authoritative BFS result for the confirmed point,
-not from user text or a category label. `requirements` repeats the boundary check
-and the tenant's location preflight. Use the live category **name** in the input;
+not from user text or a category label. `requirements` checks the boundary and tenant location preflight, reusing a
+validated exact-point result for at most 30 seconds during preparation.
+`ReportService.submit` requests fresh requirements before its durable claim. Use the live category **name** in the input;
 its current numeric category ID is resolved again inside the fresh send session.
 
 The extra fields exposed by these tenants are:
@@ -221,3 +222,52 @@ Sources: [Bottmingen municipal app guidance](https://www.bottmingen.ch/de/verwal
 [Bottmingen terms](https://bottmingen.citymobile.ch/index.php?apid=12513750),
 [Moosseedorf wizard](https://m.moosseedorf.ch/index.php?apid=8554890&do=add),
 [Moosseedorf terms](https://m.moosseedorf.ch/index.php?apid=10627725).
+
+
+## Traffic protection (v0.4.0-rc.6)
+
+The adapter shares an in-memory `AnthrazitTraffic` controller for clients using
+one fetch transport (the default in a single hosted process). It caches only
+validated category arrays for five minutes and exact-point requirements for
+30 seconds. Identical concurrent reads share one operation and receive separate
+copies. Keys bind the service/municipality and unrounded coordinates. Cache size
+is limited to 512 entries and 64 pending reads; expired entries are discarded on
+the next read. No cookies, HTML, report text, contacts or photos enter the cache.
+Coordinates remain in bounded process memory, not persisted or logged.
+
+All Anthrazit requests, including every redirect/upload, share a maximum of two
+active requests, a burst of eight starts and a refill of two starts per second.
+At most 32 requests can wait, for at most five seconds. Idle requests start
+immediately. These are conservative client limits, not verified provider quotas.
+
+HTTP 429, explicit `ipcaptcha` forms, and HTTP 503 trigger a cooldown shared by
+all users of the affected origin. Other municipal origins retain access to the
+shared budget; an observed limit does not prove provider-wide blocking.
+A valid Retry-After (seconds or HTTP date) is honored. Without one, rate limits
+pause for five minutes and 503 outages for one minute, doubling on repeated
+failures up to five steps. The backoff resets after an hour beyond the preceding
+pause. `MunicipalServiceUnavailable` exposes `status: 503` and
+`retryAfterSeconds`; consuming apps should keep the draft and display its message.
+Fresh cached preparation data remains usable during a cooldown until it expires.
+There is no background recovery probe, CAPTCHA solving, IP rotation or network
+retry. Only a later caller can try again after the pause.
+
+The optional `ReportingAdapter.requirements(point, { fresh: true })` contract
+bypasses preparation caches; adapters without caches may ignore this argument.
+`ReportService.submit` always uses it, and the wizard opens another isolated,
+uncached session. A failure after the durable claim still records an unknown
+outcome and forbids replay, including after the cooldown or a process restart.
+
+When multiple fetch wrappers are necessary, explicitly pass the same
+`new AnthrazitTraffic()` via each client's `traffic` option. Both controller and
+error are exported from the package's `/anthrazit` entry point. Controller state
+is process-local and resets on restart. Multiple workers or replicas require a
+coordinated egress budget/cooldown before scaling; this implementation does not
+establish multi-process protection. Obtain provider-agreed access and quotas
+for production growth with a stable egress IP.
+
+Verification uses mocked responses and a synthetic clock for cache isolation,
+expiry, queue/rate bounds, Retry-After, challenges, fresh submission checks and
+no replay. No real municipal requests, uploads or submissions were used for
+these controls. See HTTP semantics: [429](https://www.rfc-editor.org/rfc/rfc6585#section-4)
+and [Retry-After](https://www.rfc-editor.org/rfc/rfc9110#section-10.2.3).

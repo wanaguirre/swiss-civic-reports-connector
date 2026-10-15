@@ -1,3 +1,5 @@
+import { AnthrazitTraffic, anthrazitTraffic } from './anthrazit-traffic.js';
+export { AnthrazitTraffic, MunicipalServiceUnavailable } from './anthrazit-traffic.js';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { CityClient } from './city.js';
 import {
@@ -259,22 +261,62 @@ class Session {
   constructor(
     private tenant: Tenant,
     private request: typeof fetch,
+    private traffic: AnthrazitTraffic,
   ) {}
   async read(url: URL, init: RequestInit = {}, follow = true): Promise<{ url: URL; body: string }> {
     for (let redirects = 0; redirects <= 5; redirects++) {
       if (url.origin !== this.tenant.origin) throw new Error('Unexpected municipal origin.');
-      const response = await this.request(url, {
-        ...init,
-        redirect: 'manual',
-        signal: AbortSignal.timeout(30_000),
-        headers: {
-          Accept: 'text/html,application/json',
-          ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
-          'User-Agent': 'swiss-civic-reports/0.4.0-rc.5',
-          ...(this.cookies.size
-            ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
-            : {}),
-        },
+      const { response, body } = await this.traffic.run(url.origin, async () => {
+        const response = await this.request(url, {
+          ...init,
+          redirect: 'manual',
+          signal: AbortSignal.timeout(30_000),
+          headers: {
+            Accept: 'text/html,application/json',
+            ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
+            'User-Agent': 'swiss-civic-reports/0.4.0-rc.6',
+            ...(this.cookies.size
+              ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
+              : {}),
+          },
+        });
+        if (response.status === 429 || response.status === 503) {
+          const error = this.traffic.pause(
+            url.origin,
+            response.headers.get('retry-after'),
+            response.status,
+          );
+          await response.body?.cancel().catch(() => {});
+          throw error;
+        }
+        if (response.status >= 300 && response.status < 400) {
+          await response.body?.cancel();
+          return { response, body: '' };
+        }
+        const chunks: Uint8Array[] = [];
+        let size = 0;
+        if (!response.body) throw new Error('Empty municipal response.');
+        const reader = response.body.getReader();
+        try {
+          for (;;) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            size += value.length;
+            if (size > 1_000_000) {
+              await reader.cancel();
+              throw new Error('Municipal response is too large.');
+            }
+            chunks.push(value);
+          }
+        } finally {
+          reader.releaseLock();
+        }
+        const body = Buffer.concat(chunks).toString('utf8');
+        // This provider's explicit IP challenge can also be served as a 200/403.
+        if (/<form\b[^>]*\bid\s*=\s*["']ipcaptcha["']/i.test(body))
+          throw this.traffic.pause(url.origin, response.headers.get('retry-after'));
+        if (!response.ok) throw new Error('Municipal request failed.');
+        return { response, body };
       });
       for (const cookie of response.headers.getSetCookie()) {
         const pair = cookie.split(';')[0];
@@ -297,26 +339,7 @@ class Session {
         init = {};
         continue;
       }
-      if (!response.ok) throw new Error('Municipal request failed.');
-      const chunks: Uint8Array[] = [];
-      let size = 0;
-      if (!response.body) throw new Error('Empty municipal response.');
-      const reader = response.body.getReader();
-      try {
-        for (;;) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          size += value.length;
-          if (size > 1_000_000) {
-            await reader.cancel();
-            throw new Error('Municipal response is too large.');
-          }
-          chunks.push(value);
-        }
-      } finally {
-        reader.releaseLock();
-      }
-      return { url, body: Buffer.concat(chunks).toString('utf8') };
+      return { url, body };
     }
     throw new Error('Too many municipal redirects.');
   }
@@ -411,14 +434,20 @@ export class AnthrazitClient implements ReportingAdapter {
     'Report title, description, location and photos may be published. Email and optional contact details are sent to the municipality. Update notifications are off unless explicitly selected. Drafts contain these details locally.';
   readonly guidance;
   private places: Pick<SwissPlaces, 'municipality'>;
+  private traffic: AnthrazitTraffic;
   constructor(
     name: keyof typeof anthrazitTenants,
     private request: typeof fetch = fetch,
-    options: { experimentalSubmission?: boolean; places?: Pick<SwissPlaces, 'municipality'> } = {},
+    options: {
+      experimentalSubmission?: boolean;
+      places?: Pick<SwissPlaces, 'municipality'>;
+      traffic?: AnthrazitTraffic;
+    } = {},
   ) {
     const tenant = anthrazitTenants[name];
     if (!tenant) throw new Error('Unsupported Anthrazit municipality.');
     this.tenant = tenant;
+    this.traffic = options.traffic ?? anthrazitTraffic(request);
     this.bfsId = tenant.bfsId;
     this.municipality = tenant.municipality;
     this.serviceId = `anthrazit-${tenant.bfsId}`;
@@ -464,17 +493,32 @@ export class AnthrazitClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   async categories() {
-    return categories(
-      await new Session(this.tenant, this.request).read(endpoint(this.tenant)),
-      this.tenant,
+    return this.traffic.read(`${this.serviceId}:categories`, 300_000, async () =>
+      categories(
+        await new Session(this.tenant, this.request, this.traffic).read(endpoint(this.tenant)),
+        this.tenant,
+      ),
     );
   }
-  async requirements(point: Point): Promise<Record<string, Requirements>> {
+  async requirements(
+    point: Point,
+    options: { fresh?: boolean } = {},
+  ): Promise<Record<string, Requirements>> {
     coordinates.parse(point);
+    // Capture only coordinates, never a caller's mutable draft or private fields.
+    const exact = { latitude: point.latitude, longitude: point.longitude };
+    if (options.fresh) return this.loadRequirements(exact);
+    return this.traffic.read(
+      `${this.serviceId}:requirements:${exact.latitude}:${exact.longitude}`,
+      30_000,
+      () => this.loadRequirements(exact),
+    );
+  }
+  private async loadRequirements(point: Point): Promise<Record<string, Requirements>> {
     const municipality = await this.places.municipality(point);
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
-    const session = new Session(this.tenant, this.request);
+    const session = new Session(this.tenant, this.request, this.traffic);
     const cats = categories(await session.read(endpoint(this.tenant)), this.tenant);
     const url = new URL('/appl/api.php', this.tenant.origin);
     url.search = new URLSearchParams({
@@ -580,7 +624,7 @@ export class AnthrazitClient implements ReportingAdapter {
       throw new Error('This municipality accepts email contact only.');
     if (photos.length > 1 || !input.extra_fields.report_title || !input.email)
       throw new Error('Incomplete Anthrazit preview.');
-    const session = new Session(this.tenant, this.request);
+    const session = new Session(this.tenant, this.request, this.traffic);
     const cats = categories(await session.read(endpoint(this.tenant)), this.tenant);
     const category = cats.find((c) => c.service_name === input.category);
     if (!category) throw new Error('Municipal category changed.');

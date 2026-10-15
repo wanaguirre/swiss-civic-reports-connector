@@ -4,7 +4,12 @@ import { mkdtemp, rm, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import sharp from 'sharp';
-import { AnthrazitClient, anthrazitTenants } from '../dist/anthrazit.js';
+import {
+  AnthrazitClient,
+  anthrazitTenants,
+  AnthrazitTraffic,
+  MunicipalServiceUnavailable,
+} from '../dist/anthrazit.js';
 import { CityClient } from '../dist/city.js';
 import { ReportService } from '../dist/service.js';
 import { Store, fingerprint } from '../dist/store.js';
@@ -157,7 +162,15 @@ async function setup(
     const html = fixture(tenant, step, saved);
     return new Response(mutate?.(step, html, saved) ?? html);
   };
+  let now = 0;
+  const traffic = new AnthrazitTraffic({
+    now: () => now,
+    wait: async (ms) => {
+      now += ms;
+    },
+  });
   const city = new AnthrazitClient(name, request, {
+    traffic,
     experimentalSubmission: experimental,
     places: {
       municipality: async () => ({
@@ -175,6 +188,10 @@ async function setup(
     dir,
     calls,
     request,
+    traffic,
+    advance: (ms) => {
+      now += ms;
+    },
     posts: () => calls.filter((c) => c.method === 'POST'),
   };
 }
@@ -694,7 +711,7 @@ test('provider rate-limit challenges stop reads and claimed attempts without ret
   const blocked = await setup(t, { name: 'bottmingen', handle: challenge });
   await assert.rejects(
     () => blocked.service.prepare(record('bottmingen')),
-    /Municipal request failed/,
+    MunicipalServiceUnavailable,
   );
   assert.equal(blocked.calls.length, 1);
   assert.equal(blocked.posts().length, 0);
@@ -713,7 +730,123 @@ test('provider rate-limit challenges stop reads and claimed attempts without ret
     'two preflight GETs, then one blocked GET after the claim',
   );
   assert.equal(f.posts().length, 0);
+  await assert.rejects(() => send(f, preview), MunicipalServiceUnavailable);
+  assert.equal(f.calls.length, before + 3, 'cooldown stops even preflight without network access');
+  f.advance(300_000);
   assert.equal((await send(f, preview)).already_attempted, true);
-  assert.equal(f.calls.length, before + 5, 'an explicit second call only rechecks requirements');
+  assert.equal(
+    f.calls.length,
+    before + 5,
+    'after cooldown the durable claim still prevents replay',
+  );
   assert.equal(f.posts().length, 0);
+});
+
+test('same-point preparation shares only validated rules, with exact tenant/point keys and expiry', async (t) => {
+  const f = await setup(t);
+  const second = new AnthrazitClient('winterthur', f.request, {
+    traffic: f.traffic,
+    places: { municipality: async () => ({ bfs_id: 230 }) },
+  });
+  const point = record();
+  const rules = await Promise.all([
+    f.city.requirements(point),
+    second.requirements({ ...point, email: 'other@example.org' }),
+  ]);
+  assert.equal(f.calls.length, 2);
+  rules[0][point.category].max_photos = 99;
+  assert.equal(rules[1][point.category].max_photos, 1);
+  assert.equal((await second.requirements(point))[point.category].max_photos, 1);
+  assert.equal(f.calls.length, 2);
+  await second.requirements({ ...point, latitude: point.latitude + 0.000001 });
+  assert.equal(f.calls.length, 4, 'never round nearby points into the same boundary decision');
+  const wrong = new AnthrazitClient('stgallen', f.request, {
+    traffic: f.traffic,
+    places: { municipality: async () => ({ bfs_id: 230 }) },
+  });
+  await assert.rejects(() => wrong.requirements(point), /outside/);
+  f.advance(30_000);
+  await f.city.requirements(point);
+  assert.equal(f.calls.length, 6);
+});
+
+test('public category cache does not share cookies with preparation or submission', async (t) => {
+  const f = await setup(t);
+  const first = await f.city.categories();
+  first[0].service_name = 'edited';
+  const second = await f.city.categories();
+  assert.equal(second[0].service_name, record().category);
+  assert.equal(f.calls.length, 1);
+  const preview = await f.service.prepare(record());
+  assert.equal((await send(f, preview)).state, 'unknown');
+  assert.equal(f.posts().length, 4);
+  const before = f.calls.length;
+  f.advance(300_000);
+  await f.city.categories();
+  assert.equal(f.calls.length, before + 1);
+});
+
+test('submission bypasses cached preparation rules and fails before claiming on changed requirements', async (t) => {
+  let changed = false;
+  const f = await setup(t, {
+    handle: (url) =>
+      changed && url.searchParams.get('do') === 'usercontentCheckRadius'
+        ? Response.json({ msg: 'outside' })
+        : undefined,
+  });
+  const preview = await f.service.prepare(record());
+  changed = true;
+  await f.city.requirements(record());
+  assert.equal(f.calls.length, 2);
+  await assert.rejects(() => send(f, preview), /did not confirm/);
+  assert.equal(f.calls.length, 4);
+  assert.equal(f.posts().length, 0);
+  assert.equal((await f.store.receipts()).length, 0);
+});
+
+for (const status of [200, 403, 429, 503])
+  test(`provider ${status} stops repeat uncached requests across clients`, async (t) => {
+    const f = await setup(t, {
+      handle: () =>
+        new Response('<form id="ipcaptcha">challenge</form>', {
+          status,
+          headers: { 'Retry-After': '60' },
+        }),
+    });
+    const second = new AnthrazitClient('winterthur', f.request, { traffic: f.traffic });
+    await assert.rejects(() => f.city.categories(), MunicipalServiceUnavailable);
+    await assert.rejects(() => second.categories(), MunicipalServiceUnavailable);
+    assert.equal(f.calls.length, 1);
+    f.advance(60_000);
+    await assert.rejects(() => second.categories(), MunicipalServiceUnavailable);
+    assert.equal(f.calls.length, 2, 'only a later user request probes recovery');
+  });
+
+test('clients with the same transport share cooldowns by default', async () => {
+  let calls = 0;
+  const request = async () => {
+    calls++;
+    return new Response('busy', { status: 429 });
+  };
+  const first = new AnthrazitClient('winterthur', request),
+    second = new AnthrazitClient('winterthur', request);
+  await assert.rejects(() => first.categories(), MunicipalServiceUnavailable);
+  await assert.rejects(() => second.categories(), MunicipalServiceUnavailable);
+  assert.equal(calls, 1);
+});
+
+test('429 on a final POST is never retried, even after recovery', async (t) => {
+  const f = await setup(t, {
+    handle: (url, init) =>
+      init.method === 'POST' && url.searchParams.get('step') === '5'
+        ? new Response('busy', { status: 429, headers: { 'Retry-After': '60' } })
+        : undefined,
+  });
+  const preview = await f.service.prepare(record());
+  assert.equal((await send(f, preview)).state, 'unknown');
+  assert.equal(f.posts().filter((c) => c.url.searchParams.get('step') === '5').length, 1);
+  await assert.rejects(() => send(f, preview), MunicipalServiceUnavailable);
+  f.advance(60_000);
+  assert.equal((await send(f, preview)).already_attempted, true);
+  assert.equal(f.posts().filter((c) => c.url.searchParams.get('step') === '5').length, 1);
 });

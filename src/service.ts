@@ -188,7 +188,7 @@ export class ReportService {
     // Revalidate changing city rules before claiming or sending a report.
     this.validate(
       preview.input,
-      await this.city.requirements(preview.input),
+      await this.city.requirements(preview.input, { fresh: true }),
       preview.photos.length,
     );
     const { input } = preview;

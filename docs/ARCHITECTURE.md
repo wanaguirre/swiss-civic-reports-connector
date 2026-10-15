@@ -9,7 +9,7 @@ Importing the package has no server-starting side effects.
 | Modules | Responsibility |
 | --- | --- |
 | `model`, `reporting-draft`, `reporting-guidance` | Input schemas, shared records, model-output validation and sourced drafting guidance. |
-| `city`, `anthrazit`, `municipalities`, `places` | Municipal API calls, geographic lookup and supported-adapter identification. |
+| `city`, `anthrazit`, `anthrazit-traffic`, `municipalities`, `places` | Municipal API calls, geographic lookup and supported-adapter identification. |
 | `photos` | Bounded image import, normalization and thumbnails. |
 | `service` | Live rule validation, preparation, approval checks and submission orchestration. |
 | `store`, `storage-budget`, `durable-files` | Private persistence, storage limits, atomic publication and duplicate prevention. |
@@ -34,7 +34,7 @@ sends. Adding an adapter does not enable it in a consuming application.
 3. Save an immutable preview of the destination, input, terms and exact photo hashes. Previews expire
    after one hour; changing a Telegram draft invalidates its approval button.
 4. Require submission opt-in, approval of that preview and any municipal terms acceptance. Recheck current city
-   rules, then durably create an exclusive claim for the payload fingerprint.
+   rules with `requirements(point, { fresh: true })` (bypassing preparation caches), then durably create an exclusive claim for the payload fingerprint.
 5. Dispatch once. Persist acceptance, rejection or uncertainty. A crash or timeout
    never authorizes replay: the claim survives restart and equivalent new previews.
 

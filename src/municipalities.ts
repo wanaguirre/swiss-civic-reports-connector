@@ -5,7 +5,11 @@ import type { zurichReportingGuidance } from './reporting-guidance.js';
 
 export type ReportingGuidance = typeof zurichReportingGuidance;
 export type ReportingAdapter = MunicipalAdapter &
-  Pick<CityClient, 'categories' | 'requirements' | 'geocode' | 'reports' | 'report' | 'nearby'> & {
+  Pick<CityClient, 'categories' | 'geocode' | 'reports' | 'report' | 'nearby'> & {
+    requirements(
+      point: Point,
+      options?: { fresh?: boolean },
+    ): ReturnType<CityClient['requirements']>;
     submit(preview: import('./model.js').Prepared): Promise<{
       state: 'accepted' | 'confirmation_pending' | 'rejected' | 'unknown';
       report_id?: string;
