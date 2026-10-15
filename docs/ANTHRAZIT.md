@@ -98,6 +98,11 @@ They verify sequencing, exact payloads, tenant isolation, terms/approval gates,
 photo handling, redirects, contract drift, and durable no-replay behavior. These
 tests do not prove municipal acceptance. Before production enablement, use a
 genuine specifically approved report to verify uploads, the completed preview,
-the final response and receipt; resolve Schlieren's final flow, then add only
-observed success/status parsers. The current consumer needs routing, title,
-notification and terms UI and a versioned core release before rollout.
+the final response and receipt, then add only observed success/status parsers.
+Civic prepares Winterthur reports behind an off-by-default flag and consumes a
+versioned core dependency. Schlieren remains excluded while anonymous completion
+is unverified; no municipal login integration is planned.
+
+`report_title` is marked `translate: true` in requirements so clients translate
+it with the public description. Contact and issue-address fields must not be
+sent for translation.

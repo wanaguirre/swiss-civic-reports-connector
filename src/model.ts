@@ -109,6 +109,8 @@ export type Requirements = {
     required: boolean;
     datatype?: string;
     max_length?: number;
+    // Public report text that clients translate alongside the description.
+    translate?: boolean;
     values?: unknown;
   }[];
 };

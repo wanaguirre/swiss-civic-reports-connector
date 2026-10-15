@@ -107,7 +107,7 @@ class Session {
         headers: {
           Accept: 'text/html,application/json',
           ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
-          'User-Agent': 'swiss-civic-reports/0.3.1',
+          'User-Agent': 'swiss-civic-reports/0.4.0-rc.1',
           ...(this.cookies.size
             ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
             : {}),
@@ -339,7 +339,8 @@ export class AnthrazitClient implements ReportingAdapter {
           extra_fields: [
             {
               code: 'report_title',
-              description: 'Report title (German)',
+              description: 'Report title',
+              translate: true,
               required: true,
               datatype: 'string',
               max_length: 100,
