@@ -32,9 +32,7 @@ const record = (name = 'winterthur') => ({
         : 'Abfall',
   description: 'Synthetic report: a damaged bin.',
   email: 'test@example.org',
-  ...(['winterthur', 'schlieren'].includes(name)
-    ? { name: 'Test person', phone: '+41 00 000 00 00' }
-    : {}),
+  ...(anthrazitTenants[name].contactText ? { name: 'Test person', phone: '+41 00 000 00 00' } : {}),
   photo_ids: [],
   extra_fields: {
     report_title: 'Synthetic title',
@@ -114,9 +112,9 @@ async function setup(
     if (url.searchParams.get('do') === 'usercontentCheckRadius')
       return Response.json(
         locationResult ??
-          (name === 'stgallen'
+          (tenant.locationCheck === 'bfs'
             ? { inbfs: true }
-            : name === 'schaffhausen'
+            : tenant.locationCheck === 'distance'
               ? { distance: 0 }
               : { msg: '' }),
       );
@@ -183,7 +181,7 @@ async function setup(
 const send = (f, p, terms = p.terms_url) =>
   f.service.submit(p.preview_id, p.confirmation_token, true, terms);
 
-for (const name of ['winterthur', 'schlieren', 'stgallen', 'schaffhausen'])
+for (const name of Object.keys(anthrazitTenants))
   test(`${name}: live-shaped categories, exact BFS and radius rules; preparation never uploads`, async (t) => {
     const f = await setup(t, { name });
     const p = await f.service.prepare(record(name));
@@ -611,3 +609,70 @@ test('tenant location checks reject unexpected types, modes and out-of-area resp
   await assert.rejects(() => outside.service.prepare(record('schaffhausen')), /outside/);
   assert.equal(outside.calls.length, 0);
 });
+
+// These tenants combine the inspected BFS/device-coordinate flow with a private
+// contact textarea. Every transport and photo below is synthetic.
+for (const [name, terms] of [
+  ['dietikon', 'https://dietikon.citymobile.ch/index.php?apid=3397510'],
+  ['koeniz', 'https://koeniz.citymobile.ch/index.php?apid=9287336'],
+  ['frauenfeld', 'https://frauenfeld.citymobile.ch/index.php?apid=3670734'],
+  ['allschwil', 'https://allschwil.mopage.ch/index.php?apid=13012430'],
+  ['wil', 'https://wilsg.citymobile.ch/index.php?apid=12267455'],
+]) {
+  test(`${name}: approved contacts/photo follow the anonymous wizard exactly once`, async (t) => {
+    const f = await setup(t, { name });
+    const bytes = await sharp({
+      create: { width: 16, height: 16, channels: 3, background: 'green' },
+    })
+      .jpeg()
+      .toBuffer();
+    const photo = await f.service.inspectPhoto({ base64: bytes.toString('base64') });
+    const p = await f.service.prepare({ ...record(name), photo_ids: [photo.metadata.id] });
+    assert.deepEqual(p.requirements.contact_fields, ['name', 'phone']);
+    assert.equal(p.terms_url, terms);
+    assert.equal((await send(f, p)).state, 'unknown');
+    assert.equal(f.posts().length, 5);
+    const location = Object.fromEntries(
+      f.posts().find((c) => c.url.searchParams.get('step') === '2').init.body,
+    );
+    assert.deepEqual(location, {
+      stepback: '',
+      foo: '',
+      latitude: String(record(name).latitude),
+      longitude: String(record(name).longitude),
+      'devicecoords[lat]': '',
+      'devicecoords[long]': '',
+      submit: 'Weiter',
+    });
+    const details = Object.fromEntries(
+      f.posts().find((c) => c.url.searchParams.get('step') === '4').init.body,
+    );
+    assert.equal(details.telefon, 'Test person\n+41 00 000 00 00');
+    assert.equal(details.notification, undefined);
+    assert.equal(details.email, 'test@example.org');
+    assert.equal(details.objekttitel, p.report.extra_fields.report_title);
+    assert.equal((await send(f, p)).already_attempted, true);
+    assert.equal(f.posts().length, 5);
+  });
+  test(`${name}: opt-in, exact municipality and login failures remain enforced`, async (t) => {
+    const disabled = await setup(t, { name, experimental: false });
+    const p = await disabled.service.prepare(record(name));
+    await assert.rejects(() => send(disabled, p), /disabled|unavailable/);
+    assert.equal(disabled.posts().length, 0);
+    const outside = await setup(t, { name, bfs: 261 });
+    await assert.rejects(() => outside.service.prepare(record(name)), /outside/);
+    assert.equal(outside.calls.length, 0);
+    const login = await setup(t, {
+      name,
+      mutate: (step, html) =>
+        step === 4 ? '<form id="loginRegForm"><input type="password"></form>' : html,
+    });
+    const approved = await login.service.prepare(record(name));
+    assert.equal((await send(login, approved)).state, 'unknown');
+    assert.equal(
+      login.posts().some((c) => Number(c.url.searchParams.get('step')) >= 4),
+      false,
+    );
+    assert.equal((await send(login, approved)).already_attempted, true);
+  });
+}

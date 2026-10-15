@@ -81,6 +81,91 @@ export const anthrazitTenants = Object.freeze({
     proceed: 'true',
     experimentalSubmission: true,
   }),
+  dietikon: Object.freeze({
+    bfsId: 243,
+    municipality: 'Dietikon',
+    origin: 'https://dietikon.citymobile.ch',
+    apid: '631378530',
+    usid: '7619',
+    usmid: '6758',
+    radius: '5000',
+    clat: '47.4059702489084',
+    clong: '8.404524221628046',
+    terms: '3397510',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
+  koeniz: Object.freeze({
+    bfsId: 355,
+    municipality: 'Köniz',
+    origin: 'https://koeniz.citymobile.ch',
+    apid: '1322436301',
+    usid: '7745',
+    usmid: '6466',
+    radius: '5000',
+    clat: '46.9226191',
+    clong: '7.413805700000012',
+    terms: '9287336',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
+  frauenfeld: Object.freeze({
+    bfsId: 4566,
+    municipality: 'Frauenfeld',
+    origin: 'https://frauenfeld.citymobile.ch',
+    apid: '907518245',
+    usid: '7535',
+    usmid: '7120',
+    radius: '5000',
+    clat: '47.5553733',
+    clong: '8.897485800000027',
+    terms: '3670734',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
+  allschwil: Object.freeze({
+    bfsId: 2762,
+    municipality: 'Allschwil',
+    origin: 'https://allschwil.mopage.ch',
+    apid: '1207371969',
+    usid: '7913',
+    usmid: '6318',
+    radius: '3000',
+    clat: '47.5525290732097',
+    clong: '7.5462523579631124',
+    terms: '13012430',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
+  wil: Object.freeze({
+    bfsId: 3427,
+    municipality: 'Wil (SG)',
+    origin: 'https://wilsg.citymobile.ch',
+    apid: '1491079142',
+    usid: '7849',
+    usmid: '6728',
+    radius: '5000',
+    clat: '47.4670965',
+    clong: '9.04876539999998',
+    terms: '12267455',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
 });
 type Tenant = (typeof anthrazitTenants)[keyof typeof anthrazitTenants];
 type Node = DefaultTreeAdapterMap['node'];
@@ -151,7 +236,7 @@ class Session {
         headers: {
           Accept: 'text/html,application/json',
           ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
-          'User-Agent': 'swiss-civic-reports/0.4.0-rc.2',
+          'User-Agent': 'swiss-civic-reports/0.4.0-rc.3',
           ...(this.cookies.size
             ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
             : {}),
@@ -272,7 +357,7 @@ function categories(page: Page, tenant: Tenant) {
 }
 
 /** Shared Anthrazit wizard adapter. Writes require ReportService's durable claim
- * and approval. Winterthur additionally requires explicit experimental opt-in;
+ * and approval. Anonymous tenants require explicit experimental opt-in;
  * Schlieren stays read/preparation-only while its final step requests login. */
 export class AnthrazitClient implements ReportingAdapter {
   private tenant: Tenant;
