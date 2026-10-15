@@ -76,6 +76,9 @@ export class ReportService {
       throw new Error(
         'Category is not available at this location. Use list_categories and resolve_location.',
       );
+    for (const field of ['name', 'phone'] as const)
+      if (rule.contact_fields && !rule.contact_fields.includes(field) && input[field]?.trim())
+        throw new Error(`This municipality does not accept a reporter ${field}.`);
     if (rule.name_required && !input.name?.trim())
       throw new Error('This service requires the reporter’s full name.');
     if (rule.max_photos !== undefined && photoCount > rule.max_photos)

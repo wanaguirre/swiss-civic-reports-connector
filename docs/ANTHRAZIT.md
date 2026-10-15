@@ -1,7 +1,8 @@
 # Anthrazit Stadtmelder adapter
 
 `AnthrazitClient` shares category, location, session, upload and wizard handling
-for Winterthur (BFS 230) and Schlieren (BFS 247). Tenant IDs and hosts are pinned
+for Winterthur (BFS 230), St. Gallen (BFS 3203), Schaffhausen (BFS 2939) and
+the deferred Schlieren profile (BFS 247). Tenant IDs and hosts are pinned
 in code. It implements the same `ReportingAdapter` boundary as Zürich, so a
 consumer can use `ReportService` and `createServer` without copying the workflow.
 This is an experimental integration of official web forms, not a documented
@@ -42,7 +43,7 @@ reverse-geocoded street. Coordinates remain the confirmed issue point.
 import { AnthrazitClient, ReportService, Store } from '@wanaguirre/swiss-civic-reports';
 import { createServer } from '@wanaguirre/swiss-civic-reports/server';
 
-const city = new AnthrazitClient('winterthur'); // or 'schlieren'; writes disabled
+const city = new AnthrazitClient('winterthur'); // also 'stgallen' or 'schaffhausen'; writes disabled
 const service = new ReportService(city, new Store('./private-data'), {
   submissionEnabled: false,
   allowPaths: false,
@@ -55,7 +56,7 @@ not from user text or a category label. `requirements` repeats the boundary chec
 and the tenant's location preflight. Use the live category **name** in the input;
 its current numeric category ID is resolved again inside the fresh send session.
 
-The extra fields exposed by both tenants are:
+The extra fields exposed by these tenants are:
 
 - `report_title`: required, German, at most 100 characters (connector limit).
 - `street`, `postcode`, `place`: optional issue address components, shown verbatim
@@ -66,7 +67,7 @@ There is no verified public lookup/tracking adapter. Duplicate search is explici
 unavailable, and receipts cannot be linked to Zürich's public feed. An official
 form fallback opens a blank form; it does not prefill or transfer the draft.
 
-Winterthur can be opted into a controlled genuine-report validation with
+Winterthur, St. Gallen and Schaffhausen can be opted into controlled genuine-report validation with
 `new AnthrazitClient('winterthur', fetch, { experimentalSubmission: true })`
 **and** `ReportService`'s `submissionEnabled: true`. Show the complete preview,
 all extra fields, photos and `terms_url`. Obtain explicit report approval and
@@ -74,7 +75,7 @@ acceptance of those terms, then pass the exact `accepted_terms_url` to the MCP
 `submit_report` tool (or the fourth `ReportService.submit` argument). Existing
 consumer interfaces that do not collect this consent cannot send these reports.
 Schlieren ignores the experimental opt-in and remains preparation-only until its
-completed final flow is established. Neither tenant is automatically enabled in
+completed final flow is established. None of these tenants is automatically enabled in
 the private Civic application by adding this package.
 
 ## Failure behavior and verification still required
@@ -99,10 +100,47 @@ photo handling, redirects, contract drift, and durable no-replay behavior. These
 tests do not prove municipal acceptance. Before production enablement, use a
 genuine specifically approved report to verify uploads, the completed preview,
 the final response and receipt, then add only observed success/status parsers.
-Civic prepares Winterthur reports behind an off-by-default flag and consumes a
+Civic prepares Winterthur, St. Gallen and Schaffhausen reports behind an off-by-default flag and consumes a
 versioned core dependency. Schlieren remains excluded while anonymous completion
 is unverified; no municipal login integration is planned.
 
 `report_title` is marked `translate: true` in requirements so clients translate
 it with the public description. Contact and issue-address fields must not be
 sent for translation.
+
+## St. Gallen and Schaffhausen variants — 15 October 2026
+
+Anonymous GET requests exposed category, location, upload, details and final-form
+templates in both municipalities. No login form appeared. No location/details
+POST, photo upload or final send was made for these tenants; completed submission
+and municipal acceptance remain unverified. Live adapter GET-only requirements
+passed with eight St. Gallen categories and nine Schaffhausen categories.
+
+| Contract | St. Gallen | Schaffhausen |
+| --- | --- | --- |
+| Tenant `apid` / `usid` / `usmid` | 4507051 / 572 / 4457 | 11652884 / 7226 / 4733 |
+| Location response | `{"inbfs":true}` | numeric `distance`, from 0 to the configured limit 6580 |
+| `checkoutofrange` | empty | empty |
+| Additional location fields | `devicecoords[lat]`, `devicecoords[long]` | same |
+| Contact fields | email only; no `telefon` control | same |
+| Final `proceed` value | `true` | `true` |
+| Terms page `apid` | 15080152 | 4385201 |
+
+Both share Winterthur’s multipart image endpoint (`img`, one file per interaction,
+15 MB) and required title, description, optional issue-address fields and optional
+notification checkbox. Authoritative BFS validation remains mandatory before the
+provider check. Location-response types and final hidden values fail closed on
+contract changes. Device-coordinate fields stay empty for a manually selected
+issue point; an issue position does not establish the resident’s current location.
+
+`Requirements.contact_fields` lists supported optional `name`/`phone` fields.
+An empty list means email only; omission preserves existing adapters’ behavior.
+St. Gallen and Schaffhausen reject nonempty unsupported contacts rather than
+silently dropping them. Consumer interfaces must hide unsupported fields and
+show only data included in the frozen preview. All tenants still default to
+preparation only, without verified public tracking.
+
+Sources: [St. Gallen official wizard](https://m.stadt.sg.ch/index.php?apid=4507051&do=add),
+[St. Gallen terms](https://m.stadt.sg.ch/index.php?apid=15080152),
+[Schaffhausen official wizard](https://m.stadt-schaffhausen.ch/index.php?apid=11652884&do=add),
+[Schaffhausen terms](https://m.stadt-schaffhausen.ch/index.php?apid=4385201).

@@ -24,6 +24,11 @@ export const anthrazitTenants = Object.freeze({
     clat: '47.4970314',
     clong: '8.722418',
     terms: '1873279288',
+    locationCheck: 'message',
+    deviceCoordinates: false,
+    contactText: true,
+    proceed: '',
+    experimentalSubmission: true,
   }),
   schlieren: Object.freeze({
     bfsId: 247,
@@ -36,6 +41,45 @@ export const anthrazitTenants = Object.freeze({
     clat: '47.3961007',
     clong: '8.4469846',
     terms: undefined,
+    locationCheck: 'message',
+    deviceCoordinates: false,
+    contactText: true,
+    proceed: '',
+    experimentalSubmission: false,
+  }),
+  stgallen: Object.freeze({
+    bfsId: 3203,
+    municipality: 'St. Gallen',
+    origin: 'https://m.stadt.sg.ch',
+    apid: '4507051',
+    usid: '572',
+    usmid: '4457',
+    radius: '15000',
+    clat: '47.4210028000',
+    clong: '9.3693852000',
+    terms: '15080152',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: false,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
+  schaffhausen: Object.freeze({
+    bfsId: 2939,
+    municipality: 'Schaffhausen',
+    origin: 'https://m.stadt-schaffhausen.ch',
+    apid: '11652884',
+    usid: '7226',
+    usmid: '4733',
+    radius: '6580',
+    clat: '47.72596173638814',
+    clong: '8.625061084655727',
+    terms: '4385201',
+    locationCheck: 'distance',
+    deviceCoordinates: true,
+    contactText: false,
+    proceed: 'true',
+    experimentalSubmission: true,
   }),
 });
 type Tenant = (typeof anthrazitTenants)[keyof typeof anthrazitTenants];
@@ -107,7 +151,7 @@ class Session {
         headers: {
           Accept: 'text/html,application/json',
           ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
-          'User-Agent': 'swiss-civic-reports/0.4.0-rc.1',
+          'User-Agent': 'swiss-civic-reports/0.4.0-rc.2',
           ...(this.cookies.size
             ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
             : {}),
@@ -263,7 +307,9 @@ export class AnthrazitClient implements ReportingAdapter {
     this.reportFormUrl = endpoint(tenant).href;
     this.termsUrl = tenant.terms ? `${tenant.origin}/index.php?apid=${tenant.terms}` : undefined;
     this.submissionMode =
-      name === 'winterthur' && options.experimentalSubmission === true ? 'direct' : 'official_form';
+      tenant.experimentalSubmission && options.experimentalSubmission === true
+        ? 'direct'
+        : 'official_form';
     this.places = options.places ?? new SwissPlaces(request);
     this.guidance = {
       municipality: this.municipality,
@@ -320,20 +366,34 @@ export class AnthrazitClient implements ReportingAdapter {
       clong: this.tenant.clong,
       lat: String(point.latitude),
       long: String(point.longitude),
-      checkoutofrange: '1',
+      checkoutofrange: this.tenant.locationCheck === 'message' ? '1' : '',
       usmid: this.tenant.usmid,
       usid: this.tenant.usid,
       addcloser: 'true',
     }).toString();
     const result = JSON.parse((await session.read(url, {}, false)).body);
-    if (!result || result.msg !== '' || Object.keys(result).some((k) => k !== 'msg'))
-      throw new Error('Municipal location check did not confirm this point.');
+    const mode = this.tenant.locationCheck;
+    const confirmed =
+      result &&
+      typeof result === 'object' &&
+      !Array.isArray(result) &&
+      Object.keys(result).length === 1 &&
+      (mode === 'message'
+        ? result.msg === ''
+        : mode === 'bfs'
+          ? result.inbfs === true
+          : typeof result.distance === 'number' &&
+            Number.isFinite(result.distance) &&
+            result.distance >= 0 &&
+            result.distance <= Number(this.tenant.radius));
+    if (!confirmed) throw new Error('Municipal location check did not confirm this point.');
     return Object.fromEntries(
       cats.map((c) => [
         c.service_name,
         {
           photo_required: false,
           phone_required: false,
+          contact_fields: this.tenant.contactText ? ['name', 'phone'] : [],
           max_photos: 1,
           bodies: [this.municipality],
           extra_fields: [
@@ -397,6 +457,8 @@ export class AnthrazitClient implements ReportingAdapter {
     )
       throw new Error('Preview destination or terms do not match.');
     const { input, photos } = preview;
+    if (!this.tenant.contactText && (input.name?.trim() || input.phone?.trim()))
+      throw new Error('This municipality accepts email contact only.');
     if (photos.length > 1 || !input.extra_fields.report_title || !input.email)
       throw new Error('Incomplete Anthrazit preview.');
     const session = new Session(this.tenant, this.request);
@@ -409,6 +471,7 @@ export class AnthrazitClient implements ReportingAdapter {
       'foo',
       'latitude',
       'longitude',
+      ...(this.tenant.deviceCoordinates ? ['devicecoords[lat]', 'devicecoords[long]'] : []),
       'submit',
     ]);
     page = await session.read(location.url, {
@@ -419,6 +482,10 @@ export class AnthrazitClient implements ReportingAdapter {
           foo: '',
           latitude: String(input.latitude),
           longitude: String(input.longitude),
+          // Manual issue coordinates do not establish the device's current position.
+          ...(this.tenant.deviceCoordinates
+            ? { 'devicecoords[lat]': '', 'devicecoords[long]': '' }
+            : {}),
           submit: 'Weiter',
         },
         location.multipart,
@@ -479,7 +546,7 @@ export class AnthrazitClient implements ReportingAdapter {
       'addresse1',
       'plz',
       'ort',
-      'telefon',
+      ...(this.tenant.contactText ? ['telefon'] : []),
       'email',
       'notification',
       'submit',
@@ -491,7 +558,9 @@ export class AnthrazitClient implements ReportingAdapter {
       addresse1: input.extra_fields.street ?? '',
       plz: input.extra_fields.postcode ?? '',
       ort: input.extra_fields.place ?? '',
-      telefon: [input.name, input.phone].filter(Boolean).join('\n'),
+      ...(this.tenant.contactText
+        ? { telefon: [input.name, input.phone].filter(Boolean).join('\n') }
+        : {}),
       email: input.email,
       submit: 'Weiter',
     };
@@ -516,10 +585,21 @@ export class AnthrazitClient implements ReportingAdapter {
     const send = final.controls.some(
       (n) => attr(n, 'type') === 'submit' && attr(n, 'value') === 'Absenden' && !attr(n, 'name'),
     );
-    if (!terms || !send) throw new Error('Municipal send contract changed.');
+    const proceed = final.controls.find((n) => attr(n, 'name') === 'proceed');
+    if (
+      !terms ||
+      !send ||
+      !proceed ||
+      attr(proceed, 'type') !== 'hidden' ||
+      attr(proceed, 'value') !== this.tenant.proceed
+    )
+      throw new Error('Municipal send contract changed.');
     await session.read(
       final.url,
-      { method: 'POST', body: body({ stepback: '', proceed: '' }, final.multipart) },
+      {
+        method: 'POST',
+        body: body({ stepback: '', proceed: this.tenant.proceed }, final.multipart),
+      },
       false,
     );
     // No success response has been observed for a genuine approved report.

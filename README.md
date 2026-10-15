@@ -37,9 +37,9 @@ into another project. Browser interfaces, account services and deployments are
 separate consumers and are not included here.
 
 The installed CLI and Telegram use Zürich. The shared package also exports an
-experimental [Anthrazit adapter](docs/ANTHRAZIT.md) for Winterthur and Schlieren.
+experimental [Anthrazit adapter](docs/ANTHRAZIT.md) for Winterthur, St. Gallen, Schaffhausen and the deferred Schlieren profile.
 Their category/location reads are verified; municipal acceptance is not.
-Schlieren direct sending remains unavailable pending its final-flow investigation. This is an independent,
+Schlieren direct sending remains unavailable; no municipal login is implemented. This is an independent,
 unofficial project. Direct submission is experimental and **off by default**;
 the official municipal form is the fallback. A real Telegram exchange and an
 accepted municipal submission still need verification; passing tests do not

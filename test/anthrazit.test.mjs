@@ -20,15 +20,21 @@ const pageForm = (tenant, step, html) =>
   `<form method="POST" enctype="multipart/form-data" action="/index.php?apid=${tenant.apid}&do=add&step=${step}">${input('stepback')}${html}</form>`;
 const next = input('submit', 'submit', 'Weiter');
 const record = (name = 'winterthur') => ({
-  latitude: 47.4970314,
-  longitude: 8.722418,
+  latitude: Number(anthrazitTenants[name].clat),
+  longitude: Number(anthrazitTenants[name].clong),
   location_label: 'Synthetic issue location',
   location_confirmed: true,
-  category: name === 'winterthur' ? 'Abfall/Sammelstellen' : 'Abfallentsorgung',
+  category:
+    name === 'winterthur'
+      ? 'Abfall/Sammelstellen'
+      : name === 'schlieren'
+        ? 'Abfallentsorgung'
+        : 'Abfall',
   description: 'Synthetic report: a damaged bin.',
   email: 'test@example.org',
-  name: 'Test person',
-  phone: '+41 00 000 00 00',
+  ...(['winterthur', 'schlieren'].includes(name)
+    ? { name: 'Test person', phone: '+41 00 000 00 00' }
+    : {}),
   photo_ids: [],
   extra_fields: {
     report_title: 'Synthetic title',
@@ -42,7 +48,11 @@ function fixture(tenant, step, saved = {}) {
     return pageForm(
       tenant,
       2,
-      input('foo', 'search') + input('latitude') + input('longitude') + next,
+      input('foo', 'search') +
+        input('latitude') +
+        input('longitude') +
+        (tenant.deviceCoordinates ? input('devicecoords[lat]') + input('devicecoords[long]') : '') +
+        next,
     );
   if (step === 3)
     return (
@@ -57,13 +67,13 @@ function fixture(tenant, step, saved = {}) {
     return pageForm(
       tenant,
       4,
-      `${input('objekttitel', 'text')}<textarea name="objekttext"></textarea>${input('addresse1', 'text', 'Unapproved default street')}${input('plz', 'text', '9999')}${input('ort', 'text', 'Default town')}<textarea name="telefon"></textarea>${input('email', 'email')}${input('notification', 'checkbox', '1')}${next}`,
+      `${input('objekttitel', 'text')}<textarea name="objekttext"></textarea>${input('addresse1', 'text', 'Unapproved default street')}${input('plz', 'text', '9999')}${input('ort', 'text', 'Default town')}${tenant.contactText ? '<textarea name="telefon"></textarea>' : ''}${input('email', 'email')}${input('notification', 'checkbox', '1')}${next}`,
     );
   if (step === 5)
     return pageForm(
       tenant,
       5,
-      `<p>${escape(saved.objekttitel ?? '')} ${escape(saved.objekttext ?? '')} Abfall/Sammelstellen</p><a href="/index.php?apid=${tenant.terms}">Terms</a><input type="submit" value="Absenden">${input('proceed')}`,
+      `<p>${escape(saved.objekttitel ?? '')} ${escape(saved.objekttext ?? '')} ${tenant.bfsId === 230 ? 'Abfall/Sammelstellen' : 'Abfall'}</p><a href="/index.php?apid=${tenant.terms}">Terms</a><input type="submit" value="Absenden">${input('proceed', 'hidden', tenant.proceed)}`,
     );
   throw new Error('Unexpected fixture step');
 }
@@ -102,7 +112,14 @@ async function setup(
     const custom = await handle?.(url, init);
     if (custom) return custom;
     if (url.searchParams.get('do') === 'usercontentCheckRadius')
-      return Response.json(locationResult ?? { msg: '' });
+      return Response.json(
+        locationResult ??
+          (name === 'stgallen'
+            ? { inbfs: true }
+            : name === 'schaffhausen'
+              ? { distance: 0 }
+              : { msg: '' }),
+      );
     if (!url.searchParams.has('step') && url.pathname === '/index.php') {
       assert.equal(cookie, undefined, 'each operation starts with an isolated anonymous jar');
       const id = String(++count);
@@ -134,7 +151,7 @@ async function setup(
       });
     }
     if (method === 'POST' && step === 5) {
-      assert.deepEqual(Object.fromEntries(init.body), { stepback: '', proceed: '' });
+      assert.deepEqual(Object.fromEntries(init.body), { stepback: '', proceed: tenant.proceed });
       return new Response(
         '<p>Synthetic response, deliberately not an evidenced success marker.</p>',
       );
@@ -166,12 +183,12 @@ async function setup(
 const send = (f, p, terms = p.terms_url) =>
   f.service.submit(p.preview_id, p.confirmation_token, true, terms);
 
-for (const name of ['winterthur', 'schlieren'])
+for (const name of ['winterthur', 'schlieren', 'stgallen', 'schaffhausen'])
   test(`${name}: live-shaped categories, exact BFS and radius rules; preparation never uploads`, async (t) => {
     const f = await setup(t, { name });
     const p = await f.service.prepare(record(name));
     assert.equal(p.municipality.bfs_id, anthrazitTenants[name].bfsId);
-    assert.equal(p.submission_enabled, name === 'winterthur');
+    assert.equal(p.submission_enabled, name !== 'schlieren');
     assert.equal(p.fallback_prefilled, false);
     assert.equal(p.duplicate_search_available, false);
     assert.equal(p.requirements.max_photos, 1);
@@ -180,11 +197,17 @@ for (const name of ['winterthur', 'schlieren'])
     const stored = await f.store.preview(p.preview_id);
     assert.equal(stored.destination.service_id, `anthrazit-${f.city.bfsId}`);
     const radius = f.calls.find((c) => c.url.pathname === '/appl/api.php').url;
-    assert.equal(radius.searchParams.get('lat'), String(record().latitude));
+    assert.equal(radius.searchParams.get('lat'), String(record(name).latitude));
     assert.equal(radius.searchParams.get('usid'), anthrazitTenants[name].usid);
   });
 test('Winterthur writes are opt-in; Schlieren cannot be enabled while final guest flow is unverified', async (t) => {
-  for (const opts of [{ experimental: false }, { enabled: false }, { name: 'schlieren' }]) {
+  for (const opts of [
+    { experimental: false },
+    { enabled: false },
+    { name: 'schlieren' },
+    { name: 'stgallen', experimental: false },
+    { name: 'schaffhausen', experimental: false },
+  ]) {
     const f = await setup(t, opts);
     const p = await f.service.prepare(record(opts.name));
     await assert.rejects(() => send(f, p), /disabled|unavailable/);
@@ -482,4 +505,109 @@ test('an upload JSON response without the staged image does not authorize sendin
   const p = await f.service.prepare({ ...record(), photo_ids: [photo.metadata.id] });
   assert.equal((await send(f, p)).state, 'unknown');
   assert.equal(f.posts().length, 2);
+});
+
+for (const name of ['stgallen', 'schaffhausen']) {
+  test(`${name}: inspected anonymous fields, upload and final values remain tenant-specific`, async (t) => {
+    const f = await setup(t, { name });
+    const bytes = await sharp({
+      create: { width: 16, height: 16, channels: 3, background: 'blue' },
+    })
+      .jpeg()
+      .toBuffer();
+    const photo = await f.service.inspectPhoto({ base64: bytes.toString('base64') });
+    const p = await f.service.prepare({ ...record(name), photo_ids: [photo.metadata.id] });
+    assert.deepEqual(p.requirements.contact_fields, []);
+    assert.equal(
+      p.terms_url,
+      name === 'stgallen'
+        ? 'https://m.stadt.sg.ch/index.php?apid=15080152'
+        : 'https://m.stadt-schaffhausen.ch/index.php?apid=4385201',
+    );
+    assert.equal((await send(f, p)).state, 'unknown');
+    assert.equal(f.posts().length, 5);
+    const location = Object.fromEntries(
+      f.posts().find((c) => c.url.searchParams.get('step') === '2').init.body,
+    );
+    assert.deepEqual(location, {
+      stepback: '',
+      foo: '',
+      latitude: String(record(name).latitude),
+      longitude: String(record(name).longitude),
+      'devicecoords[lat]': '',
+      'devicecoords[long]': '',
+      submit: 'Weiter',
+    });
+    const details = Object.fromEntries(
+      f.posts().find((c) => c.url.searchParams.get('step') === '4').init.body,
+    );
+    assert.equal(details.telefon, undefined);
+    assert.equal(details.notification, undefined);
+    assert.equal(details.email, 'test@example.org');
+    const final = Object.fromEntries(
+      f.posts().find((c) => c.url.searchParams.get('step') === '5').init.body,
+    );
+    assert.deepEqual(final, { stepback: '', proceed: 'true' });
+    const check = f.calls.find(
+      (c) => c.url.searchParams.get('do') === 'usercontentCheckRadius',
+    ).url;
+    assert.equal(check.searchParams.get('checkoutofrange'), '');
+    assert.equal(check.searchParams.get('radius'), name === 'stgallen' ? '15000' : '6580');
+    assert.equal((await send(f, p)).already_attempted, true);
+    assert.equal(f.posts().length, 5);
+  });
+  test(`${name}: unsupported name/phone are refused rather than silently discarded`, async (t) => {
+    const f = await setup(t, { name });
+    for (const contact of [{ name: 'Test person' }, { phone: '123' }])
+      await assert.rejects(
+        () => f.service.prepare({ ...record(name), ...contact }),
+        /does not accept/,
+      );
+    assert.equal(f.posts().length, 0);
+  });
+  test(`${name}: altered proceed or details controls stop before sending`, async (t) => {
+    for (const mutate of [
+      (step, html) =>
+        step === 5
+          ? html.replace(
+              'name="proceed" type="hidden" value="true"',
+              'name="proceed" type="hidden" value="false"',
+            )
+          : html,
+      (step, html) =>
+        step === 4 ? html.replace('</form>', input('telefon', 'text') + '</form>') : html,
+    ]) {
+      const f = await setup(t, { name, mutate }),
+        p = await f.service.prepare(record(name));
+      assert.equal((await send(f, p)).state, 'unknown');
+      assert.equal(
+        f.posts().some((c) => c.url.searchParams.get('step') === '5'),
+        false,
+      );
+    }
+  });
+}
+test('tenant location checks reject unexpected types, modes and out-of-area responses', async (t) => {
+  const invalid = {
+    stgallen: [{ inbfs: false }, { inbfs: 'true' }, { distance: 0 }, { inbfs: true, msg: '' }, {}],
+    schaffhausen: [
+      { distance: -1 },
+      { distance: 6581 },
+      { distance: '0' },
+      { inbfs: true },
+      { distance: 0, msg: '' },
+      [],
+    ],
+  };
+  for (const [name, responses] of Object.entries(invalid))
+    for (const locationResult of responses) {
+      const f = await setup(t, { name, locationResult });
+      await assert.rejects(() => f.service.prepare(record(name)), /location check/);
+      assert.equal(f.posts().length, 0);
+    }
+  const edge = await setup(t, { name: 'schaffhausen', locationResult: { distance: 6580 } });
+  assert.equal((await edge.service.prepare(record('schaffhausen'))).municipality.bfs_id, 2939);
+  const outside = await setup(t, { name: 'schaffhausen', bfs: 3203 });
+  await assert.rejects(() => outside.service.prepare(record('schaffhausen')), /outside/);
+  assert.equal(outside.calls.length, 0);
 });

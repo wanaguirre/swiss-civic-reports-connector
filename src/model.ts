@@ -100,6 +100,8 @@ export type Receipt = {
 export type Requirements = {
   photo_required: boolean;
   name_required?: boolean;
+  // Omitted preserves existing adapters' name/phone support; [] means email only.
+  contact_fields?: ('name' | 'phone')[];
   max_photos?: number;
   phone_required: boolean;
   bodies: string[];
