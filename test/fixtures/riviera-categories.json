@@ -1,0 +1,691 @@
+{
+  "5892": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 67,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 30,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/GYRbu\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 31,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 021 943 01 28 (service de piquet des eaux des Pléiades)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 32,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 33,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 54,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Blonay - Saint-Légier",
+          "gid_zone_thematique": 113,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5882": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 69,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 13,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 23,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 0800 711 711 (service de piquet du SIGE)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 17,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 22,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 56,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Chardonne",
+          "gid_zone_thematique": 115,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5883": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 65,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 12,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/sjVLE\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 21,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 0800 711 711 (service de piquet du SIGE)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 16,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 20,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 52,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corseaux",
+          "gid_zone_thematique": 111,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5884": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 68,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 14,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/s8GLF\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 34,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 021 943 01 28 (service de piquet des eaux des Pléiades)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 18,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 24,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 55,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Corsier-sur-Vevey",
+          "gid_zone_thematique": 114,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5885": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 70,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 15,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/Dgp5i\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 37,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 021 943 01 28 (service de piquet des eaux des Pléiades)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 19,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 26,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 58,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Jongny",
+          "gid_zone_thematique": 116,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5889": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 71,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 28,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/EnZxw\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 11,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 0800 711 711 (service de piquet du SIGE)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 29,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 5,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": "Seuls les signalements concernant la signalisation (signalisation verticale, feux routiers, marquage effacé, panne d’horodateurs, etc.) seront traités."
+        }
+      },
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 59,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "La Tour-de-Peilz",
+          "gid_zone_thematique": 117,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5886": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 64,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 8,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/0B529\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 7,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 0800 711 711 (service de piquet du SIGE)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 36,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 10,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": "Seuls les signalements concernant la signalisation (signalisation verticale, feux routiers, marquage effacé, panne d’horodateurs, etc.) seront traités."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 51,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Montreux",
+          "gid_zone_thematique": 110,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5412": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 72,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 42,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/useUb\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 43,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 44,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 45,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 60,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Rennaz",
+          "gid_zone_thematique": 118,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5890": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 63,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 1,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/MD5Hc\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 3,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 0800 711 711 (service de piquet du SIGE)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 61,
+          "gid_thematique": 6,
+          "thematique": "Harcèlement de rue",
+          "info": "Le signalement d'un acte de harcèlement de rue se fait par un formulaire spécifique, <a href='harcelement/'>cliquez ici pour y accéder</a>."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 2,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 4,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": "Seuls les signalements concernant la signalisation (signalisation verticale, feux routiers, marquage effacé, panne d’horodateurs, etc.) seront traités."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 50,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Vevey",
+          "gid_zone_thematique": 109,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  },
+  "5891": {
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 66,
+          "gid_thematique": 8,
+          "thematique": "Chenilles processionnaires du pin",
+          "info": "Plus de détails sur les chenilles processionnaires du pin : <a href='https://www.vd.ch/chenilles-processionnaires' target='_blank'>cliquer ici</a>"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 38,
+          "gid_thematique": 2,
+          "thematique": "Eclairage public",
+          "info": "Pour optimiser le traitement, indiquer si possible le numéro du luminaire (affiché sur le luminaire ou visible dans <a href=\"https://map.cartoriviera.ch/s/zADPk\" target=\"_blank\">Cartoriviera</a>)"
+        }
+      },
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 39,
+          "gid_thematique": 3,
+          "thematique": "Fuites canalisation d'eau",
+          "info": "En cas d'urgence, prière de ne pas utiliser ce service et de faire l'annonce par téléphone au 021 943 01 28 (service de piquet des eaux des Pléiades)."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 40,
+          "gid_thematique": 1,
+          "thematique": "Places de jeux / bancs publics",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 41,
+          "gid_thematique": 4,
+          "thematique": "Signalisation routière",
+          "info": null
+        }
+      },
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 53,
+          "gid_thematique": 5,
+          "thematique": "Sécurité sur les chantiers",
+          "info": "Seuls les signalements concernant des risques de sécurité liés aux chantiers seront traités. Il ne sera notamment pas tenu compte des problématiques liées au bruit."
+        }
+      },
+      {
+        "properties": {
+          "zone": "Veytaux",
+          "gid_zone_thematique": 112,
+          "gid_thematique": 18,
+          "thematique": "Vélos-épaves",
+          "info": "Un vélo est considéré comme une épave dès lors que 3 points sont identifiés comme défectueux (sans selle, sans guidon, sans roues, sans pédales, pneus crevés ou forte présence de rouille)"
+        }
+      }
+    ]
+  }
+}
