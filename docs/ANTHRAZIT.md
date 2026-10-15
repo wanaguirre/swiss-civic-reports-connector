@@ -2,7 +2,8 @@
 
 `AnthrazitClient` shares category, location, session, upload and wizard handling
 for Winterthur (BFS 230), St. Gallen (3203), Schaffhausen (2939), Dietikon (243),
-Köniz (355), Frauenfeld (4566), Allschwil (2762), Wil (SG, 3427) and the deferred
+Köniz (355), Frauenfeld (4566), Allschwil (2762), Wil (SG, 3427), Bottmingen (2767),
+Moosseedorf (544) and the deferred
 Schlieren profile (247). Tenant IDs and hosts are pinned
 in code. It implements the same `ReportingAdapter` boundary as Zürich, so a
 consumer can use `ReportService` and `createServer` without copying the workflow.
@@ -182,3 +183,41 @@ Sources: [Dietikon wizard](https://dietikon.citymobile.ch/index.php?apid=6313785
 [Allschwil wizard](https://allschwil.mopage.ch/index.php?apid=1207371969&do=add),
 [Wil municipal entry](https://www.stadtwil.ch/topics/wohnen/stadtmelder),
 [Wil wizard](https://wilsg.citymobile.ch/index.php?apid=1491079142&do=add).
+
+
+## Bottmingen and Moosseedorf — 15 October 2026
+
+Both expose anonymous category, location, upload, details and final templates.
+They reuse the existing device-coordinate controls, private `telefon` contact
+textarea, multipart `img` upload (one file per interaction, 15 MB), optional
+issue address/notifications and `proceed=true`. Device coordinates stay blank
+for a manually chosen issue point. Each has eight live categories.
+
+| Tenant key | BFS | Location response | `apid` / `usid` / `usmid` | Terms `apid` |
+| --- | ---: | --- | --- | --- |
+| `bottmingen` | 2767 | `{"inbfs":true}` | 1023155635 / 7948 / 6763 | 12513750 |
+| `moosseedorf` | 544 | numeric `distance`, limit 4000 | 8554890 / 7320 / 4497 | 10627725 |
+
+Bottmingen uses the existing BFS response variant. Moosseedorf combines the
+existing distance variant with private name/phone support. Both also require
+authoritative Swiss BFS validation, independent of the provider's check.
+Inspection used GET only. No real upload, completed details or final send was
+performed; completed anonymous submission and acceptance remain unverified.
+
+A subsequent full live adapter recheck received HTTP 429 and an IP-rate-limit
+CAPTCHA at both category pages. Live requests stopped without bypassing it.
+Authoritative Swiss BFS lookups had passed, and replaying the previously captured
+category/location GET responses through the adapter passed offline. This does
+not establish current live availability; recheck it before enabling either route.
+The connector stops on HTTP failures without retrying or solving challenges.
+
+Aarberg, Büron, Sutz-Lattrigen and Bözberg presented login forms when inspecting
+step 5 and are excluded from these profiles and the Civic registry. This is an
+observed barrier in the incomplete anonymous flow, not proof of the behavior of
+every completed report. No login integration or bypass is implemented.
+
+Sources: [Bottmingen municipal app guidance](https://www.bottmingen.ch/de/verwaltung/dienstleistungen/225_app-4103bottmingen),
+[Bottmingen wizard](https://bottmingen.citymobile.ch/index.php?apid=1023155635&do=add),
+[Bottmingen terms](https://bottmingen.citymobile.ch/index.php?apid=12513750),
+[Moosseedorf wizard](https://m.moosseedorf.ch/index.php?apid=8554890&do=add),
+[Moosseedorf terms](https://m.moosseedorf.ch/index.php?apid=10627725).

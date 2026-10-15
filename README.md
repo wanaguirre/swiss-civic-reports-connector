@@ -38,7 +38,7 @@ separate consumers and are not included here.
 
 The installed CLI and Telegram use Zürich. The shared package also exports an
 experimental [Anthrazit adapter](docs/ANTHRAZIT.md) for Winterthur, St. Gallen, Schaffhausen, Dietikon, Köniz, Frauenfeld, Allschwil,
-Wil (SG) and the deferred Schlieren profile.
+Wil (SG), Bottmingen, Moosseedorf and the deferred Schlieren profile.
 Their category/location reads are verified; municipal acceptance is not.
 Schlieren direct sending remains unavailable; no municipal login is implemented. This is an independent,
 unofficial project. Direct submission is experimental and **off by default**;

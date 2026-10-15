@@ -587,6 +587,7 @@ for (const name of ['stgallen', 'schaffhausen']) {
 }
 test('tenant location checks reject unexpected types, modes and out-of-area responses', async (t) => {
   const invalid = {
+    moosseedorf: [{ distance: 4001 }, { distance: '0' }, { inbfs: true }],
     stgallen: [{ inbfs: false }, { inbfs: 'true' }, { distance: 0 }, { inbfs: true, msg: '' }, {}],
     schaffhausen: [
       { distance: -1 },
@@ -605,12 +606,20 @@ test('tenant location checks reject unexpected types, modes and out-of-area resp
     }
   const edge = await setup(t, { name: 'schaffhausen', locationResult: { distance: 6580 } });
   assert.equal((await edge.service.prepare(record('schaffhausen'))).municipality.bfs_id, 2939);
+  const moosseedorfEdge = await setup(t, {
+    name: 'moosseedorf',
+    locationResult: { distance: 4000 },
+  });
+  assert.equal(
+    (await moosseedorfEdge.service.prepare(record('moosseedorf'))).municipality.bfs_id,
+    544,
+  );
   const outside = await setup(t, { name: 'schaffhausen', bfs: 3203 });
   await assert.rejects(() => outside.service.prepare(record('schaffhausen')), /outside/);
   assert.equal(outside.calls.length, 0);
 });
 
-// These tenants combine the inspected BFS/device-coordinate flow with a private
+// These tenants combine the inspected device-coordinate flow with a private
 // contact textarea. Every transport and photo below is synthetic.
 for (const [name, terms] of [
   ['dietikon', 'https://dietikon.citymobile.ch/index.php?apid=3397510'],
@@ -618,6 +627,8 @@ for (const [name, terms] of [
   ['frauenfeld', 'https://frauenfeld.citymobile.ch/index.php?apid=3670734'],
   ['allschwil', 'https://allschwil.mopage.ch/index.php?apid=13012430'],
   ['wil', 'https://wilsg.citymobile.ch/index.php?apid=12267455'],
+  ['bottmingen', 'https://bottmingen.citymobile.ch/index.php?apid=12513750'],
+  ['moosseedorf', 'https://m.moosseedorf.ch/index.php?apid=10627725'],
 ]) {
   test(`${name}: approved contacts/photo follow the anonymous wizard exactly once`, async (t) => {
     const f = await setup(t, { name });
@@ -676,3 +687,29 @@ for (const [name, terms] of [
     assert.equal((await send(login, approved)).already_attempted, true);
   });
 }
+
+test('provider rate-limit challenges stop reads and claimed attempts without retries', async (t) => {
+  const challenge = () =>
+    new Response('<form id="ipcaptcha">Too many requests</form>', { status: 429 });
+  const blocked = await setup(t, { name: 'bottmingen', handle: challenge });
+  await assert.rejects(
+    () => blocked.service.prepare(record('bottmingen')),
+    /Municipal request failed/,
+  );
+  assert.equal(blocked.calls.length, 1);
+  assert.equal(blocked.posts().length, 0);
+
+  let limited = false;
+  const f = await setup(t, {
+    name: 'moosseedorf',
+    handle: () => (limited ? challenge() : undefined),
+  });
+  const preview = await f.service.prepare(record('moosseedorf'));
+  const before = f.calls.length;
+  limited = true;
+  assert.equal((await send(f, preview)).state, 'unknown');
+  assert.equal(f.calls.length, before + 1);
+  assert.equal(f.posts().length, 0);
+  assert.equal((await send(f, preview)).already_attempted, true);
+  assert.equal(f.calls.length, before + 1);
+});

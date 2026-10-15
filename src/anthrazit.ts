@@ -166,6 +166,40 @@ export const anthrazitTenants = Object.freeze({
     proceed: 'true',
     experimentalSubmission: true,
   }),
+  bottmingen: Object.freeze({
+    bfsId: 2767,
+    municipality: 'Bottmingen',
+    origin: 'https://bottmingen.citymobile.ch',
+    apid: '1023155635',
+    usid: '7948',
+    usmid: '6763',
+    radius: '5000',
+    clat: '47.52245970000001',
+    clong: '7.571595800000068',
+    terms: '12513750',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
+  moosseedorf: Object.freeze({
+    bfsId: 544,
+    municipality: 'Moosseedorf',
+    origin: 'https://m.moosseedorf.ch',
+    apid: '8554890',
+    usid: '7320',
+    usmid: '4497',
+    radius: '4000',
+    clat: '47.0137797',
+    clong: '7.482451999999967',
+    terms: '10627725',
+    locationCheck: 'distance',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    experimentalSubmission: true,
+  }),
 });
 type Tenant = (typeof anthrazitTenants)[keyof typeof anthrazitTenants];
 type Node = DefaultTreeAdapterMap['node'];
@@ -236,7 +270,7 @@ class Session {
         headers: {
           Accept: 'text/html,application/json',
           ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
-          'User-Agent': 'swiss-civic-reports/0.4.0-rc.3',
+          'User-Agent': 'swiss-civic-reports/0.4.0-rc.4',
           ...(this.cookies.size
             ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
             : {}),

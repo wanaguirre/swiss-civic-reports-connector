@@ -62,11 +62,13 @@ export const officialReportingPages: Readonly<Record<number, string>> = {
   247: 'https://m.schlieren.ch/index.php?apid=1837234',
   351: 'https://www.bern.ch/helfen/block_view',
   355: 'https://koeniz.citymobile.ch/index.php?apid=1322436301',
+  544: 'https://m.moosseedorf.ch/index.php?apid=8554890',
   768: 'https://www.spiez.ch/de/verwaltung/dienstleistungen/455_gemeinde-app-mylocalservices',
   1061: 'https://dialogluzern.ch/assemblies/schadenmelden/f/498/proposals',
   2196: 'https://www.ville-fribourg.ch/on-repare',
   2701: 'https://www.bs.ch/bvd/tiefbauamt/strassenunterhalt',
   2762: 'https://allschwil.mopage.ch/index.php?apid=1207371969',
+  2767: 'https://bottmingen.citymobile.ch/index.php?apid=1023155635',
   2939: 'https://m.stadt-schaffhausen.ch/index.php?apid=11652884',
   3203: 'https://m.stadt.sg.ch/index.php?apid=4507051',
   3340: 'https://www.rapperswil-jona.ch/stadtmelder',
@@ -94,7 +96,7 @@ export class SwissPlaces {
     const response = await this.request(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.3 (independent civic reporting client)',
+        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.4 (independent civic reporting client)',
       },
       signal: AbortSignal.timeout(20_000),
       redirect: 'error',
