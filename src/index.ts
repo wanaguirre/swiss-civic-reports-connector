@@ -11,3 +11,6 @@ export type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 
 export { RivieraClient, rivieraMunicipalities } from './riviera.js';
 export type { RivieraMunicipality } from './riviera.js';
+
+export { ZuchwilClient } from './zuchwil.js';
+export type { ZuchwilSubmissionPlan } from './zuchwil.js';

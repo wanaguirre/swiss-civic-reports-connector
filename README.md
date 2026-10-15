@@ -75,3 +75,11 @@ municipalities and can build the observed multipart request locally. It preserve
 location-specific categories, scope warnings, optional email, a one-photo limit
 and the 1,000-character description limit. Live sending and receipts remain
 unverified and cannot be enabled. All municipal writes in tests are mocked.
+
+## Zuchwil
+
+The [Zuchwil adapter](docs/ZUCHWIL.md) prepares German reports with required title,
+issue address and email, optional name/phone and one photo, and frozen privacy
+terms. It validates the anonymous Weblication form and constructs session-bound
+upload/form plans locally. Sending and receipt handling remain unverified and
+cannot be enabled. No municipal login or external-form completion is offered.
