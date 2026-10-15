@@ -270,7 +270,7 @@ class Session {
         headers: {
           Accept: 'text/html,application/json',
           ...(init.method === 'POST' ? { Origin: this.tenant.origin } : {}),
-          'User-Agent': 'swiss-civic-reports/0.4.0-rc.4',
+          'User-Agent': 'swiss-civic-reports/0.4.0-rc.5',
           ...(this.cookies.size
             ? { Cookie: [...this.cookies].map(([k, v]) => `${k}=${v}`).join('; ') }
             : {}),

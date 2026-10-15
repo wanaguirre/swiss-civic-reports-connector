@@ -699,17 +699,21 @@ test('provider rate-limit challenges stop reads and claimed attempts without ret
   assert.equal(blocked.calls.length, 1);
   assert.equal(blocked.posts().length, 0);
 
-  let limited = false;
   const f = await setup(t, {
     name: 'moosseedorf',
-    handle: () => (limited ? challenge() : undefined),
+    handle: async () =>
+      (await f.store.receipts()).some((r) => r.state === 'sending') ? challenge() : undefined,
   });
   const preview = await f.service.prepare(record('moosseedorf'));
   const before = f.calls.length;
-  limited = true;
   assert.equal((await send(f, preview)).state, 'unknown');
-  assert.equal(f.calls.length, before + 1);
+  assert.equal(
+    f.calls.length,
+    before + 3,
+    'two preflight GETs, then one blocked GET after the claim',
+  );
   assert.equal(f.posts().length, 0);
   assert.equal((await send(f, preview)).already_attempted, true);
-  assert.equal(f.calls.length, before + 1);
+  assert.equal(f.calls.length, before + 5, 'an explicit second call only rechecks requirements');
+  assert.equal(f.posts().length, 0);
 });
