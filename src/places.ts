@@ -52,7 +52,7 @@ export type Place = Point & {
 };
 
 // Citizen reporting pages on official municipal domains, from the dated research
-// review completed on 5 October 2026.
+// review completed on 5 October 2026; new Anthrazit links refreshed on 15 October.
 // Shown only as a pointer for places without an adapter; never used to send.
 export const OFFICIAL_PAGES_CHECKED_ON = '2026-10-05';
 export const officialReportingPages: Readonly<Record<number, string>> = {
@@ -61,15 +61,19 @@ export const officialReportingPages: Readonly<Record<number, string>> = {
   243: 'https://dietikon.citymobile.ch/index.php?apid=631378530',
   247: 'https://m.schlieren.ch/index.php?apid=1837234',
   351: 'https://www.bern.ch/helfen/block_view',
-  355: 'https://www.koeniz.ch/wohnen/stadtmelder.page/1245',
+  355: 'https://koeniz.citymobile.ch/index.php?apid=1322436301',
+  544: 'https://m.moosseedorf.ch/index.php?apid=8554890',
   768: 'https://www.spiez.ch/de/verwaltung/dienstleistungen/455_gemeinde-app-mylocalservices',
   1061: 'https://dialogluzern.ch/assemblies/schadenmelden/f/498/proposals',
   2196: 'https://www.ville-fribourg.ch/on-repare',
   2701: 'https://www.bs.ch/bvd/tiefbauamt/strassenunterhalt',
+  2762: 'https://allschwil.mopage.ch/index.php?apid=1207371969',
+  2767: 'https://bottmingen.citymobile.ch/index.php?apid=1023155635',
   2939: 'https://m.stadt-schaffhausen.ch/index.php?apid=11652884',
   3203: 'https://m.stadt.sg.ch/index.php?apid=4507051',
   3340: 'https://www.rapperswil-jona.ch/stadtmelder',
-  4566: 'https://www.frauenfeld.ch/service/index.html/771',
+  3427: 'https://wilsg.citymobile.ch/index.php?apid=1491079142',
+  4566: 'https://frauenfeld.citymobile.ch/index.php?apid=907518245',
   5002: 'https://www.bellinzona.ch/App-della-Citta',
   5113: 'https://www.locarno.ch/it/sezione-genio-civile',
   5192: 'https://egov.lugano.ch/it/services/75/segnalazioni-ufficio-quartieri',
@@ -92,7 +96,7 @@ export class SwissPlaces {
     const response = await this.request(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'zueri-wie-neu-mcp/0.3.1 (independent civic reporting client)',
+        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.7 (independent civic reporting client)',
       },
       signal: AbortSignal.timeout(20_000),
       redirect: 'error',

@@ -66,3 +66,16 @@ GitHub source, package release, client registration and application deployment
 are separate operations. No npm registry publication is configured.
 `private: true` in `package.json` prevents accidental npm publication; it does
 not make the GitHub source or release downloads private.
+
+## Municipality adapters
+
+The package exports `ReportingAdapter`, `AnthrazitClient` and the `anthrazit` /
+`municipalities` subpaths. See [Anthrazit](ANTHRAZIT.md) for tenant capabilities,
+extra fields, terms acceptance and verification limits. `ReportService.submit`
+accepts an optional fourth `acceptedTermsUrl` argument; it is required when the
+frozen preview contains municipal terms. Existing Zürich calls stay unchanged.
+
+Bern and Fribourg use `MunicipalFormClient` from `/municipal-forms`. See
+[municipal forms](MUNICIPAL-FORMS.md). The new `unverified` submission mode means
+no send button or external-form completion; do not treat all non-direct adapters
+as an `official_form` fallback.

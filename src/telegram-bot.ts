@@ -234,7 +234,7 @@ export class TelegramBot {
           .join('\n')}`
       : '\nNo duplicate matches returned. This does not establish that none exist.';
     const nonce = randomUUID();
-    const content = `REPORT PREVIEW\n${s.category}\n\n${s.description}\n\nLocation: ${s.label}\n${data.map_url}\nEmail: ${s.email}${s.name ? `\nName: ${s.name}` : ''}${s.phone ? `\nPhone: ${s.phone}` : ''}\nPhotos: ${images.length}${duplicates}\n${nearby.coverage ?? ''}\n\nThe city may publish the description and photos. The displayed contact details go to the city. Verify everything above.\n\n${data.submission_enabled ? 'Press Send only to approve this exact report.' : 'Continue in the official form and attach photos/contact details there:'}`;
+    const content = `REPORT PREVIEW\n${s.category}\n\n${s.description}\n\nLocation: ${s.label}\n${data.map_url}\nEmail: ${s.email}${s.name ? `\nName: ${s.name}` : ''}${s.phone ? `\nPhone: ${s.phone}` : ''}\nPhotos: ${images.length}${duplicates}\n${nearby.coverage ?? ''}\n\nThe city may publish the description and photos. The displayed contact details go to the city. Verify everything above.\n\n${data.submission_enabled ? 'Press Send only to approve this exact report.' : data.submission_mode === 'unverified' ? 'Sending is unavailable while municipal upload and receipt verification is pending. Nothing has been sent.' : 'Continue in the official form and attach photos/contact details there:'}`;
     const sent = await this.text(
       content,
       data.submission_enabled
@@ -248,7 +248,7 @@ export class TelegramBot {
         nonce,
         messageId: sent.message_id,
       };
-    else await this.text(data.official_form_url);
+    else if (data.submission_mode !== 'unverified') await this.text(data.official_form_url);
   }
   async handle(update: any) {
     const callback = update.callback_query,

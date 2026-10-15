@@ -18,6 +18,7 @@ function fixture({
   phoneRequired = false,
   defaults = {},
   submissionState = 'accepted',
+  submissionMode = 'direct',
 } = {}) {
   const output = [],
     tools = [];
@@ -63,6 +64,7 @@ function fixture({
         preview_id: 'preview-1',
         confirmation_token: 'secret-preview-token',
         submission_enabled: enabled,
+        submission_mode: submissionMode,
         map_url: 'https://www.zueriwieneu.ch/around',
         official_form_url: 'https://www.zueriwieneu.ch/report/new',
       },
@@ -410,4 +412,25 @@ test('Codex photo drafting uses constrained execution and no shell interpolation
   assert.ok(args.includes('mcp_servers={}'));
   assert.ok(args.includes('/tmp/image;literal.jpg'));
   assert.ok(!args.includes('--dangerously-bypass-approvals-and-sandbox'));
+});
+
+test('unverified municipal preview offers neither send nor external completion', async () => {
+  const f = fixture({ enabled: false, submissionMode: 'unverified' });
+  await f.ready();
+  const start = f.output.length;
+  await f.send('/preview');
+  const messages = f.output.slice(start);
+  assert.equal(
+    messages.some((o) => o.buttons),
+    false,
+  );
+  assert.match(messages.at(-1).text, /verification is pending/);
+  assert.equal(
+    messages.some((o) => o.text === 'https://www.zueriwieneu.ch/report/new'),
+    false,
+  );
+  assert.equal(
+    f.tools.some((t) => t.name === 'submit_report'),
+    false,
+  );
 });

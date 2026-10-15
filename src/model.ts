@@ -34,7 +34,14 @@ export type Photo = {
   gps?: Point;
   capture_location?: Point;
 };
+export const destination = z
+  .object({ bfs_id: z.number().int().positive(), service_id: z.string().min(1).max(100) })
+  .strict();
+export type Destination = z.infer<typeof destination>;
 export type Prepared = {
+  approval_fingerprint?: string;
+  destination?: Destination;
+  terms_url?: string;
   id: string;
   created_at: string;
   expires_at: string;
@@ -72,6 +79,9 @@ export type Tracking = {
 // translated again rather than shown stale.
 export type Translation = { source_sha256: string; text: string };
 export type Receipt = {
+  destination?: Destination;
+  terms_url?: string;
+  tracking_available?: boolean;
   fingerprint: string;
   preview_id: string;
   created_at: string;
@@ -89,6 +99,10 @@ export type Receipt = {
 };
 export type Requirements = {
   photo_required: boolean;
+  name_required?: boolean;
+  // Omitted preserves existing adapters' name/phone support; [] means email only.
+  contact_fields?: ('name' | 'phone')[];
+  max_photos?: number;
   phone_required: boolean;
   bodies: string[];
   extra_fields: {
@@ -96,6 +110,9 @@ export type Requirements = {
     description: string;
     required: boolean;
     datatype?: string;
+    max_length?: number;
+    // Public report text that clients translate alongside the description.
+    translate?: boolean;
     values?: unknown;
   }[];
 };

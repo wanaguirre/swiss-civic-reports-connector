@@ -1,5 +1,11 @@
-import { distance, SUBMISSION_INTERFACE, type CityClient } from './city.js';
-import { CITY, type Receipt, type ReceiptSummary, type Tracking } from './model.js';
+import { distance, SUBMISSION_INTERFACE } from './city.js';
+import {
+  type ReportingAdapter,
+  destinationFor,
+  receiptDestination,
+  sameDestination,
+} from './municipalities.js';
+import { type Receipt, type ReceiptSummary, type Tracking } from './model.js';
 import { hash } from './photos.js';
 import type { Store } from './store.js';
 
@@ -15,7 +21,7 @@ const MAX_LOOKUPS = 10;
 const MAX_REPLY = 2000;
 
 export const textHash = (text: string) => hash(text.replace(/\s+/g, ' ').trim());
-type Published = Awaited<ReturnType<CityClient['reports']>>[number];
+type Published = Awaited<ReturnType<ReportingAdapter['reports']>>[number];
 
 function published(report: Published, at: string, matched_by: Tracking['matched_by']): Tracking {
   const reply = report.service_notice?.trim();
@@ -32,7 +38,7 @@ function published(report: Published, at: string, matched_by: Tracking['matched_
 
 // An older receipt kept no details. Once its number is linked, the city's public
 // record supplies the category, position and published text; it has no street label.
-function publicSummary(city: CityClient, report: Published): ReceiptSummary | undefined {
+function publicSummary(city: ReportingAdapter, report: Published): ReceiptSummary | undefined {
   if (report.lat === undefined || report.long === undefined || !report.service_code)
     return undefined;
   const detail = report.detail?.trim() ?? '';
@@ -79,7 +85,7 @@ function find(receipt: Receipt, reports: Published[], taken: Set<string>) {
 }
 
 export async function track(
-  city: CityClient,
+  city: ReportingAdapter,
   store: Store,
   receipts: Receipt[],
 ): Promise<{ receipts: Receipt[]; complete: boolean }> {
@@ -90,7 +96,8 @@ export async function track(
   // A linked number lets an older receipt without a summary be followed; such
   // receipts could only have gone to the first connected municipality.
   const due = (r: Receipt) =>
-    (r.summary ? r.summary.municipality.bfs_id === city.bfsId : !!r.report_id) &&
+    sameDestination(receiptDestination(r), destinationFor(city)) &&
+    (r.summary ? true : !!r.report_id) &&
     r.state !== 'rejected' &&
     // A recent claim still belongs to its submission, which writes the result.
     (r.state !== 'sending' || age(r) > 3600_000) &&
@@ -125,7 +132,11 @@ export async function track(
         Math.min(...unnumbered.map((r) => Date.parse(r.created_at))) - CLOCK_SKEW_MS,
       ).toISOString();
       const reports = await city.reports({ since, limit: 1000 });
-      const taken = new Set(receipts.flatMap((r) => (r.report_id ? [r.report_id] : [])));
+      const taken = new Set(
+        receipts
+          .filter((r) => sameDestination(receiptDestination(r), destinationFor(city)))
+          .flatMap((r) => (r.report_id ? [r.report_id] : [])),
+      );
       for (const receipt of unnumbered) {
         const match = find(receipt, reports, taken);
         if (!match) {
@@ -137,7 +148,7 @@ export async function track(
         updated.set(receipt.fingerprint, {
           ...receipt,
           report_id: id,
-          url: `${CITY}/report/${id}`,
+          url: city.reportUrl(id),
           tracking: published(match.report, at, match.by),
         });
       }

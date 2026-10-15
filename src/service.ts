@@ -1,11 +1,15 @@
-import { CityClient, SUBMISSION_INTERFACE } from './city.js';
+import { SUBMISSION_INTERFACE } from './city.js';
+import {
+  type ReportingAdapter,
+  destinationFor,
+  sameDestination,
+  receiptDestination,
+  ZURICH_DESTINATION,
+} from './municipalities.js';
 import { Store } from './store.js';
 import {
   coordinates,
   reportInput,
-  fallbackUrl,
-  mapUrl,
-  CITY,
   type Point,
   type ReportInput,
   type Prepared,
@@ -41,7 +45,7 @@ const RESERVED_FIELDS = new Set([
 /** Shared workflow boundary: validate live rules, freeze previews, and claim each submission before dispatch. */
 export class ReportService {
   constructor(
-    readonly city: CityClient,
+    readonly city: ReportingAdapter,
     readonly store: Store,
     readonly options: { submissionEnabled: boolean; allowPaths: boolean },
   ) {}
@@ -65,11 +69,20 @@ export class ReportService {
     requirements: Record<string, Requirements>,
     photoCount: number,
   ) {
+    if (this.city.submissionMode === 'direct' && !input.email)
+      throw new Error('This reporting service requires an email address.');
     const rule = requirements[input.category];
     if (!rule)
       throw new Error(
         'Category is not available at this location. Use list_categories and resolve_location.',
       );
+    for (const field of ['name', 'phone'] as const)
+      if (rule.contact_fields && !rule.contact_fields.includes(field) && input[field]?.trim())
+        throw new Error(`This municipality does not accept a reporter ${field}.`);
+    if (rule.name_required && !input.name?.trim())
+      throw new Error('This service requires the reporter’s full name.');
+    if (rule.max_photos !== undefined && photoCount > rule.max_photos)
+      throw new Error(`This service accepts at most ${rule.max_photos} photo(s).`);
     if (rule.photo_required && !photoCount) throw new Error('This category requires a photo.');
     if (rule.phone_required && !input.phone)
       throw new Error('This category requires a contact phone number.');
@@ -78,10 +91,19 @@ export class ReportService {
       if (RESERVED_FIELDS.has(key) || /^photo|^password|^submit_/i.test(key) || !fields.has(key))
         throw new Error(`Unsupported extra field: ${key}`);
       const field = fields.get(key)!;
+      if (field.max_length !== undefined && value.length > field.max_length)
+        throw new Error(`${field.description} must not exceed ${field.max_length} characters.`);
       if (field.datatype && !['string', 'text'].includes(field.datatype))
         throw new Error(`Use the official form for this category's typed field: ${key}`);
-      if (value.trim() && field.values)
-        throw new Error(`Use the official form for the category's choice field: ${key}`);
+      if (value.trim() && field.values) {
+        if (
+          !Array.isArray(field.values) ||
+          !field.values.every((v: unknown) => typeof v === 'string')
+        )
+          throw new Error(`Use the official form for the category's choice field: ${key}`);
+        if (!field.values.includes(value))
+          throw new Error(`Invalid choice for extra field: ${key}`);
+      }
     }
     for (const field of rule.extra_fields) {
       if (field.required && !input.extra_fields[field.code]?.trim())
@@ -90,6 +112,8 @@ export class ReportService {
     return rule;
   }
   present(preview: Prepared) {
+    if (!sameDestination(preview.destination ?? ZURICH_DESTINATION, destinationFor(this.city)))
+      throw new Error('This preview belongs to a different municipality or service.');
     const { photo_ids: _, location_confirmed: __, ...input } = preview.input;
     return {
       preview_id: preview.id,
@@ -102,15 +126,23 @@ export class ReportService {
         width: p.width,
         height: p.height,
       })),
-      map_url: mapUrl(preview.input),
-      official_form_url: fallbackUrl(preview.input),
-      submission_enabled: this.options.submissionEnabled,
+      ...(preview.terms_url ? { terms_url: preview.terms_url } : {}),
+      municipality: { bfs_id: this.city.bfsId, name: this.city.municipality },
+      submission_mode: this.city.submissionMode,
+      fallback_prefilled: this.city.fallbackPrefilled,
+      duplicate_search_available: this.city.trackingSupported,
+      map_url: this.city.mapUrl(preview.input),
+      official_form_url: this.city.fallbackUrl(preview.input),
+      submission_enabled: this.options.submissionEnabled && this.city.submissionMode === 'direct',
       confirmation_required:
-        'Show the description, category, exact map location, contact details and ALL photos. Ask the user to approve this particular report before calling submit_report.',
-      privacy:
-        'Description and photos may be published by the city. Email, optional name and phone are sent to the city as contact details; this client requests that your name not be shown. Drafts contain these details locally.',
+        'Show the description, category, exact map location, contact details, ALL extra fields and photos, and any terms URL. Obtain explicit acceptance of those terms with approval. Ask the user to approve this particular report before calling submit_report.',
+      privacy: this.city.privacy,
       fallback_note:
-        'The official-form link contains the report text and location. Photos and contact details are not included and must be attached there. Opening the link does not submit a report.',
+        this.city.submissionMode === 'unverified'
+          ? 'Sending is unavailable until municipal upload and receipt verification is complete. This preview has not been sent.'
+          : this.city.fallbackPrefilled
+            ? 'The official-form link contains the report text and location. Photos and contact details are not included and must be attached there. Opening the link does not submit a report.'
+            : 'Copy the prepared text and select the category and location in the official form. Add photos and any required contact details there. Nothing is sent or prefilled by opening the link.',
     };
   }
   async prepare(raw: unknown) {
@@ -129,20 +161,39 @@ export class ReportService {
         matches: [],
       };
     }
-    const prepared = await this.store.prepare(input, photos);
+    const prepared = await this.store.prepare(
+      input,
+      photos,
+      destinationFor(this.city),
+      this.city.termsUrl,
+    );
     return { ...this.present(prepared), requirements: rule, nearby_reports: duplicates };
   }
-  async submit(id: string, token: string, confirmed: boolean) {
+  async submit(id: string, token: string, confirmed: boolean, acceptedTermsUrl?: string) {
     if (confirmed !== true) throw new Error('Explicit approval of this preview is required.');
+    if (this.city.submissionMode !== 'direct')
+      throw new Error(
+        this.city.submissionMode === 'unverified'
+          ? 'Sending is unavailable until municipal upload and receipt verification is complete.'
+          : 'Complete and send this report in the municipality’s official form. Direct submission is unavailable.',
+      );
     if (!this.options.submissionEnabled)
       throw new Error(
         'Experimental submission is disabled. Set ZURI_ENABLE_SUBMISSION=true to opt in, or use the prepared official-form link.',
       );
     const preview = await this.store.confirmed(id, token);
+    if (!sameDestination(preview.destination ?? ZURICH_DESTINATION, destinationFor(this.city)))
+      throw new Error(
+        'This preview belongs to a different municipality or service. Prepare a new preview.',
+      );
+    if (preview.terms_url !== this.city.termsUrl)
+      throw new Error('Municipal terms changed. Prepare and approve a new preview.');
+    if (preview.terms_url && acceptedTermsUrl !== preview.terms_url)
+      throw new Error('Explicit acceptance of the terms shown in this preview is required.');
     // Revalidate changing city rules before claiming or sending a report.
     this.validate(
       preview.input,
-      await this.city.requirements(preview.input),
+      await this.city.requirements(preview.input, { fresh: true }),
       preview.photos.length,
     );
     const { input } = preview;
@@ -159,12 +210,14 @@ export class ReportService {
       text_sha256: textHash(input.description),
       description: input.description,
     };
-    const claim = await this.store.claim(preview, summary);
+    const claim = await this.store.claim(preview, summary, this.city.trackingSupported);
     if (!claim.owned) return { ...claim.receipt, already_attempted: true };
-    let receipt = claim.receipt;
+    let receipt = { ...claim.receipt, tracking_available: this.city.trackingSupported };
     try {
       const result = await this.city.submit(preview);
       const messages = {
+        unknown:
+          'The send request was attempted, but municipal acceptance is unverified. Check the official service. Do not resubmit or create a replacement automatically.',
         accepted:
           'City endpoint accepted the report. Publication or moderation may still be pending.',
         confirmation_pending:
@@ -175,7 +228,7 @@ export class ReportService {
       receipt = {
         ...receipt,
         ...result,
-        ...(result.report_id ? { url: `${CITY}/report/${result.report_id}` } : {}),
+        ...(result.report_id ? { url: this.city.reportUrl(result.report_id) } : {}),
         message: messages[result.state],
       };
     } catch {
@@ -195,7 +248,10 @@ export class ReportService {
   // review is accepted and checked once the city publishes it.
   async linkReport(fingerprint: string, id: string) {
     const receipt = (await this.store.receipts()).find((r) => r.fingerprint === fingerprint);
-    if (!receipt) throw Object.assign(new Error('Report not found.'), { status: 404 });
+    if (!receipt || !sameDestination(receiptDestination(receipt), destinationFor(this.city)))
+      throw Object.assign(new Error('Report not found for this municipality.'), { status: 404 });
+    if (!this.city.trackingSupported)
+      throw new Error('Public tracking is unavailable for this municipality.');
     const published = await this.city.report(id);
     if (
       published &&
@@ -207,7 +263,7 @@ export class ReportService {
     ) {
       throw Object.assign(new Error('That number belongs to a different report.'), { status: 409 });
     }
-    return this.store.linkReport(fingerprint, id, `${CITY}/report/${id}`);
+    return this.store.linkReport(fingerprint, id, this.city.reportUrl(id));
   }
   // The sent text and the city's reply in the resident's language. Each text is
   // translated at most once per language, only when first read in it, and kept
@@ -218,7 +274,8 @@ export class ReportService {
     translate?: (text: string, from: Language, to: Language) => Promise<string>,
   ) {
     const receipt = (await this.store.receipts()).find((r) => r.fingerprint === fingerprint);
-    if (!receipt) throw Object.assign(new Error('Report not found.'), { status: 404 });
+    if (!receipt || !sameDestination(receiptDestination(receipt), destinationFor(this.city)))
+      throw Object.assign(new Error('Report not found for this municipality.'), { status: 404 });
     const from = this.city.deliveryLanguage,
       result: { reply?: string; description?: string } = {};
     const sources = {
@@ -250,6 +307,8 @@ export class ReportService {
   // Receipts, newest first; with refresh, their public status is updated first.
   async receipts(refresh = false) {
     const receipts = await this.store.receipts();
-    return refresh ? track(this.city, this.store, receipts) : { receipts, complete: true };
+    return refresh && this.city.trackingSupported
+      ? track(this.city, this.store, receipts)
+      : { receipts, complete: true };
   }
 }

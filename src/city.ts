@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { CITY, coordinates, type Point, type Prepared, type Requirements } from './model.js';
 import type { Language } from './language.js';
+import { mapUrl, fallbackUrl } from './model.js';
+import { zurichReportingGuidance } from './reporting-guidance.js';
 
 const text = z.string();
 const categorySchema = z.object({
@@ -45,6 +47,19 @@ export const SUBMISSION_INTERFACE = 'MCP';
 /** Zürich municipal adapter. Read failures can be retried by callers; submission outcomes must never be replayed automatically. */
 export class CityClient {
   readonly bfsId = 261;
+  readonly serviceId = 'zurich-fixmystreet';
+  readonly privacy =
+    'Description and photos may be published by the city. Email, optional name and phone are sent as contact details; this client requests that your name not be shown. Drafts contain these details locally.';
+  readonly submissionMode = 'direct' as const;
+  readonly fallbackPrefilled = true;
+  readonly trackingSupported = true;
+  readonly guidance = zurichReportingGuidance;
+  mapUrl = mapUrl;
+  fallbackUrl = fallbackUrl;
+  reportUrl(id: string) {
+    if (!/^\d+$/.test(id)) throw new Error('Report ID must contain digits only.');
+    return `${CITY}/report/${id}`;
+  }
   readonly municipality = 'Zürich';
   // The name residents see on the city's emails, such as the confirmation link.
   readonly reportingService = 'Züri wie neu';
@@ -59,7 +74,7 @@ export class CityClient {
     const response = await this.request(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'zueri-wie-neu-mcp/0.3.1 (independent civic reporting client)',
+        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.7 (independent civic reporting client)',
       },
       signal: AbortSignal.timeout(20_000),
       redirect: 'error',
@@ -217,7 +232,7 @@ export class CityClient {
       body: form,
       redirect: 'error',
       signal: AbortSignal.timeout(45_000),
-      headers: { Accept: 'application/json', 'User-Agent': 'zueri-wie-neu-mcp/0.3.1' },
+      headers: { Accept: 'application/json', 'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.7' },
     });
     if (!response.ok) throw new Error('Submission result uncertain. Do not retry.');
     const body = await response.json();

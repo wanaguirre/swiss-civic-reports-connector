@@ -4,6 +4,8 @@ import { z } from 'zod';
 import { randomUUID, timingSafeEqual } from 'node:crypto';
 import {
   coordinates,
+  destination,
+  type Destination,
   reportInput,
   type Photo,
   type Prepared,
@@ -13,6 +15,7 @@ import {
   type Translation,
 } from './model.js';
 import type { Language } from './language.js';
+import { ZURICH_DESTINATION, sameDestination, receiptDestination } from './municipalities.js';
 import { hash, TTL_MS } from './photos.js';
 import { initializeDirectory, syncDirectory } from './durable-files.js';
 import { StorageBudget, withStorageLock, type StorageLimits } from './storage-budget.js';
@@ -31,6 +34,9 @@ const legacyPhoto = metadata.extend({ jpeg: z.string() });
 const storedPhoto = metadata.extend({ format: z.literal('civic-photo-v2') });
 const storedPreview = z.object({
   format: z.literal('civic-preview-v2'),
+  destination: destination.optional(),
+  terms_url: z.string().url().optional(),
+  approval_fingerprint: z.string().length(64).optional(),
   id: z.string().uuid(),
   created_at: z.string().datetime(),
   expires_at: z.string().datetime(),
@@ -44,7 +50,12 @@ const legacyPreview = storedPreview
   .extend({ photos: z.array(legacyPhoto).max(3) });
 type PhotoMetadata = z.infer<typeof metadata>;
 
-export function fingerprint(input: ReportInput, photos: Photo[]) {
+export function fingerprint(
+  input: ReportInput,
+  photos: Photo[],
+  route: Destination = ZURICH_DESTINATION,
+) {
+  route = destination.parse(route);
   // Contact and public content are frozen together. Photo IDs/time do not change the identity of identical content.
   const { photo_ids: _, ...fields } = input;
   const ordered = {
@@ -53,7 +64,14 @@ export function fingerprint(input: ReportInput, photos: Photo[]) {
       Object.entries(fields.extra_fields).sort(([a], [b]) => a.localeCompare(b)),
     ),
   };
-  return hash(JSON.stringify({ input: ordered, photos: photos.map((p) => p.sha256) }));
+  // Preserve Zürich's historical hashes so an upgrade cannot resend old attempts.
+  return hash(
+    JSON.stringify({
+      ...(!sameDestination(route, ZURICH_DESTINATION) ? { destination: route } : {}),
+      input: ordered,
+      photos: photos.map((p) => p.sha256),
+    }),
+  );
 }
 
 /** Private filesystem persistence. Transient media expires; submission claims survive to prevent duplicate sends. */
@@ -230,7 +248,13 @@ export class Store {
       throw new Error('Stored photo failed integrity verification.');
     return photo;
   }
-  async prepare(input: ReportInput, photos: Photo[]): Promise<Prepared> {
+  async prepare(
+    input: ReportInput,
+    photos: Photo[],
+    route: Destination = ZURICH_DESTINATION,
+    termsUrl?: string,
+  ): Promise<Prepared> {
+    route = destination.parse(route);
     return this.locked(async () => {
       await this.clean();
       const prepared: Prepared = {
@@ -240,7 +264,19 @@ export class Store {
         confirmation_token: randomUUID(),
         input,
         photos,
-        fingerprint: fingerprint(input, photos),
+        destination: route,
+        ...(termsUrl
+          ? {
+              terms_url: termsUrl,
+              approval_fingerprint: hash(
+                JSON.stringify({
+                  fingerprint: fingerprint(input, photos, route),
+                  terms_url: termsUrl,
+                }),
+              ),
+            }
+          : {}),
+        fingerprint: fingerprint(input, photos, route),
       };
       const files = new Map<string, Buffer>();
       await this.media(photos, files);
@@ -268,8 +304,13 @@ export class Store {
     } else if (record.format !== undefined) throw new Error('Unknown preview format.');
     else preview = legacyPreview.parse(record);
     if (
+      (preview.terms_url &&
+        preview.approval_fingerprint !==
+          hash(
+            JSON.stringify({ fingerprint: preview.fingerprint, terms_url: preview.terms_url }),
+          )) ||
       preview.id !== id ||
-      fingerprint(preview.input, preview.photos) !== preview.fingerprint ||
+      fingerprint(preview.input, preview.photos, preview.destination) !== preview.fingerprint ||
       preview.photos.some((p) => hash(Buffer.from(p.jpeg, 'base64')) !== p.sha256)
     )
       throw new Error('Preview integrity check failed.');
@@ -286,11 +327,15 @@ export class Store {
   async claim(
     preview: Prepared,
     summary?: ReceiptSummary,
+    trackingAvailable?: boolean,
   ): Promise<{ owned: boolean; receipt: Receipt }> {
     await this.initialize();
     const receipt: Receipt = {
       fingerprint: preview.fingerprint,
       preview_id: preview.id,
+      destination: preview.destination ?? ZURICH_DESTINATION,
+      ...(preview.terms_url ? { terms_url: preview.terms_url } : {}),
+      ...(trackingAvailable !== undefined ? { tracking_available: trackingAvailable } : {}),
       created_at: new Date(this.now()).toISOString(),
       state: 'sending',
       message:
@@ -411,7 +456,10 @@ export class Store {
         } catch {
           /* An unreadable claim holds no number. */
         }
-        if (other?.report_id === id)
+        if (
+          other?.report_id === id &&
+          sameDestination(receiptDestination(other), receiptDestination(receipt))
+        )
           throw Object.assign(new Error('That number already belongs to another sent report.'), {
             status: 409,
           });
