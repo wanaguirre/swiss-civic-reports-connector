@@ -67,3 +67,11 @@ TypeScript, runs tests and validates the release package.
 [MIT](LICENSE). You may use, modify and redistribute the code, including
 commercially, provided you retain its copyright and license notices. The software
 is provided without warranty. This license does not imply municipal endorsement.
+
+## Signalements-Riviera
+
+The shared [Riviera adapter](docs/RIVIERA.md) prepares French reports for ten
+municipalities and can build the observed multipart request locally. It preserves
+location-specific categories, scope warnings, optional email, a one-photo limit
+and the 1,000-character description limit. Live sending and receipts remain
+unverified and cannot be enabled. All municipal writes in tests are mocked.

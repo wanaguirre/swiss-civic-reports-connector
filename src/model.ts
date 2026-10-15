@@ -14,7 +14,7 @@ export const reportInput = z
       .describe('The user has confirmed the exact issue location, not just the nearest address.'),
     category: z.string().trim().min(1).max(100),
     description: z.string().trim().min(10).max(5000),
-    email: z.string().email().max(254),
+    email: z.union([z.literal(''), z.string().email().max(254)]),
     name: z.string().trim().max(100).optional(),
     phone: z.string().trim().max(50).optional(),
     photo_ids: z.array(z.string().uuid()).max(3).default([]),
@@ -99,10 +99,16 @@ export type Receipt = {
 };
 export type Requirements = {
   photo_required: boolean;
+  // Omitted preserves the existing required-email behavior.
+  email_required?: boolean;
   name_required?: boolean;
   // Omitted preserves existing adapters' name/phone support; [] means email only.
   contact_fields?: ('name' | 'phone')[];
   max_photos?: number;
+  description_max_length?: number;
+  // Included before freezing the preview; never added silently during dispatch.
+  description_prefix?: string;
+  notes?: string[];
   phone_required: boolean;
   bodies: string[];
   extra_fields: {

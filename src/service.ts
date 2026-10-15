@@ -69,13 +69,22 @@ export class ReportService {
     requirements: Record<string, Requirements>,
     photoCount: number,
   ) {
-    if (this.city.submissionMode === 'direct' && !input.email)
-      throw new Error('This reporting service requires an email address.');
     const rule = requirements[input.category];
     if (!rule)
       throw new Error(
         'Category is not available at this location. Use list_categories and resolve_location.',
       );
+    if (rule.email_required !== false && !input.email)
+      throw new Error('This reporting service requires an email address.');
+    if (
+      rule.description_max_length !== undefined &&
+      input.description.length > rule.description_max_length
+    )
+      throw new Error(
+        `This service accepts at most ${rule.description_max_length} description characters, including location context.`,
+      );
+    if (rule.description_prefix && !input.description.startsWith(rule.description_prefix + '\n'))
+      throw new Error('Municipal location context changed. Prepare and review a new preview.');
     for (const field of ['name', 'phone'] as const)
       if (rule.contact_fields && !rule.contact_fields.includes(field) && input[field]?.trim())
         throw new Error(`This municipality does not accept a reporter ${field}.`);
@@ -151,6 +160,9 @@ export class ReportService {
       throw new Error('A photo cannot be attached twice.');
     const photos = await Promise.all(input.photo_ids.map((id) => this.store.photo(id)));
     const requirements = await this.city.requirements(input);
+    const prefix = requirements[input.category]?.description_prefix;
+    if (prefix && !input.description.startsWith(prefix + '\n'))
+      input.description = prefix + '\n' + input.description;
     const rule = this.validate(input, requirements, photos.length);
     let duplicates: unknown;
     try {
