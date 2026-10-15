@@ -21,7 +21,7 @@ export type ReportingAdapter = MunicipalAdapter &
     readonly reportingUrl: string;
     readonly reportFormUrl: string;
     readonly placeMapUrl: string;
-    readonly submissionMode: 'direct' | 'official_form';
+    readonly submissionMode: 'direct' | 'official_form' | 'unverified';
     readonly fallbackPrefilled: boolean;
     readonly trackingSupported: boolean;
     readonly guidance: ReportingGuidance;

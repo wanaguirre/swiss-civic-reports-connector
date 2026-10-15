@@ -46,6 +46,9 @@ the official municipal form is the fallback. A real Telegram exchange and an
 accepted municipal submission still need verification; passing tests do not
 establish those live journeys.
 
+The shared package also includes disabled [Bern/Fribourg preparation adapters](docs/MUNICIPAL-FORMS.md).
+They collect the observed fields but cannot send; actual uploads and municipal receipts remain unverified.
+
 ## Develop
 
 `src/` contains the core and transports; `test/` covers behavior with mocked

@@ -9,7 +9,7 @@ Importing the package has no server-starting side effects.
 | Modules | Responsibility |
 | --- | --- |
 | `model`, `reporting-draft`, `reporting-guidance` | Input schemas, shared records, model-output validation and sourced drafting guidance. |
-| `city`, `anthrazit`, `anthrazit-traffic`, `municipalities`, `places` | Municipal API calls, geographic lookup and supported-adapter identification. |
+| `city`, `municipal-forms`, `anthrazit`, `anthrazit-traffic`, `municipalities`, `places` | Municipal API calls, geographic lookup and supported-adapter identification. |
 | `photos` | Bounded image import, normalization and thumbnails. |
 | `service` | Live rule validation, preparation, approval checks and submission orchestration. |
 | `store`, `storage-budget`, `durable-files` | Private persistence, storage limits, atomic publication and duplicate prevention. |
@@ -19,7 +19,8 @@ Importing the package has no server-starting side effects.
 | `run-cli`, `cli`, `index` | Explicit process startup and package exports. |
 
 `ReportService` accepts a `ReportingAdapter`: Zürich `CityClient` or the experimental
-[Anthrazit adapter](ANTHRAZIT.md). Consumers select an adapter from the authoritative
+[Anthrazit adapter](ANTHRAZIT.md), or the disabled
+[Bern/Fribourg preparation adapters](MUNICIPAL-FORMS.md). Consumers select an adapter from the authoritative
 BFS boundary result. Previews and receipts bind BFS plus service identity; records
 without a destination belong only to the original Zürich service. Terms are frozen
 and integrity-checked separately from the payload identity used to prevent duplicate

@@ -74,3 +74,8 @@ The package exports `ReportingAdapter`, `AnthrazitClient` and the `anthrazit` /
 extra fields, terms acceptance and verification limits. `ReportService.submit`
 accepts an optional fourth `acceptedTermsUrl` argument; it is required when the
 frozen preview contains municipal terms. Existing Zürich calls stay unchanged.
+
+Bern and Fribourg use `MunicipalFormClient` from `/municipal-forms`. See
+[municipal forms](MUNICIPAL-FORMS.md). The new `unverified` submission mode means
+no send button or external-form completion; do not treat all non-direct adapters
+as an `official_form` fallback.

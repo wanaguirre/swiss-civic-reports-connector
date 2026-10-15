@@ -137,9 +137,12 @@ export class ReportService {
       confirmation_required:
         'Show the description, category, exact map location, contact details, ALL extra fields and photos, and any terms URL. Obtain explicit acceptance of those terms with approval. Ask the user to approve this particular report before calling submit_report.',
       privacy: this.city.privacy,
-      fallback_note: this.city.fallbackPrefilled
-        ? 'The official-form link contains the report text and location. Photos and contact details are not included and must be attached there. Opening the link does not submit a report.'
-        : 'Copy the prepared text and select the category and location in the official form. Add photos and any required contact details there. Nothing is sent or prefilled by opening the link.',
+      fallback_note:
+        this.city.submissionMode === 'unverified'
+          ? 'Sending is unavailable until municipal upload and receipt verification is complete. This preview has not been sent.'
+          : this.city.fallbackPrefilled
+            ? 'The official-form link contains the report text and location. Photos and contact details are not included and must be attached there. Opening the link does not submit a report.'
+            : 'Copy the prepared text and select the category and location in the official form. Add photos and any required contact details there. Nothing is sent or prefilled by opening the link.',
     };
   }
   async prepare(raw: unknown) {
@@ -170,7 +173,9 @@ export class ReportService {
     if (confirmed !== true) throw new Error('Explicit approval of this preview is required.');
     if (this.city.submissionMode !== 'direct')
       throw new Error(
-        'Complete and send this report in the municipality’s official form. Direct submission is unavailable.',
+        this.city.submissionMode === 'unverified'
+          ? 'Sending is unavailable until municipal upload and receipt verification is complete.'
+          : 'Complete and send this report in the municipality’s official form. Direct submission is unavailable.',
       );
     if (!this.options.submissionEnabled)
       throw new Error(
