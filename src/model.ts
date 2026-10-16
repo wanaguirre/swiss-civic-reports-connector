@@ -114,6 +114,8 @@ export type Requirements = {
   description_prefix?: string;
   notes?: string[];
   phone_required: boolean;
+  /** Exact number of ASCII digits required by the municipal phone field. */
+  phone_digits?: number;
   bodies: string[];
   extra_fields: {
     code: string;

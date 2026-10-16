@@ -101,3 +101,10 @@ transport shared with Ebikon. It requires explicit library opt-in and remains of
 in Civic. No real report or upload was sent; municipal acceptance needs a genuine
 pilot. Mocked tests cover exact review matching, receipt validation, uncertainty,
 rate-limit pauses and durable prevention of repeated submissions.
+
+### v0.4.0-rc.12 — Gossau ZH preparation
+
+Adds opt-in Gossau ZH preparation with exact field/phone validation, public scope,
+private contact fields, one photo and linked terms. Sending is unconditionally
+disabled; no municipal writes or real receipts were verified. See
+[municipal forms](docs/MUNICIPAL-FORMS.md#gossau-zh--16-october-2026).

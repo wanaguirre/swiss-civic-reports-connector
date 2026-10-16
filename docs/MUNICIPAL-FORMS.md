@@ -110,3 +110,29 @@ Contract tests use local fixtures and mocked responses, including tampered echoe
 redirects, missing receipts, uncertain writes, photos and durable duplicate protection.
 No municipal write was performed. A genuine approved pilot or operator sandbox
 must validate actual photo arrival and receipt before application rollout.
+
+## Gossau ZH — 16 October 2026
+
+`new MunicipalFormClient('gossau')` prepares `Problem melden` reports for **BFS 115**
+(Gossau ZH, not Gossau SG) from its [official form](https://www.gossau-zh.ch/problem-melden/).
+Scope: non-emergency public infrastructure, including bus stops, streetlights and
+public noticeboards. Required: title, description, issue street/address and
+postcode/locality, user-chosen salutation, first/last name, ten-digit phone and
+email. One photo is optional. Civic's local caps are 5 MB/photo, 100 characters for
+title/names, 5000 for description and 250 for each location field.
+
+The read-only parser validates Ninja Forms 3.15.5 / Uploads 3.3.35, form 7,
+14 field identities/types/order, required fields, phone mask, salutation choices,
+photo constraints and the two policy links. It reads JSON literals without executing
+scripts. It discards session tokens and fails closed on a changed contract.
+`gossauRequirements()` is exported for consumers and offline fixtures.
+
+The preview links to the official form containing both AGB and privacy terms;
+preparation grants no consent. Contact extras stay separate from AI report text.
+The source-reviewed upload uses `nf_fu_upload`, followed by `nf_ajax_submit`, but
+**this adapter has no upload or submission transport**. Generic plugin success,
+`save.sub_id` and `email.sent` do not verify the deployed recipient, attachment
+arrival or municipal acceptance. No public tracking route is established.
+Neither a global send switch nor `experimentalSubmission` can enable Gossau.
+A genuine approved report or operator sandbox must establish delivery and receipt
+before implementing and enabling that transport. All regression writes are mocked.

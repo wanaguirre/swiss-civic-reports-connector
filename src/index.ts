@@ -17,3 +17,5 @@ export type { ZuchwilSubmissionPlan } from './zuchwil.js';
 
 export { RiehenClient, riehenCategories, riehenRequirements } from './riehen.js';
 export type { RiehenSubmissionPlan } from './riehen.js';
+
+export { gossauRequirements } from './gossau-form.js';
