@@ -46,3 +46,23 @@ shared immutable-preview and durable duplicate-protection flow, with mocked
 failure/redirect/session tests, before enabling it. Drupal's generic confirmation
 markup, an HTTP 200, or an upload ID does not establish receipt. There is no
 verified public tracking endpoint for either municipality.
+
+## Ebikon — 16 October 2026
+
+`new MunicipalFormClient('ebikon')` prepares German reports for BFS 1054 using
+its [official OneGov form](https://www.ebikon.ch/form/schaden-melden).
+Eight observed classes: signs, benches/bins, playgrounds/sports facilities,
+green spaces/trees, waterways, toilets, public properties and other damage.
+The [official forms index](https://www.ebikon.ch/forms) directs streetlight faults
+to CKW separately; do not route them through "other damage".
+
+Required first/last name and email; phone and one photo are optional. The exact
+issue location label is limited to 150 characters and description to 400.
+"Other damage" additionally exposes an optional translated type field.
+Anonymous GET returned the multipart first step, CSRF token and empty honeypot,
+with no active CAPTCHA or municipal login requirement. The page's unrelated login
+link is not a reporting requirement. The first submit control is **Weiter**;
+later review/final submission, photo limits/acceptance and receipt semantics are
+unverified. No POST or upload was attempted, including first-step validation.
+This adapter inspects public metadata and prepares locally; it has no write
+transport and cannot be enabled for sending with a global switch.

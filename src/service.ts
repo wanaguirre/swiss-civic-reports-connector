@@ -67,12 +67,20 @@ export class ReportService {
   private validate(
     input: ReportInput,
     requirements: Record<string, Requirements>,
-    photoCount: number,
+    photos: Prepared['photos'],
   ) {
+    const photoCount = photos.length;
     const rule = requirements[input.category];
     if (!rule)
       throw new Error(
         'Category is not available at this location. Use list_categories and resolve_location.',
+      );
+    if (
+      rule.location_label_max_length !== undefined &&
+      input.location_label.length > rule.location_label_max_length
+    )
+      throw new Error(
+        `This category accepts a location label of at most ${rule.location_label_max_length} characters.`,
       );
     if (rule.email_required !== false && !input.email)
       throw new Error('This reporting service requires an email address.');
@@ -92,6 +100,11 @@ export class ReportService {
       throw new Error('This service requires the reporter’s full name.');
     if (rule.max_photos !== undefined && photoCount > rule.max_photos)
       throw new Error(`This service accepts at most ${rule.max_photos} photo(s).`);
+    if (
+      rule.max_photo_bytes !== undefined &&
+      photos.some((p) => Buffer.byteLength(p.jpeg, 'base64') > rule.max_photo_bytes!)
+    )
+      throw new Error(`This category accepts photos of at most ${rule.max_photo_bytes} bytes.`);
     if (rule.photo_required && !photoCount) throw new Error('This category requires a photo.');
     if (rule.phone_required && !input.phone)
       throw new Error('This category requires a contact phone number.');
@@ -163,7 +176,7 @@ export class ReportService {
     const prefix = requirements[input.category]?.description_prefix;
     if (prefix && !input.description.startsWith(prefix + '\n'))
       input.description = prefix + '\n' + input.description;
-    const rule = this.validate(input, requirements, photos.length);
+    const rule = this.validate(input, requirements, photos);
     let duplicates: unknown;
     try {
       duplicates = await this.city.nearby(input);
@@ -206,7 +219,7 @@ export class ReportService {
     this.validate(
       preview.input,
       await this.city.requirements(preview.input, { fresh: true }),
-      preview.photos.length,
+      preview.photos,
     );
     const { input } = preview;
     const summary: ReceiptSummary = {

@@ -83,3 +83,11 @@ issue address and email, optional name/phone and one photo, and frozen privacy
 terms. It validates the anonymous Weblication form and constructs session-bound
 upload/form plans locally. Sending and receipt handling remain unverified and
 cannot be enabled. No municipal login or external-form completion is offered.
+
+## Riehen and Ebikon preparation (core 0.4.0-rc.10)
+
+[Riehen](docs/RIEHEN.md) distinguishes infrastructure damage (no attachments)
+from public-property graffiti (one optional photo under 2 MB). Ebikon joins the
+[municipal-form adapter](docs/MUNICIPAL-FORMS.md) with eight public-space damage
+classes. Both stay preparation-only. Structured category scope, photo byte/count
+limits and location/text limits are shared by validation and consuming interfaces.

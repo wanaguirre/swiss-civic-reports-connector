@@ -1,3 +1,4 @@
+import { WeblicationReader } from './weblication-reader.js';
 import { createHash } from 'node:crypto';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { CityClient } from './city.js';
@@ -163,6 +164,27 @@ export function inspectZuchwilForm(html: string): FormSession {
 
 /** Parse the observed literal configuration, without evaluating municipal JS. */
 export function inspectZuchwilUploader(html: string, form: FormSession) {
+  return inspectWeblicationUploader(html, form, {
+    version: '21',
+    element: 'images',
+    userType: true,
+    maxUploads: '128',
+    maxWidthImage: '',
+    showThumbnails: '',
+  });
+}
+export function inspectWeblicationUploader(
+  html: string,
+  form: Pick<FormSession, 'formId' | 'visitorId'>,
+  expectedWidget: {
+    version: string;
+    element: string;
+    userType: boolean;
+    maxUploads: string;
+    maxWidthImage: string;
+    showThumbnails: string;
+  },
+) {
   if (Buffer.byteLength(html) > 200_000) throw changed();
   const nodes = all(parse(html));
   protectedControls(nodes);
@@ -178,13 +200,15 @@ export function inspectZuchwilUploader(html: string, form: FormSession) {
   };
   const csrf = token(one(/\bvar\s+wCsrf\s*=\s*["']([a-zA-Z0-9_-]+)["']\s*;/g));
   if (
-    one(/\bvar\s+wVersionGrid\s*=\s*['"]([^'"]*)['"]/g) !== '21' ||
+    one(/\bvar\s+wVersionGrid\s*=\s*['"]([^'"]*)['"]/g) !== expectedWidget.version ||
     one(/\bvar\s+checkMetaDataActive\s*=\s*['"]([^'"]*)['"]/g) !== '1'
   )
     throw changed();
   if (
-    one(/\bvar\s+wUserType\s*=\s*['"]([^'"]*)['"]/g) !== '' ||
-    one(/\bvar\s+elementName\s*=\s*['"]([^'"]*)['"]/g) !== 'images' ||
+    (expectedWidget.userType
+      ? one(/\bvar\s+wUserType\s*=\s*['"]([^'"]*)['"]/g) !== ''
+      : /\bwUserType\b/.test(script)) ||
+    one(/\bvar\s+elementName\s*=\s*['"]([^'"]*)['"]/g) !== expectedWidget.element ||
     one(/\bvar\s+formID\s*=\s*['"]([^'"]*)['"]/g) !== form.formId
   )
     throw changed();
@@ -211,11 +235,11 @@ export function inspectZuchwilUploader(html: string, form: FormSession) {
     vId: form.visitorId,
     nameDest: '',
     onAfterUpload: '',
-    maxUploads: '128',
+    maxUploads: expectedWidget.maxUploads,
     maxSizeImage: '5',
-    maxWidthImage: '',
+    maxWidthImage: expectedWidget.maxWidthImage,
     useSend: '',
-    showThumbnails: '',
+    showThumbnails: expectedWidget.showThumbnails,
     resizeIfhasCopyright: '',
   };
   if (
@@ -288,100 +312,31 @@ export class ZuchwilClient implements ReportingAdapter {
   private places: Pick<SwissPlaces, 'municipality'>;
   private now: () => number;
   private verifiedUntil = 0;
-  private retryAt = 0;
   private checking?: Promise<void>;
-  private active = 0;
+  private reader: WeblicationReader<FormSession>;
   constructor(
     private request: typeof fetch = fetch,
     options: { places?: Pick<SwissPlaces, 'municipality'>; now?: () => number } = {},
   ) {
     this.places = options.places ?? new SwissPlaces(request);
     this.now = options.now ?? Date.now;
+    this.reader = new WeblicationReader(
+      request,
+      this.now,
+      this.municipality,
+      'zuchwil.ch',
+      FORM,
+      inspectZuchwilForm,
+      inspectZuchwilUploader,
+      changed,
+    );
   }
   private async session() {
-    if (this.now() < this.retryAt)
-      throw new Error('Zuchwil reads are paused. Try preparing later.');
-    if (this.active >= 2)
-      throw new Error('Zuchwil has enough requests in progress. Try preparing later.');
-    this.active++;
-    const cookies = new Map<string, string>();
-    const read = async (url: string, limit: number) => {
-      const response = await this.request(url, {
-        method: 'GET',
-        redirect: 'error',
-        signal: AbortSignal.timeout(20_000),
-        headers: {
-          Accept: 'text/html',
-          'User-Agent': 'Civic Zuchwil preparation (read-only)',
-          ...(cookies.size ? { Cookie: [...cookies].map(([k, v]) => `${k}=${v}`).join('; ') } : {}),
-        },
-      });
-      if (!response.ok || !/^text\/html(?:;|$)/i.test(response.headers.get('content-type') ?? '')) {
-        const retry = response.headers.get('retry-after') ?? '';
-        const delay = /^\d+$/.test(retry) ? Number(retry) * 1000 : Date.parse(retry) - this.now();
-        if (Number.isFinite(delay) && delay > 0)
-          this.retryAt = this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now());
-        await response.body?.cancel();
-        throw changed();
-      }
-      try {
-        for (const cookie of response.headers.getSetCookie()) {
-          if (cookie.length > 4096 || cookies.size >= 8) throw changed();
-          const [pair, ...attributes] = cookie.split(';'),
-            split = pair.indexOf('=');
-          const name = pair.slice(0, split),
-            value = pair.slice(split + 1);
-          if (
-            split < 1 ||
-            !/^[a-zA-Z0-9_%.-]+$/.test(name) ||
-            !/^[\x21-\x3A\x3C-\x7E]+$/.test(value)
-          )
-            throw changed();
-          for (const item of attributes) {
-            const [k, v] = item.trim().split('=');
-            if (
-              k.toLowerCase() === 'domain' &&
-              !['zuchwil.ch', '.zuchwil.ch', 'www.zuchwil.ch'].includes(v?.toLowerCase())
-            )
-              throw changed();
-            if (k.toLowerCase() === 'path' && v !== '/') throw changed();
-            if (k.toLowerCase() === 'max-age' && Number(v) <= 0) throw changed();
-            if (k.toLowerCase() === 'expires' && Date.parse(v) <= this.now()) throw changed();
-          }
-          cookies.set(name, value);
-        }
-      } catch {
-        await response.body?.cancel().catch(() => {});
-        throw changed();
-      }
-      if (!response.body) throw changed();
-      const reader = response.body.getReader(),
-        chunks: Uint8Array[] = [];
-      let bytes = 0;
-      try {
-        while (true) {
-          const part = await reader.read();
-          if (part.done) break;
-          bytes += part.value.byteLength;
-          if (bytes > limit) throw changed();
-          chunks.push(part.value);
-        }
-      } finally {
-        await reader.cancel().catch(() => {});
-      }
-      return Buffer.concat(chunks).toString('utf8');
-    };
     try {
-      const form = inspectZuchwilForm(await read(FORM, 1_000_000));
-      if (!cookies.has('WSESSIONID')) throw changed();
-      const widget = inspectZuchwilUploader(await read(form.uploadUrl, 200_000), form);
-      return { ...form, ...widget, cookie: [...cookies].map(([k, v]) => `${k}=${v}`).join('; ') };
-    } catch {
+      return await this.reader.session();
+    } catch (error) {
       this.verifiedUntil = 0;
-      this.retryAt = Math.max(this.retryAt, this.now() + 300_000);
-      throw changed();
-    } finally {
-      this.active--;
+      throw error;
     }
   }
   private async verify(fresh = false) {

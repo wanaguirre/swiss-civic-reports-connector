@@ -1,0 +1,22 @@
+<!-- Synthetic contract fixture; no session values. -->
+<form id="main-form" method="POST" action="/form/schaden-melden" enctype="multipart/form-data">
+<input name="csrf_token" type="hidden" value="fictionalCsrfToken#1234567890123456789">
+<input aria-required="" name="personalien_vorname" type="text" value="">
+<input aria-required="" name="personalien_name" type="text" value="">
+<input aria-required="" name="personalien_e_mail" type="email" value="">
+<input name="personalien_telefon" type="text" value="">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Signalisation">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Sitzbank oder Abfalleimer">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Spielplatz oder Sportanlage">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Grünanlage oder Baum">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Gewässer">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="WC-Anlagen">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Öffentliche Liegenschaft">
+<input aria-required="" name="was_mochten_sie_melden_auswahl" type="radio" value="Anderer Schaden">
+<input data-depends-on="was_mochten_sie_melden_auswahl/Anderer Schaden" name="was_mochten_sie_melden_auswahl_beschrieb" type="text" value="">
+<input aria-required="" maxlength="150" name="wo_befindet_sich_der_schaden_strasse_hausnummer_oder_genaue_beschreibung_des_ortes_" type="text" value="">
+<input aria-required="" maxlength="400" name="wo_befindet_sich_der_schaden_beschreiben_sie_den_schaden_moglichst_genau_" type="text" value="">
+<input accept="image/heic,image/jpeg,image/png,image/gif" name="foto_hochladen_ein_foto_hilft_uns_den_schaden_zu_beurteilen_" type="file">
+<input class="lazy-wolves" name="duplicate_of" type="text" value="">
+<input type="submit" value="Weiter" class="button">
+</form>
