@@ -1,3 +1,4 @@
+import { inspectGossauForm, gossauRequirements, gossauScope } from './gossau-form.js';
 import { inspectMeggenForm, submitOneGov, oneGovReportUrl } from './onegov-form.js';
 import { inspectEbikonForm } from './ebikon-form.js';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
@@ -14,6 +15,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  gossau: Object.freeze({
+    bfsId: 115,
+    municipality: 'Gossau ZH',
+    language: 'de' as const,
+    formUrl: 'https://www.gossau-zh.ch/problem-melden/',
+    reportingUrl: 'https://www.gossau-zh.ch/problem-melden/',
+  }),
   meggen: Object.freeze({
     bfsId: 1063,
     municipality: 'Meggen',
@@ -93,6 +101,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'gossau') return inspectGossauForm(html);
   if (name === 'ebikon') return inspectEbikonForm(html);
   if (name === 'meggen') return inspectMeggenForm(html);
   const config = municipalForms[name];
@@ -244,6 +253,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   readonly fallbackPrefilled = false;
   readonly placeMapUrl = 'https://map.geo.admin.ch/?center={longitude},{latitude}&z=10';
   readonly privacy: string;
+  readonly termsUrl?: string;
   readonly guidance;
   private places: Pick<SwissPlaces, 'municipality'>;
   private now: () => number;
@@ -272,12 +282,15 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.municipality = config.municipality;
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
+    this.termsUrl = name === 'gossau' ? config.formUrl : undefined;
     this.reportingService =
-      name === 'meggen'
-        ? 'Meldung Sicherheitsproblem'
-        : name !== 'fribourg'
-          ? 'Schaden melden'
-          : 'Avis de défectuosité';
+      name === 'gossau'
+        ? 'Problem melden'
+        : name === 'meggen'
+          ? 'Meldung Sicherheitsproblem'
+          : name !== 'fribourg'
+            ? 'Schaden melden'
+            : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -285,12 +298,15 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.guidance = {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
-      verified_on: name === 'ebikon' || name === 'meggen' ? '2026-10-16' : '2026-10-15',
+      verified_on:
+        name === 'gossau' || name === 'ebikon' || name === 'meggen' ? '2026-10-16' : '2026-10-15',
       sources: [{ title: 'Official municipal damage form', url: this.reportingUrl }],
       scope:
-        name === 'meggen'
-          ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-          : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'gossau'
+          ? gossauScope
+          : name === 'meggen'
+            ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+            : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -384,6 +400,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'gossau') return gossauRequirements();
     if (this.name === 'meggen')
       return {
         'Meldung Sicherheitsproblem': {

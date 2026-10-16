@@ -108,6 +108,16 @@ export class ReportService {
     if (rule.photo_required && !photoCount) throw new Error('This category requires a photo.');
     if (rule.phone_required && !input.phone)
       throw new Error('This category requires a contact phone number.');
+    if (
+      rule.phone_digits !== undefined &&
+      (!Number.isInteger(rule.phone_digits) ||
+        rule.phone_digits < 1 ||
+        rule.phone_digits > 50 ||
+        (input.phone && (!/^\d+$/.test(input.phone) || input.phone.length !== rule.phone_digits)))
+    )
+      throw new Error(
+        `This service requires a phone number with exactly ${rule.phone_digits} digits.`,
+      );
     const fields = new Map(rule.extra_fields.map((field) => [field.code, field]));
     for (const [key, value] of Object.entries(input.extra_fields)) {
       if (RESERVED_FIELDS.has(key) || /^photo|^password|^submit_/i.test(key) || !fields.has(key))
