@@ -89,5 +89,15 @@ cannot be enabled. No municipal login or external-form completion is offered.
 [Riehen](docs/RIEHEN.md) distinguishes infrastructure damage (no attachments)
 from public-property graffiti (one optional photo under 2 MB). Ebikon joins the
 [municipal-form adapter](docs/MUNICIPAL-FORMS.md) with eight public-space damage
-classes. Both stay preparation-only. Structured category scope, photo byte/count
+classes. Both default to preparation-only. Structured category scope, photo byte/count
 limits and location/text limits are shared by validation and consuming interfaces.
+
+## Meggen and shared OneGov transport (core 0.4.0-rc.11)
+
+Meggen adds one narrowly defined infrastructure-safety class, required first/last
+name and email, and one optional photo. The [municipal-form adapter](docs/MUNICIPAL-FORMS.md)
+now includes a source-reviewed, experimental upload → review → completion → ticket
+transport shared with Ebikon. It requires explicit library opt-in and remains off
+in Civic. No real report or upload was sent; municipal acceptance needs a genuine
+pilot. Mocked tests cover exact review matching, receipt validation, uncertainty,
+rate-limit pauses and durable prevention of repeated submissions.

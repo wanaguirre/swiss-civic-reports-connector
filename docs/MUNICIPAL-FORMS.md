@@ -4,7 +4,7 @@
 read/preparation for Bern (BFS 351, German) and Fribourg (BFS 2196, French).
 It is **not a verified sending integration**. Its `submissionMode` is `unverified`;
 `submit` always rejects before making a request. There is no experimental send
-switch. Consumers must show preparation as unavailable for sending and must not
+switch for Bern or Fribourg. Consumers must show preparation as unavailable for sending and must not
 substitute an external-form completion step for a confirmed municipal receipt.
 
 ## Verified form structure, 15 October 2026
@@ -30,7 +30,7 @@ are cached. Fresh requirement requests bypass cached metadata.
 
 Civic's shared importer normalizes local photos and removes metadata; preparation
 limits attachments to one and freezes their hashes with the municipal destination.
-**No photo upload or municipal POST is implemented.** The form names are evidence
+**No photo upload or municipal POST is implemented for Bern or Fribourg.** The form names are evidence
 for completing that transport later, not proof that a submission works.
 
 The contract tests use sanitized read-only form fixtures and fictional local
@@ -62,7 +62,51 @@ issue location label is limited to 150 characters and description to 400.
 Anonymous GET returned the multipart first step, CSRF token and empty honeypot,
 with no active CAPTCHA or municipal login requirement. The page's unrelated login
 link is not a reporting requirement. The first submit control is **Weiter**;
-later review/final submission, photo limits/acceptance and receipt semantics are
-unverified. No POST or upload was attempted, including first-step validation.
-This adapter inspects public metadata and prepares locally; it has no write
-transport and cannot be enabled for sending with a global switch.
+the initial inspection did not exercise the later steps. The subsequent public-source
+review below establishes the platform contract, while deployed acceptance is still
+unverified. No municipal POST or upload was attempted.
+
+## Meggen and OneGov experimental transport — 16 October 2026
+
+`new MunicipalFormClient('meggen')` prepares German infrastructure-safety reports
+for BFS 1063 using [Meggen’s official form](https://www.meggen.ch/form/meldung-sicherheitsproblem).
+Its single class is `Meldung Sicherheitsproblem`, handled by Planning / Construction;
+exclude emergencies, police reports, general complaints and the separate lighting
+route. First name, last name and email are required; phone and an issue address /
+parcel are optional. Civic requires a confirmed issue location and description,
+and permits one normalized JPEG up to 5 MB. The same conservative photo cap now
+applies to Ebikon. Report scope and field definitions are shared with clients/AI.
+
+Both live forms advertise OneGov Cloud 2026.52. Public upstream source at
+[ef2496d446a2e0cb56f17e1296e0f97560f44ce0](https://github.com/OneGov/onegov-cloud/tree/ef2496d446a2e0cb56f17e1296e0f97560f44ce0)
+provides the anonymous contract in `org/views/form_definition.py`,
+`org/views/form_submission.py`, `town6/templates/submission.pt`,
+`town6/templates/macros.pt`, `town6/templates/ticket_status.pt` and
+`core/converters.py`. OneGov is MIT licensed; Civic’s independent HTTP client does
+not vendor its implementation. Footer version matching does not verify the deployed
+server or successful municipal delivery.
+
+The library option `{ experimentalSubmission: true }` is accepted **only** for
+Ebikon and Meggen. It is off by default and the consuming Civic app never passes it.
+A global submission setting or coverage flag cannot unlock it. When used for an
+approved genuine pilot through `ReportService`, the adapter:
+
+1. Validates municipality, frozen destination, expiry, fields and photo hash.
+2. Gets a fresh anonymous form/session, then uploads the approved payload once.
+3. Follows only the exact same-origin pending-preview route. Every echoed field
+   and the uploaded filename must match before the completion POST is sent.
+4. Requires an FRM number, correct form subject and ticket state on the expected
+   `/ticket/FRM/<32-hex-id>/status` response. Upload/preview/HTTP 200 alone is not
+   acceptance. The ticket’s unguessable link is stored in the private receipt.
+
+Requests are bounded and never retried. Errors after the first POST are `unknown`;
+the durable send claim prevents recreation/replay. A first POST itself persists
+pending data, even without completion. Cookies remain in an isolated temporary jar.
+Provider Retry-After values pause subsequent attempts. The optional personal-data
+email-copy checkbox is omitted; upstream still sends a ticket-reference email.
+Automatic tracking is unsupported; the official ticket link supports manual viewing.
+
+Contract tests use local fixtures and mocked responses, including tampered echoes,
+redirects, missing receipts, uncertain writes, photos and durable duplicate protection.
+No municipal write was performed. A genuine approved pilot or operator sandbox
+must validate actual photo arrival and receipt before application rollout.
