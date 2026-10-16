@@ -1,8 +1,10 @@
+import { inspectMeggenForm, submitOneGov, oneGovReportUrl } from './onegov-form.js';
 import { inspectEbikonForm } from './ebikon-form.js';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { CityClient } from './city.js';
 import {
   coordinates,
+  reportInput,
   type Point,
   type Prepared,
   type ReportInput,
@@ -12,6 +14,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  meggen: Object.freeze({
+    bfsId: 1063,
+    municipality: 'Meggen',
+    language: 'de' as const,
+    formUrl: 'https://www.meggen.ch/form/meldung-sicherheitsproblem',
+    reportingUrl: 'https://www.meggen.ch/form/meldung-sicherheitsproblem',
+  }),
   ebikon: Object.freeze({
     bfsId: 1054,
     municipality: 'Ebikon',
@@ -85,6 +94,7 @@ const specs = {
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'ebikon') return inspectEbikonForm(html);
+  if (name === 'meggen') return inspectMeggenForm(html);
   const config = municipalForms[name];
   if (!config || Buffer.byteLength(html) > 1_000_000) throw changed();
   const doc = all(parse(html));
@@ -219,8 +229,8 @@ async function readHtml(response: Response) {
   }
 }
 
-/** Read/preparation adapter. No municipal write transport exists until actual
- * upload and receipt contracts are verified. A global send flag cannot unlock it. */
+/** Preparation defaults for all forms. Only the source-reviewed OneGov profiles
+ * have a separately opted-in experimental transport; applications keep it off. */
 export class MunicipalFormClient implements ReportingAdapter {
   readonly bfsId: number;
   readonly municipality: string;
@@ -229,12 +239,11 @@ export class MunicipalFormClient implements ReportingAdapter {
   readonly reportingService: string;
   readonly reportingUrl: string;
   readonly reportFormUrl: string;
-  readonly submissionMode = 'unverified' as const;
+  readonly submissionMode: 'unverified' | 'direct';
   readonly trackingSupported = false;
   readonly fallbackPrefilled = false;
   readonly placeMapUrl = 'https://map.geo.admin.ch/?center={longitude},{latitude}&z=10';
-  readonly privacy =
-    'Preparation keeps contact details and normalized photos in Civic. Nothing is sent to the municipality: upload, submission and receipt verification is pending.';
+  readonly privacy: string;
   readonly guidance;
   private places: Pick<SwissPlaces, 'municipality'>;
   private now: () => number;
@@ -244,15 +253,31 @@ export class MunicipalFormClient implements ReportingAdapter {
   constructor(
     private name: Name,
     private request: typeof fetch = fetch,
-    options: { places?: Pick<SwissPlaces, 'municipality'>; now?: () => number } = {},
+    options: {
+      places?: Pick<SwissPlaces, 'municipality'>;
+      now?: () => number;
+      experimentalSubmission?: boolean;
+    } = {},
   ) {
     const config = municipalForms[name];
     if (!config) throw new Error('Unsupported municipal form.');
+    if (options.experimentalSubmission && name !== 'ebikon' && name !== 'meggen')
+      throw new Error('Experimental submission is only implemented for the reviewed OneGov forms.');
+    this.submissionMode = options.experimentalSubmission === true ? 'direct' : 'unverified';
+    this.privacy =
+      this.submissionMode === 'direct'
+        ? 'After your approval, Civic sends your reviewed contact details, report and optional normalized photo to the municipality. Its service emails a ticket reference; Civic does not request a personal-data copy by email.'
+        : 'Preparation keeps contact details and normalized photos in Civic. Sending is disabled pending a genuine municipal delivery pilot.';
     this.bfsId = config.bfsId;
     this.municipality = config.municipality;
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
-    this.reportingService = name !== 'fribourg' ? 'Schaden melden' : 'Avis de défectuosité';
+    this.reportingService =
+      name === 'meggen'
+        ? 'Meldung Sicherheitsproblem'
+        : name !== 'fribourg'
+          ? 'Schaden melden'
+          : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -260,23 +285,28 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.guidance = {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
-      verified_on: name === 'ebikon' ? '2026-10-16' : '2026-10-15',
+      verified_on: name === 'ebikon' || name === 'meggen' ? '2026-10-16' : '2026-10-15',
       sources: [{ title: 'Official municipal damage form', url: this.reportingUrl }],
-      scope: 'Non-emergency defects in municipal infrastructure and public spaces.',
+      scope:
+        name === 'meggen'
+          ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+          : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
           issue: 'Emergency or immediate danger',
           next_step: 'Use the appropriate emergency service.',
         },
-        ...(name === 'bern' || name === 'ebikon'
+        ...(name === 'bern' || name === 'ebikon' || name === 'meggen'
           ? [
               {
                 issue: 'Street-light fault',
                 next_step:
-                  name === 'ebikon'
-                    ? 'Ebikon directs street-light faults to CKW, outside this damage form.'
-                    : 'Bern directs street-light faults to Energie Wasser Bern (ewb), outside this form.',
+                  name === 'meggen'
+                    ? 'Meggen lists defective lighting separately from this safety-problem form.'
+                    : name === 'ebikon'
+                      ? 'Ebikon directs street-light faults to CKW, outside this damage form.'
+                      : 'Bern directs street-light faults to Energie Wasser Bern (ewb), outside this form.',
               },
             ]
           : []),
@@ -284,7 +314,9 @@ export class MunicipalFormClient implements ReportingAdapter {
       responsibility:
         'Use the exact municipal boundary and the official form’s current categories.',
       routing_note:
-        'Preparation only. Municipal uploads, acceptance and tracking are unverified; do not claim the report has been sent.',
+        this.submissionMode === 'direct'
+          ? 'Experimental source-reviewed transport. A real municipal pilot remains pending. Only a verified ticket receipt means sent; uncertain responses must not be retried.'
+          : 'Preparation only. Municipal delivery has not been pilot-verified; do not claim the report has been sent.',
     };
   }
   mapUrl(point: Point) {
@@ -297,6 +329,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.reportingUrl;
   }
   reportUrl(_id: string): string {
+    if (this.name === 'ebikon' || this.name === 'meggen') return oneGovReportUrl(this.name, _id);
     throw new Error('Public report linking is unverified for this municipality.');
   }
   geocode(query: string) {
@@ -351,6 +384,50 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'meggen')
+      return {
+        'Meldung Sicherheitsproblem': {
+          scope: this.guidance.scope,
+          photo_required: false,
+          email_required: true,
+          phone_required: false,
+          contact_fields: ['phone'],
+          max_photos: 1,
+          max_photo_bytes: 5_000_000,
+          description_max_length: 5000,
+          location_label_max_length: 250,
+          bodies: [this.municipality],
+          extra_fields: [
+            {
+              code: 'first_name',
+              contact: true,
+              description: 'First name',
+              required: true,
+              datatype: 'string',
+              max_length: 200,
+            },
+            {
+              code: 'last_name',
+              contact: true,
+              description: 'Last name',
+              required: true,
+              datatype: 'string',
+              max_length: 200,
+            },
+            {
+              code: 'parcel_address',
+              description: 'Issue address or parcel number (optional)',
+              required: false,
+              datatype: 'string',
+              max_length: 250,
+            },
+          ],
+          notes: [
+            'Nicht dringende Sicherheitsprobleme an der kommunalen Infrastruktur. Vorname, Name und E-Mail sind erforderlich; Telefon, Grundstücksangabe und ein Foto sind freiwillig.',
+            'Civic benötigt einen bestätigten Standort und eine Beschreibung. Höchstens ein Foto bis 5 MB.',
+          ],
+        },
+      };
     if (this.name === 'ebikon')
       return Object.fromEntries(
         cats.map((c) => [
@@ -365,6 +442,7 @@ export class MunicipalFormClient implements ReportingAdapter {
             phone_required: false,
             contact_fields: ['phone'],
             max_photos: 1,
+            max_photo_bytes: 5_000_000,
             description_max_length: 400,
             location_label_max_length: 150,
             bodies: [this.municipality],
@@ -400,7 +478,7 @@ export class MunicipalFormClient implements ReportingAdapter {
             ],
             notes: [
               'Vorname, Nachname, E-Mail, Schadensart, Standort und Beschreibung sind erforderlich. Telefon und ein Foto sind freiwillig.',
-              'Die Beschreibung darf höchstens 400 Zeichen, die Standortbezeichnung höchstens 150 Zeichen enthalten. Vorbereitung in Civic; es wird nichts übermittelt.',
+              'Die Beschreibung darf höchstens 400 Zeichen, die Standortbezeichnung höchstens 150 Zeichen enthalten. Höchstens ein Foto bis 5 MB.',
             ],
           } satisfies Requirements,
         ]),
@@ -453,9 +531,52 @@ export class MunicipalFormClient implements ReportingAdapter {
   async nearby(): ReturnType<CityClient['nearby']> {
     throw new Error('Duplicate search is unavailable for this municipality.');
   }
-  async submit(_preview: Prepared): Promise<{ state: 'unknown' }> {
-    throw new Error(
-      'Sending is disabled until municipal upload and receipt verification is complete.',
-    );
+  async submit(
+    preview: Prepared,
+  ): Promise<{ state: 'accepted' | 'rejected' | 'unknown'; report_id?: string }> {
+    if (this.submissionMode !== 'direct' || (this.name !== 'ebikon' && this.name !== 'meggen'))
+      throw new Error(
+        'Sending is disabled until municipal upload and receipt verification is complete.',
+      );
+    const input = reportInput.parse(preview.input);
+    if (
+      preview.destination?.bfs_id !== this.bfsId ||
+      preview.destination.service_id !== this.serviceId ||
+      preview.terms_url !== undefined ||
+      !Number.isFinite(Date.parse(preview.expires_at)) ||
+      Date.parse(preview.expires_at) <= this.now()
+    )
+      throw new Error('Preview destination or expiry does not match this municipality.');
+    const rule = (await this.requirements(input))[input.category];
+    if (
+      !rule ||
+      !input.email ||
+      input.name ||
+      input.description.length > rule.description_max_length! ||
+      input.location_label.length > rule.location_label_max_length! ||
+      preview.photos.length > 1 ||
+      input.photo_ids.length !== preview.photos.length ||
+      preview.photos.some((p, i) => p.id !== input.photo_ids[i])
+    )
+      throw new Error('The approved preview does not match the current municipal requirements.');
+    const fields = rule.extra_fields ?? [];
+    if (
+      Object.keys(input.extra_fields).some((key) => !fields.some((f) => f.code === key)) ||
+      fields.some(
+        (f) =>
+          (f.required && !input.extra_fields[f.code]?.trim()) ||
+          (f.max_length && (input.extra_fields[f.code]?.length ?? 0) > f.max_length),
+      )
+    )
+      throw new Error('The approved contact or extra fields do not match this form.');
+    if (this.retryAt > this.now()) throw changed();
+    const result = await submitOneGov(this.name, preview, this.request, this.now, (delay) => {
+      this.retryAt = Math.max(
+        this.retryAt,
+        this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+      );
+    });
+    if (result.state !== 'accepted') this.retryAt = Math.max(this.retryAt, this.now() + 300_000);
+    return result;
   }
 }
