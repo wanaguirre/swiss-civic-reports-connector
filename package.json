@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.9",
+  "version": "0.4.0-rc.10",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -31,7 +31,8 @@
     "docs/ANTHRAZIT.md",
     "docs/MUNICIPAL-FORMS.md",
     "docs/RIVIERA.md",
-    "docs/ZUCHWIL.md"
+    "docs/ZUCHWIL.md",
+    "docs/RIEHEN.md"
   ],
   "scripts": {
     "build": "node scripts/clean-build.mjs && tsc",
@@ -167,6 +168,10 @@
     "./zuchwil": {
       "types": "./dist/zuchwil.d.ts",
       "import": "./dist/zuchwil.js"
+    },
+    "./riehen": {
+      "types": "./dist/riehen.d.ts",
+      "import": "./dist/riehen.js"
     }
   }
 }

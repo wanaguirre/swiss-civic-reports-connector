@@ -1,3 +1,4 @@
+import { inspectEbikonForm } from './ebikon-form.js';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { CityClient } from './city.js';
 import {
@@ -11,6 +12,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  ebikon: Object.freeze({
+    bfsId: 1054,
+    municipality: 'Ebikon',
+    language: 'de' as const,
+    formUrl: 'https://www.ebikon.ch/form/schaden-melden',
+    reportingUrl: 'https://www.ebikon.ch/form/schaden-melden',
+  }),
   bern: Object.freeze({
     bfsId: 351,
     municipality: 'Bern',
@@ -76,6 +84,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'ebikon') return inspectEbikonForm(html);
   const config = municipalForms[name];
   if (!config || Buffer.byteLength(html) > 1_000_000) throw changed();
   const doc = all(parse(html));
@@ -243,7 +252,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.municipality = config.municipality;
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
-    this.reportingService = name === 'bern' ? 'Schaden melden' : 'Avis de défectuosité';
+    this.reportingService = name !== 'fribourg' ? 'Schaden melden' : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -251,7 +260,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.guidance = {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
-      verified_on: '2026-10-15',
+      verified_on: name === 'ebikon' ? '2026-10-16' : '2026-10-15',
       sources: [{ title: 'Official municipal damage form', url: this.reportingUrl }],
       scope: 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
@@ -260,12 +269,14 @@ export class MunicipalFormClient implements ReportingAdapter {
           issue: 'Emergency or immediate danger',
           next_step: 'Use the appropriate emergency service.',
         },
-        ...(name === 'bern'
+        ...(name === 'bern' || name === 'ebikon'
           ? [
               {
                 issue: 'Street-light fault',
                 next_step:
-                  'Bern directs street-light faults to Energie Wasser Bern (ewb), outside this form.',
+                  name === 'ebikon'
+                    ? 'Ebikon directs street-light faults to CKW, outside this damage form.'
+                    : 'Bern directs street-light faults to Energie Wasser Bern (ewb), outside this form.',
               },
             ]
           : []),
@@ -340,6 +351,60 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'ebikon')
+      return Object.fromEntries(
+        cats.map((c) => [
+          c.service_name,
+          {
+            scope:
+              'Non-emergency damage in public spaces: ' +
+              c.service_name +
+              '. Street-light faults use the separate CKW route.',
+            photo_required: false,
+            email_required: true,
+            phone_required: false,
+            contact_fields: ['phone'],
+            max_photos: 1,
+            description_max_length: 400,
+            location_label_max_length: 150,
+            bodies: [this.municipality],
+            extra_fields: [
+              {
+                code: 'first_name',
+                contact: true,
+                description: 'First name',
+                required: true,
+                datatype: 'string',
+                max_length: 200,
+              },
+              {
+                code: 'last_name',
+                contact: true,
+                description: 'Last name',
+                required: true,
+                datatype: 'string',
+                max_length: 200,
+              },
+              ...(c.service_name === 'Anderer Schaden'
+                ? [
+                    {
+                      code: 'other_damage',
+                      description: 'Type of other damage (optional)',
+                      required: false,
+                      datatype: 'string',
+                      max_length: 200,
+                      translate: true,
+                    },
+                  ]
+                : []),
+            ],
+            notes: [
+              'Vorname, Nachname, E-Mail, Schadensart, Standort und Beschreibung sind erforderlich. Telefon und ein Foto sind freiwillig.',
+              'Die Beschreibung darf höchstens 400 Zeichen, die Standortbezeichnung höchstens 150 Zeichen enthalten. Vorbereitung in Civic; es wird nichts übermittelt.',
+            ],
+          } satisfies Requirements,
+        ]),
+      );
     const rule: Requirements = {
       photo_required: false,
       phone_required: false,
@@ -352,6 +417,7 @@ export class MunicipalFormClient implements ReportingAdapter {
           ? [
               {
                 code: 'reporter_address',
+                contact: true,
                 description: 'Reporter postal street address',
                 required: true,
                 datatype: 'string',
@@ -359,6 +425,7 @@ export class MunicipalFormClient implements ReportingAdapter {
               },
               {
                 code: 'reporter_postcode_city',
+                contact: true,
                 description: 'Reporter postcode and locality',
                 required: true,
                 datatype: 'string',
@@ -366,6 +433,7 @@ export class MunicipalFormClient implements ReportingAdapter {
               },
               {
                 code: 'reporter_address_2',
+                contact: true,
                 description: 'Additional reporter postal address (optional)',
                 required: false,
                 datatype: 'string',

@@ -105,7 +105,11 @@ export type Requirements = {
   // Omitted preserves existing adapters' name/phone support; [] means email only.
   contact_fields?: ('name' | 'phone')[];
   max_photos?: number;
+  max_photo_bytes?: number;
+  /** Public category scope, shared by AI and resident interfaces. */
+  scope?: string;
   description_max_length?: number;
+  location_label_max_length?: number;
   // Included before freezing the preview; never added silently during dispatch.
   description_prefix?: string;
   notes?: string[];
@@ -119,6 +123,8 @@ export type Requirements = {
     max_length?: number;
     // Public report text that clients translate alongside the description.
     translate?: boolean;
+    /** Contact fields are collected separately from public report details. */
+    contact?: boolean;
     values?: unknown;
   }[];
 };
