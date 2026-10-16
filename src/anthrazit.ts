@@ -185,6 +185,26 @@ export const anthrazitTenants = Object.freeze({
     proceed: 'true',
     experimentalSubmission: true,
   }),
+  wetzikon: Object.freeze({
+    bfsId: 121,
+    municipality: 'Wetzikon (ZH)',
+    origin: 'https://m.wetzikon.ch',
+    apid: '464979004',
+    usid: '7235',
+    usmid: '6871',
+    radius: '5000',
+    clat: '47.3263066000',
+    clong: '8.7997303000',
+    terms: '1873856',
+    locationCheck: 'bfs',
+    deviceCoordinates: true,
+    contactText: true,
+    proceed: 'true',
+    lampNumber: true,
+    verifiedOn: '2026-10-16',
+    preparationOnly: true,
+    experimentalSubmission: false,
+  }),
   moosseedorf: Object.freeze({
     bfsId: 544,
     municipality: 'Moosseedorf',
@@ -429,7 +449,7 @@ export class AnthrazitClient implements ReportingAdapter {
   readonly placeMapUrl = 'https://map.geo.admin.ch/?center={longitude},{latitude}&z=10';
   readonly trackingSupported = false;
   readonly fallbackPrefilled = false;
-  readonly submissionMode: 'direct' | 'official_form';
+  readonly submissionMode: 'direct' | 'official_form' | 'unverified';
   readonly privacy =
     'Report title, description, location and photos may be published. Email and optional contact details are sent to the municipality. Update notifications are off unless explicitly selected. Drafts contain these details locally.';
   readonly guidance;
@@ -455,14 +475,16 @@ export class AnthrazitClient implements ReportingAdapter {
     this.reportFormUrl = endpoint(tenant).href;
     this.termsUrl = tenant.terms ? `${tenant.origin}/index.php?apid=${tenant.terms}` : undefined;
     this.submissionMode =
-      tenant.experimentalSubmission && options.experimentalSubmission === true
-        ? 'direct'
-        : 'official_form';
+      'preparationOnly' in tenant
+        ? 'unverified'
+        : tenant.experimentalSubmission && options.experimentalSubmission === true
+          ? 'direct'
+          : 'official_form';
     this.places = options.places ?? new SwissPlaces(request);
     this.guidance = {
       municipality: this.municipality,
       delivery_language: 'de',
-      verified_on: '2026-10-15',
+      verified_on: 'verifiedOn' in tenant ? tenant.verifiedOn : '2026-10-15',
       sources: [{ title: 'Official Stadtmelder', url: this.reportingUrl }],
       scope: 'Non-emergency observations in the municipality. Use live categories.',
       issue_groups: [],
@@ -474,7 +496,9 @@ export class AnthrazitClient implements ReportingAdapter {
       ],
       responsibility: 'The municipality routes the report to its responsible office.',
       routing_note:
-        'Choose from live categories and verify the municipality from the exact point. A public tracking API has not been verified.',
+        this.submissionMode === 'unverified'
+          ? 'Preparation only; upload delivery and municipal receipt are unverified. Do not claim the report has been sent. Lamp number is optional and only applies to streetlights; never infer it from coordinates.'
+          : 'Choose from live categories and verify the municipality from the exact point. A public tracking API has not been verified.',
     };
   }
   mapUrl(point: Point) {
@@ -589,6 +613,17 @@ export class AnthrazitClient implements ReportingAdapter {
               datatype: 'string',
               max_length: 100,
             },
+            ...('lampNumber' in this.tenant
+              ? [
+                  {
+                    code: 'lamp_number',
+                    description: 'Lamp number (optional; streetlights only)',
+                    required: false,
+                    datatype: 'string' as const,
+                    max_length: 80,
+                  },
+                ]
+              : []),
             {
               code: 'notify_updates',
               description: 'Email updates: yes or no (default no)',

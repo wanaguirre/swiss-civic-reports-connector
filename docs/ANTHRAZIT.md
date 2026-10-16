@@ -3,7 +3,7 @@
 `AnthrazitClient` shares category, location, session, upload and wizard handling
 for Winterthur (BFS 230), St. Gallen (3203), Schaffhausen (2939), Dietikon (243),
 Köniz (355), Frauenfeld (4566), Allschwil (2762), Wil (SG, 3427), Bottmingen (2767),
-Moosseedorf (544) and the deferred
+Moosseedorf (544), preparation-only Wetzikon (ZH, 121), and the deferred
 Schlieren profile (247). Tenant IDs and hosts are pinned
 in code. It implements the same `ReportingAdapter` boundary as Zürich, so a
 consumer can use `ReportService` and `createServer` without copying the workflow.
@@ -70,7 +70,7 @@ There is no verified public lookup/tracking adapter. Duplicate search is explici
 unavailable, and receipts cannot be linked to Zürich's public feed. An official
 form fallback opens a blank form; it does not prefill or transfer the draft.
 
-All reviewed anonymous tenants can be opted into controlled genuine-report validation with
+The ten older anonymous tenant profiles can be opted into controlled genuine-report validation with
 `new AnthrazitClient('winterthur', fetch, { experimentalSubmission: true })`
 **and** `ReportService`'s `submissionEnabled: true`. Show the complete preview,
 all extra fields, photos and `terms_url`. Obtain explicit report approval and
@@ -271,3 +271,33 @@ expiry, queue/rate bounds, Retry-After, challenges, fresh submission checks and
 no replay. No real municipal requests, uploads or submissions were used for
 these controls. See HTTP semantics: [429](https://www.rfc-editor.org/rfc/rfc6585#section-4)
 and [Retry-After](https://www.rfc-editor.org/rfc/rfc9110#section-10.2.3).
+
+
+## Wetzikon ZH preparation — 16 October 2026
+
+The [municipal utility instructions](https://www.wetzikon.ch/stadtwerke/stoerungsmeldung/)
+link to [WetziMelder](https://m.wetzikon.ch/index.php?apid=464979004).
+Anonymous GET navigation in a preserved cookie session exposed seven categories,
+location, photo, details and final templates. The documented boundary GET returned
+`{"inbfs":true}` at the official map centre. This is one successful read observation,
+not evidence that other Anthrazit tenants have recovered or that access is reliable
+at public traffic volumes.
+
+`AnthrazitClient('wetzikon')` binds BFS 121, tenant 7235, module 6871 and app
+464979004. It uses live category names and IDs, authoritative BFS routing and
+the tenant boundary check. Categories cover waste/collection points, open spaces,
+praise/criticism, road damage/litter, graffiti, lighting/utilities and traffic/signs.
+Emergencies remain excluded. The observed optional `sf[1]` lamp-number control is
+exposed as `lamp_number`, limited to 80 characters by Civic. It applies only to
+streetlights and is never inferred from location. The usual German title,
+description, email, optional issue address, name/phone, notification choice and
+one-photo preparation rules apply. The observed upload widget is multipart `img`,
+one file per interaction and 15 MB.
+
+This profile always has `submissionMode: 'unverified'`, including when experimental
+writes are requested. It has no enabled write path or external-form completion.
+The linked [terms](https://m.wetzikon.ch/index.php?apid=1873856) are frozen for review;
+preparation is not consent. Real upload acceptance, completed anonymous submission,
+municipal receipt and status linking remain unverified. No photo, location/details
+POST or report was submitted. An operator test environment or genuine approved
+report is required before enabling sending; source/template similarity is insufficient.
