@@ -203,7 +203,7 @@ for (const name of Object.keys(anthrazitTenants))
     const f = await setup(t, { name });
     const p = await f.service.prepare(record(name));
     assert.equal(p.municipality.bfs_id, anthrazitTenants[name].bfsId);
-    assert.equal(p.submission_enabled, name !== 'schlieren');
+    assert.equal(p.submission_enabled, anthrazitTenants[name].experimentalSubmission);
     assert.equal(p.fallback_prefilled, false);
     assert.equal(p.duplicate_search_available, false);
     assert.equal(p.requirements.max_photos, 1);
@@ -849,4 +849,34 @@ test('429 on a final POST is never retried, even after recovery', async (t) => {
   f.advance(60_000);
   assert.equal((await send(f, preview)).already_attempted, true);
   assert.equal(f.posts().filter((c) => c.url.searchParams.get('step') === '5').length, 1);
+});
+
+test('Wetzikon retains its lamp number and cannot send even with both write switches enabled', async (t) => {
+  const f = await setup(t, { name: 'wetzikon', experimental: true, enabled: true });
+  const report = record('wetzikon');
+  report.extra_fields.lamp_number = '30817';
+  const p = await f.service.prepare(report);
+  assert.equal(f.city.submissionMode, 'unverified');
+  assert.equal(p.submission_enabled, false);
+  assert.equal(p.report.extra_fields.lamp_number, '30817');
+  assert.equal(p.terms_url, 'https://m.wetzikon.ch/index.php?apid=1873856');
+  assert.equal(
+    p.requirements.extra_fields.find((field) => field.code === 'lamp_number').required,
+    false,
+  );
+  await assert.rejects(() => send(f, p), /disabled|unavailable/);
+  await assert.rejects(async () => f.city.submit(await f.store.preview(p.preview_id)), /disabled/);
+  assert.equal(f.posts().length, 0);
+  assert.equal((await f.store.receipts()).length, 0);
+  await assert.rejects(() =>
+    f.service.prepare({
+      ...report,
+      extra_fields: { ...report.extra_fields, lamp_number: 'x'.repeat(81) },
+    }),
+  );
+  const wrong = await setup(t, { name: 'wetzikon', bfs: 115 });
+  await assert.rejects(() => wrong.service.prepare(report), /outside/);
+  assert.equal(wrong.calls.length, 0);
+  const rejected = await setup(t, { name: 'wetzikon', locationResult: { inbfs: false } });
+  await assert.rejects(() => rejected.service.prepare(report), /did not confirm/);
 });
