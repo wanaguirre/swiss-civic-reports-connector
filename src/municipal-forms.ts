@@ -1,3 +1,4 @@
+import { inspectBoenigenForm, boenigenRequirements, boenigenScope } from './boenigen-form.js';
 import { inspectGossauForm, gossauRequirements, gossauScope } from './gossau-form.js';
 import { inspectMeggenForm, submitOneGov, oneGovReportUrl } from './onegov-form.js';
 import { inspectEbikonForm } from './ebikon-form.js';
@@ -15,6 +16,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  boenigen: Object.freeze({
+    bfsId: 572,
+    municipality: 'Bönigen',
+    language: 'de' as const,
+    formUrl: 'https://boenigen.ch/services/schaden-melden/',
+    reportingUrl: 'https://boenigen.ch/services/schaden-melden/',
+  }),
   gossau: Object.freeze({
     bfsId: 115,
     municipality: 'Gossau ZH',
@@ -101,6 +109,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'boenigen') return inspectBoenigenForm(html);
   if (name === 'gossau') return inspectGossauForm(html);
   if (name === 'ebikon') return inspectEbikonForm(html);
   if (name === 'meggen') return inspectMeggenForm(html);
@@ -299,14 +308,20 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'gossau' || name === 'ebikon' || name === 'meggen' ? '2026-10-16' : '2026-10-15',
+        name === 'boenigen'
+          ? '2026-10-17'
+          : name === 'gossau' || name === 'ebikon' || name === 'meggen'
+            ? '2026-10-16'
+            : '2026-10-15',
       sources: [{ title: 'Official municipal damage form', url: this.reportingUrl }],
       scope:
-        name === 'gossau'
-          ? gossauScope
-          : name === 'meggen'
-            ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-            : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'boenigen'
+          ? boenigenScope
+          : name === 'gossau'
+            ? gossauScope
+            : name === 'meggen'
+              ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+              : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -400,6 +415,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'boenigen') return boenigenRequirements();
     if (this.name === 'gossau') return gossauRequirements();
     if (this.name === 'meggen')
       return {
