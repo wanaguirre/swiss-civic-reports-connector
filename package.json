@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.19",
+  "version": "0.4.0-rc.20",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -200,6 +200,10 @@
     "./roggwil-form": {
       "types": "./dist/roggwil-form.d.ts",
       "import": "./dist/roggwil-form.js"
+    },
+    "./wohlen-be-form": {
+      "types": "./dist/wohlen-be-form.d.ts",
+      "import": "./dist/wohlen-be-form.js"
     }
   }
 }

@@ -1,4 +1,11 @@
 import {
+  inspectWohlenBeForm,
+  wohlenBeRequirements,
+  wohlenBeScope,
+  wohlenBeFormUrl,
+  wohlenBeTermsUrl,
+} from './wohlen-be-form.js';
+import {
   inspectRoggwilForm,
   roggwilRequirements,
   roggwilScope,
@@ -41,6 +48,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'wohlen-be': Object.freeze({
+    bfsId: 360,
+    municipality: 'Wohlen bei Bern',
+    language: 'de' as const,
+    formUrl: wohlenBeFormUrl,
+    reportingUrl: wohlenBeFormUrl,
+  }),
   roggwil: Object.freeze({
     bfsId: 337,
     municipality: 'Roggwil (BE)',
@@ -176,6 +190,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'wohlen-be') return inspectWohlenBeForm(html);
   if (name === 'roggwil') return inspectRoggwilForm(html);
   if (name === 'langenthal') return inspectLangenthalForm(html);
   if (name === 'staefa') throw new Error('Stäfa requires its public JSON schema and translations.');
@@ -364,25 +379,33 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
     this.termsUrl =
-      name === 'marthalen' ? marthalenTermsUrl : name === 'gossau' ? config.formUrl : undefined;
+      name === 'wohlen-be'
+        ? wohlenBeTermsUrl
+        : name === 'marthalen'
+          ? marthalenTermsUrl
+          : name === 'gossau'
+            ? config.formUrl
+            : undefined;
     this.reportingService =
-      name === 'roggwil'
-        ? 'GBR – Strassenbeleuchtung'
-        : name === 'langenthal'
-          ? 'IB Langenthal – Strassenbeleuchtung'
-          : name === 'staefa'
-            ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
-            : name === 'erlenbach' || name === 'zollikon'
-              ? 'Werke am Zürichsee – Strassenbeleuchtung'
-              : name === 'marthalen'
-                ? 'EGM – Öffentliche Beleuchtung'
-                : name === 'gossau'
-                  ? 'Problem melden'
-                  : name === 'meggen'
-                    ? 'Meldung Sicherheitsproblem'
-                    : name !== 'fribourg'
-                      ? 'Schaden melden'
-                      : 'Avis de défectuosité';
+      name === 'wohlen-be'
+        ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+        : name === 'roggwil'
+          ? 'GBR – Strassenbeleuchtung'
+          : name === 'langenthal'
+            ? 'IB Langenthal – Strassenbeleuchtung'
+            : name === 'staefa'
+              ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+              : name === 'erlenbach' || name === 'zollikon'
+                ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                : name === 'marthalen'
+                  ? 'EGM – Öffentliche Beleuchtung'
+                  : name === 'gossau'
+                    ? 'Problem melden'
+                    : name === 'meggen'
+                      ? 'Meldung Sicherheitsproblem'
+                      : name !== 'fribourg'
+                        ? 'Schaden melden'
+                        : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -391,6 +414,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
+        name === 'wohlen-be' ||
         name === 'roggwil' ||
         name === 'langenthal' ||
         name === 'staefa' ||
@@ -403,6 +427,14 @@ export class MunicipalFormClient implements ReportingAdapter {
             ? '2026-10-16'
             : '2026-10-15',
       sources: [
+        ...(name === 'wohlen-be'
+          ? [
+              {
+                title: 'Municipal and cantonal road lighting responsibilities',
+                url: 'https://www.wohlen-be.ch/de/verwaltung/dienstleistungen/265_strassen',
+              },
+            ]
+          : []),
         ...(name === 'roggwil'
           ? [
               {
@@ -449,23 +481,25 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'roggwil'
-          ? roggwilScope
-          : name === 'langenthal'
-            ? langenthalScope
-            : name === 'staefa'
-              ? staefaScope
-              : name === 'erlenbach' || name === 'zollikon'
-                ? wazScope
-                : name === 'marthalen'
-                  ? marthalenScope
-                  : name === 'boenigen'
-                    ? boenigenScope
-                    : name === 'gossau'
-                      ? gossauScope
-                      : name === 'meggen'
-                        ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                        : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'wohlen-be'
+          ? wohlenBeScope
+          : name === 'roggwil'
+            ? roggwilScope
+            : name === 'langenthal'
+              ? langenthalScope
+              : name === 'staefa'
+                ? staefaScope
+                : name === 'erlenbach' || name === 'zollikon'
+                  ? wazScope
+                  : name === 'marthalen'
+                    ? marthalenScope
+                    : name === 'boenigen'
+                      ? boenigenScope
+                      : name === 'gossau'
+                        ? gossauScope
+                        : name === 'meggen'
+                          ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                          : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -569,6 +603,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'wohlen-be') return wohlenBeRequirements();
     if (this.name === 'roggwil') return roggwilRequirements();
     if (this.name === 'langenthal') return langenthalRequirements();
     if (this.name === 'staefa') return staefaRequirements();

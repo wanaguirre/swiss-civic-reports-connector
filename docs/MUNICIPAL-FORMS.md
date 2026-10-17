@@ -257,3 +257,9 @@ present, but active binding and delivery acceptance are unverified. No scripts,
 challenge, POST, upload or status requests are implemented. Ambiguous future
 delivery must never be retried automatically. A genuine approved report or
 authorized test environment is required before adding sends.
+
+## Wohlen bei Bern (BFS360)
+
+Preparation-only lighting adapter, checked against the public form and municipal-road responsibility page on 2026-10-17. Five fault classes; explicit resident municipal-road confirmation is required and is not independent ownership verification. Cantonal, private and unknown responsibility are excluded. First/last name, contact address, email, lamp locality and privacy consent are required; phone and actual lamp number are optional. Text-only preparation requires explicit source-photo exclusion.
+
+The selected Weblication form is pinned, including validators and the technical empty field. Only the validated local generated action and transient token value are normalized. Public JavaScript was read without execution; server validation, multipart delivery, upload limits, receipt and uncertain-outcome reconciliation remain unverified. Submission and tracking stay disabled; ambiguous delivery must never be automatically replayed.
