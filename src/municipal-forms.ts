@@ -1,4 +1,10 @@
 import {
+  ostermundigenForms,
+  ostermundigenScope,
+  ostermundigenRequirements,
+  inspectOstermundigenForm,
+} from './ostermundigen-form.js';
+import {
   inspectWohlenBeForm,
   wohlenBeRequirements,
   wohlenBeScope,
@@ -48,6 +54,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  ostermundigen: Object.freeze({
+    bfsId: 363,
+    municipality: 'Ostermundigen',
+    language: 'de',
+    formUrl: ostermundigenForms.lighting.url,
+    reportingUrl: 'https://www.ostermundigen.ch/de/verwaltung/abteilungen/detail/detail.php?i=16',
+  }),
   'wohlen-be': Object.freeze({
     bfsId: 360,
     municipality: 'Wohlen bei Bern',
@@ -190,6 +203,8 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'ostermundigen')
+    throw new Error('Ostermundigen requires both separate form contracts.');
   if (name === 'wohlen-be') return inspectWohlenBeForm(html);
   if (name === 'roggwil') return inspectRoggwilForm(html);
   if (name === 'langenthal') return inspectLangenthalForm(html);
@@ -379,33 +394,37 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
     this.termsUrl =
-      name === 'wohlen-be'
-        ? wohlenBeTermsUrl
-        : name === 'marthalen'
-          ? marthalenTermsUrl
-          : name === 'gossau'
-            ? config.formUrl
-            : undefined;
+      name === 'ostermundigen'
+        ? 'https://www.ostermundigen.ch/de/datenschutz/nutzungsbedingungen.php'
+        : name === 'wohlen-be'
+          ? wohlenBeTermsUrl
+          : name === 'marthalen'
+            ? marthalenTermsUrl
+            : name === 'gossau'
+              ? config.formUrl
+              : undefined;
     this.reportingService =
-      name === 'wohlen-be'
-        ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
-        : name === 'roggwil'
-          ? 'GBR – Strassenbeleuchtung'
-          : name === 'langenthal'
-            ? 'IB Langenthal – Strassenbeleuchtung'
-            : name === 'staefa'
-              ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
-              : name === 'erlenbach' || name === 'zollikon'
-                ? 'Werke am Zürichsee – Strassenbeleuchtung'
-                : name === 'marthalen'
-                  ? 'EGM – Öffentliche Beleuchtung'
-                  : name === 'gossau'
-                    ? 'Problem melden'
-                    : name === 'meggen'
-                      ? 'Meldung Sicherheitsproblem'
-                      : name !== 'fribourg'
-                        ? 'Schaden melden'
-                        : 'Avis de défectuosité';
+      name === 'ostermundigen'
+        ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
+        : name === 'wohlen-be'
+          ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+          : name === 'roggwil'
+            ? 'GBR – Strassenbeleuchtung'
+            : name === 'langenthal'
+              ? 'IB Langenthal – Strassenbeleuchtung'
+              : name === 'staefa'
+                ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+                : name === 'erlenbach' || name === 'zollikon'
+                  ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                  : name === 'marthalen'
+                    ? 'EGM – Öffentliche Beleuchtung'
+                    : name === 'gossau'
+                      ? 'Problem melden'
+                      : name === 'meggen'
+                        ? 'Meldung Sicherheitsproblem'
+                        : name !== 'fribourg'
+                          ? 'Schaden melden'
+                          : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -414,6 +433,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
+        name === 'ostermundigen' ||
         name === 'wohlen-be' ||
         name === 'roggwil' ||
         name === 'langenthal' ||
@@ -481,25 +501,27 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'wohlen-be'
-          ? wohlenBeScope
-          : name === 'roggwil'
-            ? roggwilScope
-            : name === 'langenthal'
-              ? langenthalScope
-              : name === 'staefa'
-                ? staefaScope
-                : name === 'erlenbach' || name === 'zollikon'
-                  ? wazScope
-                  : name === 'marthalen'
-                    ? marthalenScope
-                    : name === 'boenigen'
-                      ? boenigenScope
-                      : name === 'gossau'
-                        ? gossauScope
-                        : name === 'meggen'
-                          ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                          : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'ostermundigen'
+          ? ostermundigenScope
+          : name === 'wohlen-be'
+            ? wohlenBeScope
+            : name === 'roggwil'
+              ? roggwilScope
+              : name === 'langenthal'
+                ? langenthalScope
+                : name === 'staefa'
+                  ? staefaScope
+                  : name === 'erlenbach' || name === 'zollikon'
+                    ? wazScope
+                    : name === 'marthalen'
+                      ? marthalenScope
+                      : name === 'boenigen'
+                        ? boenigenScope
+                        : name === 'gossau'
+                          ? gossauScope
+                          : name === 'meggen'
+                            ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                            : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -535,6 +557,11 @@ export class MunicipalFormClient implements ReportingAdapter {
       .replace('{latitude}', String(point.latitude));
   }
   fallbackUrl(_input: ReportInput) {
+    if (this.name === 'ostermundigen')
+      return (
+        Object.values(ostermundigenForms).find((f) => f.category === _input.category)?.url ??
+        this.reportingUrl
+      );
     return this.reportingUrl;
   }
   reportUrl(_id: string): string {
@@ -561,6 +588,31 @@ export class MunicipalFormClient implements ReportingAdapter {
                 this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
               );
             });
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'ostermundigen') {
+            const value: Category[] = [];
+            for (const kind of ['lighting', 'road'] as const) {
+              const response = await this.request(ostermundigenForms[kind].url, {
+                method: 'GET',
+                redirect: 'error',
+                signal: AbortSignal.timeout(20_000),
+                headers: {
+                  Accept: 'text/html',
+                  'User-Agent': 'Civic municipal form preparation (read-only)',
+                },
+              });
+              if (!response.ok) {
+                const header = response.headers.get('retry-after') ?? '';
+                const delay = /^\d+$/.test(header)
+                  ? Number(header) * 1000
+                  : Date.parse(header) - this.now();
+                if (Number.isFinite(delay) && delay > 0)
+                  this.retryAt = this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now());
+              }
+              value.push(...inspectOstermundigenForm(kind, await readHtml(response)));
+            }
             this.cached = { value, expires: this.now() + 300_000 };
             return value;
           }
@@ -603,6 +655,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'ostermundigen') return ostermundigenRequirements();
     if (this.name === 'wohlen-be') return wohlenBeRequirements();
     if (this.name === 'roggwil') return roggwilRequirements();
     if (this.name === 'langenthal') return langenthalRequirements();

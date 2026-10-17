@@ -123,6 +123,8 @@ export type Requirements = {
     required: boolean;
     datatype?: string;
     max_length?: number;
+    /** Bounded formats; never execute provider-supplied regular expressions. */
+    format?: 'postcode_4_5_digits' | 'numeric_date';
     // Public report text that clients translate alongside the description.
     translate?: boolean;
     /** Contact fields are collected separately from public report details. */

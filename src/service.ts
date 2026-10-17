@@ -127,6 +127,12 @@ export class ReportService {
         throw new Error(`${field.description} must not exceed ${field.max_length} characters.`);
       if (field.datatype && !['string', 'text'].includes(field.datatype))
         throw new Error(`Use the official form for this category's typed field: ${key}`);
+      if (value.trim() && field.format) {
+        const formats = { postcode_4_5_digits: /^[0-9]{4,5}$/, numeric_date: /^[0-9.,]+$/ };
+        const pattern = formats[field.format];
+        if (!pattern || !pattern.test(value))
+          throw new Error(`Invalid format for extra field: ${key}`);
+      }
       if (value.trim() && field.values) {
         if (
           !Array.isArray(field.values) ||
