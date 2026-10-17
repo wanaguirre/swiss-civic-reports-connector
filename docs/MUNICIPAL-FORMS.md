@@ -242,3 +242,18 @@ is optional and must be real. No photo is transmitted; source photos require
 explicit attachment exclusion. No submit or tracking transport is implemented;
 experimental flags cannot enable it. Real acceptance and uncertain-outcome
 reconciliation still require approved evidence, with no automatic retry.
+
+## Roggwil BE (GBR), preparation only
+
+`MunicipalFormClient('roggwil')` binds BFS337 and reads the public GBR YForm.
+The municipality-hosted [GBR annual report 2024, page 7](https://www.roggwil.ch/_doc/5714911)
+assigns public-lighting maintenance in Roggwil to GBR. Exclude private lights,
+outages and other defects. Four fault classes; actual lamp number, separate
+issue street/locality, remarks, reporter name/address/email required. Phone is
+optional. Requiredness comes from the form's asterisk guidance; server enforcement
+is untested. No photo transport. The selected form schema is pinned, excluding
+only its transient CSRF value; changes fail closed. Global reCAPTCHA scripts are
+present, but active binding and delivery acceptance are unverified. No scripts,
+challenge, POST, upload or status requests are implemented. Ambiguous future
+delivery must never be retried automatically. A genuine approved report or
+authorized test environment is required before adding sends.
