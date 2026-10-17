@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.17",
+  "version": "0.4.0-rc.18",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -192,6 +192,10 @@
     "./staefa-form": {
       "types": "./dist/staefa-form.d.ts",
       "import": "./dist/staefa-form.js"
+    },
+    "./langenthal-form": {
+      "types": "./dist/langenthal-form.d.ts",
+      "import": "./dist/langenthal-form.js"
     }
   }
 }

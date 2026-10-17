@@ -227,3 +227,18 @@ Source photos require explicit exclusion. No token, login or municipal write
 is performed. The public activity helper serializes mapped fields and uses
 a boolean-like response without a durable receipt; this is not acceptance
 verification. Sending and tracking are unimplemented regardless of flags.
+
+## Langenthal public lighting (2026-10-17)
+
+`MunicipalFormClient('langenthal')` provides text-only preparation for BFS 329.
+The city explicitly directs defective public-road and square lighting to IBL:
+https://www.langenthal.ch/umweltenergie/49274 . Private roads without public
+right of way, private lights, electricity outages and other defects are excluded.
+The selected Ninja Forms 15 JSON settings/fields are hash-pinned without executing
+JavaScript. Schema drift, login restrictions, added fields or changed fault codes
+pause preparation. Issue postcode/locality/street and reporter postcode/locality/
+street remain separate, with first/last name, phone and email required. Pole number
+is optional and must be real. No photo is transmitted; source photos require
+explicit attachment exclusion. No submit or tracking transport is implemented;
+experimental flags cannot enable it. Real acceptance and uncertain-outcome
+reconciliation still require approved evidence, with no automatic retry.
