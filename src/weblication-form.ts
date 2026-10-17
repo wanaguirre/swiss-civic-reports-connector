@@ -5,7 +5,12 @@ const all = (n: Node): Node[] => [n, ...('childNodes' in n ? n.childNodes.flatMa
 const changed = () =>
   new Error('The municipal Weblication form has changed. Preparation is paused.');
 /** Inspect the whole selected form without executing scripts or retaining session tokens. */
-export function inspectWeblicationForm(html: string, selector: string, fingerprint: string) {
+export function inspectWeblicationForm(
+  html: string,
+  selector: string,
+  fingerprint: string,
+  actionKind: 'cached' | 'session' = 'cached',
+) {
   try {
     if (Buffer.byteLength(html) > 1_000_000) throw changed();
     const forms = all(parse(html)).filter(
@@ -18,8 +23,11 @@ export function inspectWeblicationForm(html: string, selector: string, fingerpri
     );
     if (forms.length !== 1 || !('attrs' in forms[0])) throw changed();
     const action = forms[0].attrs.find((a) => a.name === 'action')?.value ?? '';
-    if (!/^\/weblication\/grid5\/tmpHTTP\/wForm-cached-\d+-nsid-[a-z0-9]+\.php$/.test(action))
-      throw changed();
+    const actionPattern =
+      actionKind === 'session'
+        ? /^\/weblication\/grid5\/tmpHTTP\/wForm-nsid-[a-f0-9]{32}\.php$/
+        : /^\/weblication\/grid5\/tmpHTTP\/wForm-cached-\d+-nsid-[a-z0-9]+\.php$/;
+    if (!actionPattern.test(action)) throw changed();
     const semantic = all(forms[0])
       .map((n) => {
         if ('tagName' in n)
