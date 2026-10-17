@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.23",
+  "version": "0.4.0-rc.24",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -216,6 +216,10 @@
     "./dotzigen-form": {
       "types": "./dist/dotzigen-form.d.ts",
       "import": "./dist/dotzigen-form.js"
+    },
+    "./buchsi-form": {
+      "types": "./dist/buchsi-form.d.ts",
+      "import": "./dist/buchsi-form.js"
     }
   }
 }

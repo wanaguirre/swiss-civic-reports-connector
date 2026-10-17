@@ -1,4 +1,10 @@
 import {
+  buchsiFormUrl,
+  buchsiScope,
+  buchsiRequirements,
+  inspectBuchsiForm,
+} from './buchsi-form.js';
+import {
   dotzigenFormUrl,
   dotzigenScope,
   dotzigenRequirements,
@@ -61,6 +67,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  buchsi: Object.freeze({
+    bfsId: 546,
+    municipality: 'Münchenbuchsee',
+    language: 'de',
+    formUrl: buchsiFormUrl,
+    reportingUrl: 'https://www.energiebuchsi.ch/de/online-schalter/',
+  }),
   dotzigen: Object.freeze({
     bfsId: 386,
     municipality: 'Dotzigen',
@@ -224,6 +237,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'buchsi') return inspectBuchsiForm(html);
   if (name === 'dotzigen') return inspectDotzigenForm(html);
   if (name === 'bueren') return inspectEvbForm(html);
   if (name === 'ostermundigen')
@@ -431,31 +445,33 @@ export class MunicipalFormClient implements ReportingAdapter {
                   ? config.formUrl
                   : undefined;
     this.reportingService =
-      name === 'dotzigen'
-        ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
-        : name === 'bueren'
-          ? 'EVB – Strassenbeleuchtung'
-          : name === 'ostermundigen'
-            ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
-            : name === 'wohlen-be'
-              ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
-              : name === 'roggwil'
-                ? 'GBR – Strassenbeleuchtung'
-                : name === 'langenthal'
-                  ? 'IB Langenthal – Strassenbeleuchtung'
-                  : name === 'staefa'
-                    ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
-                    : name === 'erlenbach' || name === 'zollikon'
-                      ? 'Werke am Zürichsee – Strassenbeleuchtung'
-                      : name === 'marthalen'
-                        ? 'EGM – Öffentliche Beleuchtung'
-                        : name === 'gossau'
-                          ? 'Problem melden'
-                          : name === 'meggen'
-                            ? 'Meldung Sicherheitsproblem'
-                            : name !== 'fribourg'
-                              ? 'Schaden melden'
-                              : 'Avis de défectuosité';
+      name === 'buchsi'
+        ? 'Energie Buchsi – Strassenbeleuchtung'
+        : name === 'dotzigen'
+          ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
+          : name === 'bueren'
+            ? 'EVB – Strassenbeleuchtung'
+            : name === 'ostermundigen'
+              ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
+              : name === 'wohlen-be'
+                ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+                : name === 'roggwil'
+                  ? 'GBR – Strassenbeleuchtung'
+                  : name === 'langenthal'
+                    ? 'IB Langenthal – Strassenbeleuchtung'
+                    : name === 'staefa'
+                      ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+                      : name === 'erlenbach' || name === 'zollikon'
+                        ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                        : name === 'marthalen'
+                          ? 'EGM – Öffentliche Beleuchtung'
+                          : name === 'gossau'
+                            ? 'Problem melden'
+                            : name === 'meggen'
+                              ? 'Meldung Sicherheitsproblem'
+                              : name !== 'fribourg'
+                                ? 'Schaden melden'
+                                : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -464,7 +480,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'dotzigen'
+        name === 'buchsi' || name === 'dotzigen'
           ? '2026-10-18'
           : name === 'bueren' ||
               name === 'ostermundigen' ||
@@ -481,6 +497,14 @@ export class MunicipalFormClient implements ReportingAdapter {
               ? '2026-10-16'
               : '2026-10-15',
       sources: [
+        ...(name === 'buchsi'
+          ? [
+              {
+                title: 'Municipal energy and street-lighting referral',
+                url: 'https://www.muenchenbuchsee.ch/de/verwaltung/dienstleistungen/150_energieversorgung:-stromversorgung-wasserversorgung-strassenbeleuchtung',
+              },
+            ]
+          : []),
         ...(name === 'dotzigen'
           ? [
               {
@@ -543,31 +567,33 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'dotzigen'
-          ? dotzigenScope
-          : name === 'bueren'
-            ? evbScope
-            : name === 'ostermundigen'
-              ? ostermundigenScope
-              : name === 'wohlen-be'
-                ? wohlenBeScope
-                : name === 'roggwil'
-                  ? roggwilScope
-                  : name === 'langenthal'
-                    ? langenthalScope
-                    : name === 'staefa'
-                      ? staefaScope
-                      : name === 'erlenbach' || name === 'zollikon'
-                        ? wazScope
-                        : name === 'marthalen'
-                          ? marthalenScope
-                          : name === 'boenigen'
-                            ? boenigenScope
-                            : name === 'gossau'
-                              ? gossauScope
-                              : name === 'meggen'
-                                ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                                : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'buchsi'
+          ? buchsiScope
+          : name === 'dotzigen'
+            ? dotzigenScope
+            : name === 'bueren'
+              ? evbScope
+              : name === 'ostermundigen'
+                ? ostermundigenScope
+                : name === 'wohlen-be'
+                  ? wohlenBeScope
+                  : name === 'roggwil'
+                    ? roggwilScope
+                    : name === 'langenthal'
+                      ? langenthalScope
+                      : name === 'staefa'
+                        ? staefaScope
+                        : name === 'erlenbach' || name === 'zollikon'
+                          ? wazScope
+                          : name === 'marthalen'
+                            ? marthalenScope
+                            : name === 'boenigen'
+                              ? boenigenScope
+                              : name === 'gossau'
+                                ? gossauScope
+                                : name === 'meggen'
+                                  ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                                  : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -701,6 +727,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'buchsi') return buchsiRequirements();
     if (this.name === 'dotzigen') return dotzigenRequirements();
     if (this.name === 'bueren') return evbRequirements();
     if (this.name === 'ostermundigen') return ostermundigenRequirements();
