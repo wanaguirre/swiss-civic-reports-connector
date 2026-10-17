@@ -136,3 +136,17 @@ arrival or municipal acceptance. No public tracking route is established.
 Neither a global send switch nor `experimentalSubmission` can enable Gossau.
 A genuine approved report or operator sandbox must establish delivery and receipt
 before implementing and enabling that transport. All regression writes are mocked.
+
+## Bönigen: preparation only (17 October 2026)
+
+`new MunicipalFormClient('boenigen')` supports the anonymous official Gravity Forms
+intake (BFS 572). One general damage class, German description, exact municipal
+location, first/last name, reporter address/locality, phone and email. One optional
+normalized photo up to Civic's conservative 5 MB limit; the live form advertises
+64 MiB. Reporter address fields are contact data, distinct from issue location.
+
+The strict live schema inspector retains no form tokens. Sending, external-form
+completion and tracking remain unavailable; experimentalSubmission is rejected.
+The public multipart form establishes intended attachment transport, not deployed
+acceptance. Its municipal confirmation, delivery recipient and receipt are not
+verified. No synthetic submission or upload was sent.
