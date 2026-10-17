@@ -1,0 +1,27 @@
+{
+  "common": {
+    "street": "Strasse",
+    "streetNbr": "Nr",
+    "lampNr": "Kandelaber-Nummer",
+    "reason": "Grund",
+    "deffectiveReason1": "Lampe brennt nicht",
+    "deffectiveReason2": "Lampe brennt unregelmässig",
+    "deffectiveReason3": "Leuchte zerstört",
+    "deffectiveReason4": "Andere Defekte",
+    "lastname": "Nachname",
+    "firstname": "Vorname",
+    "communication1": "Telefon",
+    "comments": "Zusätzliche Angaben / Bemerkungen",
+    "salutation": "Anrede"
+  },
+  "forms": {
+    "deffectiveStreetLamp": {
+      "description": "Funktioniert eine Strassenleuchte nicht mehr? Ist Ihnen sonst etwas an der Strassenbeleuchtung aufgefallen? Teilen Sie uns Ihre Beobachtungen bitte hier mit. Bitte füllen Sie das Formular aus oder rufen Sie uns an. Die Lampe wird im Normalfall innerhalb von zwei bis drei Wochen repariert.",
+      "title": "Defekte Strassenlampe melden"
+    },
+    "common": {
+      "deffectiveStreetlamp": "Folgende Strassenlampe ist defekt; in der Nähe von:",
+      "personalInformation": "Persönliche Daten"
+    }
+  }
+}

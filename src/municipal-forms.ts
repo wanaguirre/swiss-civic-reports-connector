@@ -1,3 +1,9 @@
+import {
+  loadStaefaCategories,
+  staefaRequirements,
+  staefaScope,
+  staefaFormUrl,
+} from './staefa-form.js';
 import { inspectWazForm, wazRequirements, wazScope, wazFormUrl } from './waz-form.js';
 import {
   inspectMarthalenForm,
@@ -23,6 +29,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  staefa: Object.freeze({
+    bfsId: 158,
+    municipality: 'Stäfa',
+    language: 'de' as const,
+    formUrl: staefaFormUrl,
+    reportingUrl: staefaFormUrl,
+  }),
   erlenbach: Object.freeze({
     bfsId: 151,
     municipality: 'Erlenbach (ZH)',
@@ -137,6 +150,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'staefa') throw new Error('Stäfa requires its public JSON schema and translations.');
   if (name === 'erlenbach' || name === 'zollikon') return inspectWazForm(html);
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (name === 'boenigen') return inspectBoenigenForm(html);
@@ -324,17 +338,19 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.termsUrl =
       name === 'marthalen' ? marthalenTermsUrl : name === 'gossau' ? config.formUrl : undefined;
     this.reportingService =
-      name === 'erlenbach' || name === 'zollikon'
-        ? 'Werke am Zürichsee – Strassenbeleuchtung'
-        : name === 'marthalen'
-          ? 'EGM – Öffentliche Beleuchtung'
-          : name === 'gossau'
-            ? 'Problem melden'
-            : name === 'meggen'
-              ? 'Meldung Sicherheitsproblem'
-              : name !== 'fribourg'
-                ? 'Schaden melden'
-                : 'Avis de défectuosité';
+      name === 'staefa'
+        ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+        : name === 'erlenbach' || name === 'zollikon'
+          ? 'Werke am Zürichsee – Strassenbeleuchtung'
+          : name === 'marthalen'
+            ? 'EGM – Öffentliche Beleuchtung'
+            : name === 'gossau'
+              ? 'Problem melden'
+              : name === 'meggen'
+                ? 'Meldung Sicherheitsproblem'
+                : name !== 'fribourg'
+                  ? 'Schaden melden'
+                  : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -343,13 +359,25 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'erlenbach' || name === 'zollikon' || name === 'boenigen' || name === 'marthalen'
+        name === 'staefa' ||
+        name === 'erlenbach' ||
+        name === 'zollikon' ||
+        name === 'boenigen' ||
+        name === 'marthalen'
           ? '2026-10-17'
           : name === 'gossau' || name === 'ebikon' || name === 'meggen'
             ? '2026-10-16'
             : '2026-10-15',
       sources: [
         { title: 'Official reporting form', url: this.reportingUrl },
+        ...(name === 'staefa'
+          ? [
+              {
+                title: 'GWS municipal public-lighting responsibility',
+                url: 'https://gws.ch/stromversorgung/',
+              },
+            ]
+          : []),
         ...(name === 'erlenbach' || name === 'zollikon'
           ? [
               {
@@ -371,17 +399,19 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'erlenbach' || name === 'zollikon'
-          ? wazScope
-          : name === 'marthalen'
-            ? marthalenScope
-            : name === 'boenigen'
-              ? boenigenScope
-              : name === 'gossau'
-                ? gossauScope
-                : name === 'meggen'
-                  ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                  : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'staefa'
+          ? staefaScope
+          : name === 'erlenbach' || name === 'zollikon'
+            ? wazScope
+            : name === 'marthalen'
+              ? marthalenScope
+              : name === 'boenigen'
+                ? boenigenScope
+                : name === 'gossau'
+                  ? gossauScope
+                  : name === 'meggen'
+                    ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                    : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -436,6 +466,16 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (!this.pending)
       this.pending = (async () => {
         try {
+          if (this.name === 'staefa') {
+            const value = await loadStaefaCategories(this.request, (delay) => {
+              this.retryAt = Math.max(
+                this.retryAt,
+                this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+              );
+            });
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
           const response = await this.request(this.reportFormUrl, {
             method: 'GET',
             redirect: 'error',
@@ -475,6 +515,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'staefa') return staefaRequirements();
     if (this.name === 'erlenbach' || this.name === 'zollikon')
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();

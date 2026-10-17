@@ -207,3 +207,23 @@ a durable receipt. There is no send or tracking implementation; experimental
 and global submission switches cannot unlock these adapters. A real approved
 report or authorized test environment must establish acceptance and uncertain
 outcome handling before any future transport is enabled.
+
+## Stäfa / Gemeindewerke Stäfa
+
+`MunicipalFormClient('staefa')` binds BFS 158 and service `staefa-defect-form`.
+GWS explicitly [operates public lighting throughout Stäfa on behalf of the municipality](https://gws.ch/stromversorgung/), including Uerikon (read 2026-10-17).
+Its [public form](https://kundenportal.gws.ch/forms/deffective-street-lamp) is
+logged-out accessible despite the customer-portal hostname. Preparation reads
+only the public Energyboard layout and German translations with tenant `GWS`.
+The entire selected form and relevant translations are canonically hash-pinned;
+key order and unrelated tenant content can change, but form, field, condition,
+protection or selected wording drift pauses preparation. One megabyte response
+limits, five-minute cache/backoff and Retry-After handling apply.
+
+Four lighting classes require first/last name and phone; there is no email or
+file field. Civic additionally requires a meaningful confirmed location/street
+and description. Nearby house number and actual pole number are optional.
+Source photos require explicit exclusion. No token, login or municipal write
+is performed. The public activity helper serializes mapped fields and uses
+a boolean-like response without a durable receipt; this is not acceptance
+verification. Sending and tracking are unimplemented regardless of flags.

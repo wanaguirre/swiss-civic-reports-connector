@@ -74,7 +74,7 @@ export class CityClient {
     const response = await this.request(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.16 (independent civic reporting client)',
+        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.17 (independent civic reporting client)',
       },
       signal: AbortSignal.timeout(20_000),
       redirect: 'error',
@@ -232,7 +232,7 @@ export class CityClient {
       body: form,
       redirect: 'error',
       signal: AbortSignal.timeout(45_000),
-      headers: { Accept: 'application/json', 'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.16' },
+      headers: { Accept: 'application/json', 'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.17' },
     });
     if (!response.ok) throw new Error('Submission result uncertain. Do not retry.');
     const body = await response.json();
