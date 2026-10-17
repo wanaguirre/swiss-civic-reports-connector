@@ -1,3 +1,4 @@
+import { evbFormUrl, evbScope, evbRequirements, inspectEvbForm } from './evb-form.js';
 import {
   ostermundigenForms,
   ostermundigenScope,
@@ -54,6 +55,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  bueren: Object.freeze({
+    bfsId: 383,
+    municipality: 'Büren an der Aare',
+    language: 'de',
+    formUrl: evbFormUrl,
+    reportingUrl: evbFormUrl,
+  }),
   ostermundigen: Object.freeze({
     bfsId: 363,
     municipality: 'Ostermundigen',
@@ -203,6 +211,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'bueren') return inspectEvbForm(html);
   if (name === 'ostermundigen')
     throw new Error('Ostermundigen requires both separate form contracts.');
   if (name === 'wohlen-be') return inspectWohlenBeForm(html);
@@ -394,37 +403,41 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
     this.termsUrl =
-      name === 'ostermundigen'
-        ? 'https://www.ostermundigen.ch/de/datenschutz/nutzungsbedingungen.php'
-        : name === 'wohlen-be'
-          ? wohlenBeTermsUrl
-          : name === 'marthalen'
-            ? marthalenTermsUrl
-            : name === 'gossau'
-              ? config.formUrl
-              : undefined;
+      name === 'bueren'
+        ? 'https://www.ev-bueren.ch/datenschutz/'
+        : name === 'ostermundigen'
+          ? 'https://www.ostermundigen.ch/de/datenschutz/nutzungsbedingungen.php'
+          : name === 'wohlen-be'
+            ? wohlenBeTermsUrl
+            : name === 'marthalen'
+              ? marthalenTermsUrl
+              : name === 'gossau'
+                ? config.formUrl
+                : undefined;
     this.reportingService =
-      name === 'ostermundigen'
-        ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
-        : name === 'wohlen-be'
-          ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
-          : name === 'roggwil'
-            ? 'GBR – Strassenbeleuchtung'
-            : name === 'langenthal'
-              ? 'IB Langenthal – Strassenbeleuchtung'
-              : name === 'staefa'
-                ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
-                : name === 'erlenbach' || name === 'zollikon'
-                  ? 'Werke am Zürichsee – Strassenbeleuchtung'
-                  : name === 'marthalen'
-                    ? 'EGM – Öffentliche Beleuchtung'
-                    : name === 'gossau'
-                      ? 'Problem melden'
-                      : name === 'meggen'
-                        ? 'Meldung Sicherheitsproblem'
-                        : name !== 'fribourg'
-                          ? 'Schaden melden'
-                          : 'Avis de défectuosité';
+      name === 'bueren'
+        ? 'EVB – Strassenbeleuchtung'
+        : name === 'ostermundigen'
+          ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
+          : name === 'wohlen-be'
+            ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+            : name === 'roggwil'
+              ? 'GBR – Strassenbeleuchtung'
+              : name === 'langenthal'
+                ? 'IB Langenthal – Strassenbeleuchtung'
+                : name === 'staefa'
+                  ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+                  : name === 'erlenbach' || name === 'zollikon'
+                    ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                    : name === 'marthalen'
+                      ? 'EGM – Öffentliche Beleuchtung'
+                      : name === 'gossau'
+                        ? 'Problem melden'
+                        : name === 'meggen'
+                          ? 'Meldung Sicherheitsproblem'
+                          : name !== 'fribourg'
+                            ? 'Schaden melden'
+                            : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -433,6 +446,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
+        name === 'bueren' ||
         name === 'ostermundigen' ||
         name === 'wohlen-be' ||
         name === 'roggwil' ||
@@ -501,27 +515,29 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'ostermundigen'
-          ? ostermundigenScope
-          : name === 'wohlen-be'
-            ? wohlenBeScope
-            : name === 'roggwil'
-              ? roggwilScope
-              : name === 'langenthal'
-                ? langenthalScope
-                : name === 'staefa'
-                  ? staefaScope
-                  : name === 'erlenbach' || name === 'zollikon'
-                    ? wazScope
-                    : name === 'marthalen'
-                      ? marthalenScope
-                      : name === 'boenigen'
-                        ? boenigenScope
-                        : name === 'gossau'
-                          ? gossauScope
-                          : name === 'meggen'
-                            ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                            : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'bueren'
+          ? evbScope
+          : name === 'ostermundigen'
+            ? ostermundigenScope
+            : name === 'wohlen-be'
+              ? wohlenBeScope
+              : name === 'roggwil'
+                ? roggwilScope
+                : name === 'langenthal'
+                  ? langenthalScope
+                  : name === 'staefa'
+                    ? staefaScope
+                    : name === 'erlenbach' || name === 'zollikon'
+                      ? wazScope
+                      : name === 'marthalen'
+                        ? marthalenScope
+                        : name === 'boenigen'
+                          ? boenigenScope
+                          : name === 'gossau'
+                            ? gossauScope
+                            : name === 'meggen'
+                              ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                              : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -655,6 +671,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'bueren') return evbRequirements();
     if (this.name === 'ostermundigen') return ostermundigenRequirements();
     if (this.name === 'wohlen-be') return wohlenBeRequirements();
     if (this.name === 'roggwil') return roggwilRequirements();
