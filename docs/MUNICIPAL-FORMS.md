@@ -150,3 +150,29 @@ completion and tracking remain unavailable; experimentalSubmission is rejected.
 The public multipart form establishes intended attachment transport, not deployed
 acceptance. Its municipal confirmation, delivery recipient and receipt are not
 verified. No synthetic submission or upload was sent.
+
+
+## Marthalen public lighting (BFS 35)
+
+`new MunicipalFormClient('marthalen')` provides opt-in preparation for the four
+lighting-defect choices in EGM's public Elementor form. EGM's official
+[responsibility page](https://eg-m.ch/projekt/oeffentliche-beleuchtung/) states that
+it operates and maintains Marthalen's public lighting on behalf of the municipality.
+The scope excludes private lights, general infrastructure and electricity outages.
+
+The inspector selects form `a1a202b` / post `2236`, checks the complete control
+schema, exact choices and privacy link, and fails closed on protection, duplicates
+or drift. An unrelated Contact Form 7 CAPTCHA popup is not this form. Exact BFS
+boundary validation happens before form reads. The current public HTML was checked
+on 17 October 2026; fixtures are synthetic and all test requests are mocked.
+
+First/last name and email are required; phone and a known lamp number are optional.
+The confirmed location must identify the street and nearby house number. A source
+photo can assist drafting, but the municipal preview must explicitly exclude it:
+`max_photos` is zero. The privacy policy is linked in the frozen preview.
+
+Sending and tracking are unconditionally disabled, including under experimental
+OneGov opt-in. No live validation, upload or report was sent. Client-side AJAX
+success handling is not proof of municipal acceptance; no transport is exposed
+until acceptance/reconciliation are supported and reviewed. Do not retry an
+uncertain submission or substitute invented lamp identifiers.
