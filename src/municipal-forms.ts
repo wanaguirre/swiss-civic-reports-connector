@@ -1,3 +1,4 @@
+import { inspectWazForm, wazRequirements, wazScope, wazFormUrl } from './waz-form.js';
 import {
   inspectMarthalenForm,
   marthalenRequirements,
@@ -22,6 +23,20 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  erlenbach: Object.freeze({
+    bfsId: 151,
+    municipality: 'Erlenbach (ZH)',
+    language: 'de' as const,
+    formUrl: wazFormUrl,
+    reportingUrl: wazFormUrl,
+  }),
+  zollikon: Object.freeze({
+    bfsId: 161,
+    municipality: 'Zollikon',
+    language: 'de' as const,
+    formUrl: wazFormUrl,
+    reportingUrl: wazFormUrl,
+  }),
   marthalen: Object.freeze({
     bfsId: 35,
     municipality: 'Marthalen',
@@ -122,6 +137,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'erlenbach' || name === 'zollikon') return inspectWazForm(html);
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (name === 'boenigen') return inspectBoenigenForm(html);
   if (name === 'gossau') return inspectGossauForm(html);
@@ -308,15 +324,17 @@ export class MunicipalFormClient implements ReportingAdapter {
     this.termsUrl =
       name === 'marthalen' ? marthalenTermsUrl : name === 'gossau' ? config.formUrl : undefined;
     this.reportingService =
-      name === 'marthalen'
-        ? 'EGM – Öffentliche Beleuchtung'
-        : name === 'gossau'
-          ? 'Problem melden'
-          : name === 'meggen'
-            ? 'Meldung Sicherheitsproblem'
-            : name !== 'fribourg'
-              ? 'Schaden melden'
-              : 'Avis de défectuosité';
+      name === 'erlenbach' || name === 'zollikon'
+        ? 'Werke am Zürichsee – Strassenbeleuchtung'
+        : name === 'marthalen'
+          ? 'EGM – Öffentliche Beleuchtung'
+          : name === 'gossau'
+            ? 'Problem melden'
+            : name === 'meggen'
+              ? 'Meldung Sicherheitsproblem'
+              : name !== 'fribourg'
+                ? 'Schaden melden'
+                : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -325,13 +343,24 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'boenigen' || name === 'marthalen'
+        name === 'erlenbach' || name === 'zollikon' || name === 'boenigen' || name === 'marthalen'
           ? '2026-10-17'
           : name === 'gossau' || name === 'ebikon' || name === 'meggen'
             ? '2026-10-16'
             : '2026-10-15',
       sources: [
         { title: 'Official reporting form', url: this.reportingUrl },
+        ...(name === 'erlenbach' || name === 'zollikon'
+          ? [
+              {
+                title: 'Municipal lighting responsibility',
+                url:
+                  name === 'erlenbach'
+                    ? 'https://www.erlenbach.ch/de/dienstleistungen/strassenbeleuchtung/'
+                    : 'https://www.zollikon.ch/verkehr',
+              },
+            ]
+          : []),
         ...(name === 'marthalen'
           ? [
               {
@@ -342,15 +371,17 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'marthalen'
-          ? marthalenScope
-          : name === 'boenigen'
-            ? boenigenScope
-            : name === 'gossau'
-              ? gossauScope
-              : name === 'meggen'
-                ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'erlenbach' || name === 'zollikon'
+          ? wazScope
+          : name === 'marthalen'
+            ? marthalenScope
+            : name === 'boenigen'
+              ? boenigenScope
+              : name === 'gossau'
+                ? gossauScope
+                : name === 'meggen'
+                  ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                  : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -444,6 +475,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'erlenbach' || this.name === 'zollikon')
+      return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
     if (this.name === 'boenigen') return boenigenRequirements();
     if (this.name === 'gossau') return gossauRequirements();

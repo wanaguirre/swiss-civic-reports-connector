@@ -176,3 +176,34 @@ OneGov opt-in. No live validation, upload or report was sent. Client-side AJAX
 success handling is not proof of municipal acceptance; no transport is exposed
 until acceptance/reconciliation are supported and reviewed. Do not retry an
 uncertain submission or substitute invented lamp identifiers.
+
+## Werke am Zürichsee: Erlenbach and Zollikon
+
+`MunicipalFormClient('erlenbach')` (BFS 151) and `('zollikon')` (BFS 161)
+share the public Craft Formie lighting contract but retain independent service
+identities and exact boundary checks. Municipal sources establish lighting
+responsibility: [Erlenbach](https://www.erlenbach.ch/de/dienstleistungen/strassenbeleuchtung/)
+and [Zollikon](https://www.zollikon.ch/verkehr). The operator's
+[current form](https://www.werkezuerichsee.ch/formulare/stoerungsmeldung-strassenbeleuchtung)
+was read on 2026-10-17; no login, upload, token refresh or POST was performed.
+Küsnacht is not included without independent lighting responsibility evidence.
+
+Five lighting categories are supported for individual residents. First/last
+name, contact postal code/locality, phone/email and the light's street/postal
+code/locality are required. Contact address, nearby house number and actual
+pole number are optional. Salutation/company remain omitted: the company
+branch is not supported. The inspector validates labels and both conditional
+rules because the form's `vorname` is company and `name` is first name.
+Civic requires a description for every category, including the form's required
+other-defect description. No photos can be delivered; source photos must be
+explicitly excluded before preview.
+
+The inspector performs only a GET and rejects changes to form identity,
+controls, labels, requiredness, choices, conditional rules and protection.
+CSRF and return values in the fixture are offline placeholders. The public
+Formie runtime's token refresh and conditional CAPTCHA behavior have not been
+verified. The configured thank-you message establishes neither delivery nor
+a durable receipt. There is no send or tracking implementation; experimental
+and global submission switches cannot unlock these adapters. A real approved
+report or authorized test environment must establish acceptance and uncertain
+outcome handling before any future transport is enabled.
