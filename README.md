@@ -108,3 +108,9 @@ Adds opt-in Gossau ZH preparation with exact field/phone validation, public scop
 private contact fields, one photo and linked terms. Sending is unconditionally
 disabled; no municipal writes or real receipts were verified. See
 [municipal forms](docs/MUNICIPAL-FORMS.md#gossau-zh--16-october-2026).
+
+Lungern (BFS1405) has source-pinned preparation through its municipal
+Mängelmelder: eleven reviewed defect classes, required names/email and precise
+location, and one optional local photo. Its four metadata POSTs are named
+configuration queries with no resident/report data. Sending, external completion
+and tracking remain unavailable; see [the contract](docs/MUNICIPAL-FORMS.md#lungern--municipal-mängelmelder-18-october-2026).

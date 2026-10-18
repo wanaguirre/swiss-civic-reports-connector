@@ -490,3 +490,47 @@ GET does not require municipal login; unrelated municipal login overlay is not a
 gate. The form posts to its CF7 action; AJAX/receipt behavior is unverified.
 Sending, external completion and tracking remain unavailable even if global or
 experimental flags are set. Uncertain outcomes stay unconfirmed with no retry.
+
+## Lungern / municipal Mängelmelder (18 October 2026)
+
+The [municipal infrastructure department](https://www.lungern.ch/aemter/6448)
+explicitly links the Lungern tenant of maengelmelder.eu. The shared
+`lungern-form` module pins its complete widget fingerprint and selected tenant
+configuration, categories, location centre and translated labels. It does not
+redistribute vendor implementation code or execute it. Public client keys are
+read from the embedding and not retained in fixtures or cached metadata.
+
+The actual tenant has eleven defect classes, including bins/Robidog, shafts,
+signs, benches, public playgrounds, lighting, vandalism and public toilets.
+`Sonstiges` remains restricted to non-emergency public-space maintenance.
+Exact BFS1405 is checked before provider access; the tenant's polygon is empty,
+so its map centre cannot determine geographic eligibility or asset ownership.
+First/last name, email, description and detailed location are required. Telephone
+and reporter postal address are not enabled. Names are contact data, excluded
+from AI drafting. The explicit privacy-consent choice is frozen locally and is
+never submitted or silently accepted by Civic.
+
+One optional normalized JPEG up to5MB is a **local preparation limit**; the
+provider widget accepts PNG/JPEG but publishes no server byte limit. Local
+limits also bound description5000, location label250, detailed location500 and
+names250 characters. No synthetic upload or real submission was performed.
+
+Loading metadata makes two GETs and exactly four named JSON configuration POST
+queries (`getAllDataFromConfigAsArray`, `reportTypes`, `geoLocation`, `getTexts`).
+These contain only customer/action and a public client bearer, with no resident,
+report, photo, consent or location data. Report creation is the shared endpoint's
+default action: the loader never invokes it or `reportsNearby` validation.
+The observed PHP response labels JSON as text/html; the loader accepts that MIME
+only for these fixed configuration queries, parses JSON and pins the complete
+selected data. HTML challenges still fail. Redirects and oversized/non-JSON
+bodies fail closed; drift clears metadata
+and applies cooldown. The widget's empty honeypot/five-second checks are source
+evidence only, never exercised or bypassed.
+
+Preparation is unverified and cannot send, complete externally or track, even
+with global/experimental switches. The client treats `id=0` as success; it is a
+status sentinel, not a municipal case ID. An approved genuine report or operator
+test environment and durable acceptance/duplicate reconciliation are required
+before implementing sending. An uncertain result must never trigger a retry or
+alternate channel. Offline engine/schema tests use fictional data; packaged
+smoke checks use locally captured source bytes without redistributing them.
