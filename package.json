@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.55",
+  "version": "0.4.0-rc.56",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -284,6 +284,10 @@
     "./wil-lighting-form": {
       "types": "./dist/wil-lighting-form.d.ts",
       "import": "./dist/wil-lighting-form.js"
+    },
+    "./falera-form": {
+      "types": "./dist/falera-form.d.ts",
+      "import": "./dist/falera-form.js"
     }
   }
 }

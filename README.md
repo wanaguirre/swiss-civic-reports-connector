@@ -130,3 +130,10 @@ and tracking remain unavailable; see [the contract](docs/MUNICIPAL-FORMS.md#lung
 Stäfa and the fourteen independently qualified CKW lighting profiles reject
 reporter email because their supported forms have no email control. Account email
 is excluded from preparation; optional email on other supported forms is retained.
+
+Falera (BFS3572) has source-pinned text preparation through
+`MunicipalFormClient('falera')` for nonurgent municipal public-works questions and
+problems. Combined name, email and comment are required; private postal contacts
+and phone are optional. Confirm the actual public asset and responsibility, exclude
+photos, and keep sending, external completion and tracking disabled. See the
+[Falera contract](docs/MUNICIPAL-FORMS.md#falera--municipal-works-questions-and-problems-18-october-2026).

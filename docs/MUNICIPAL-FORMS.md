@@ -836,3 +836,29 @@ attachment cleanup, final redirect/report binding and reconciliation are unknown
 `cspmsl_sbmt` is a success-notice parameter, not a verified receipt. Sending,
 external completion and tracking remain unavailable even with experimental/global
 switches. Never retry or switch channels after uncertain delivery.
+
+## Falera — municipal works questions and problems (18 October 2026)
+
+`MunicipalFormClient('falera')` prepares text-only questions/problems about municipal
+public works in exact BFS3572. The [works page](https://www.falera.net/verwaltung/werkhofstrassenwesen/)
+invites questions/problems and lists roads, paths, streetlights, waste and municipal
+facilities. The [general contact form](https://www.falera.net/kontakt/kontaktformular/)
+has required combined name, email and comment, with optional private address,
+postal locality and telephone. These contacts stay separate from the issue location.
+The local routing label and responsibility confirmation are not official form fields
+or independent proof of asset ownership. Local text limits are not claimed as
+municipal server validation. Private assets, outages and emergencies are excluded.
+
+The complete selected Gravity Form2 and all37 published script semantics are pinned.
+Only shaped read-time form state, the initial Akismet field and the matching
+unrelated generated slider identifier are checked and discarded. The empty Akismet
+trap, timestamp client and other scripts are never executed or simulated. There is
+no selected CAPTCHA; generic cookie controls are not a selected challenge. Source
+changes pause preparation. The sanitized fixture contains no actual read-time state
+or resident data. Both actual source captures pass the inspector.
+
+No file/consent/category/issue-location control was selected. Source photos must be
+explicitly excluded. No transport payload, municipal POST, upload, external completion,
+tracking, receipt or acceptance is implemented or verified. An approved genuine
+report or authorized environment is required for delivery verification; uncertain
+outcomes never permit automatic retry, recreation or another sending channel.
