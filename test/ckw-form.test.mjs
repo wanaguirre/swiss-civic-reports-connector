@@ -48,6 +48,7 @@ test('CKW membership requires an independently qualified own key, not a provider
     'alberswil',
     'grosswangen',
     'rickenbach',
+    'sempach',
     'Knutwil',
     'constructor',
     'toString',

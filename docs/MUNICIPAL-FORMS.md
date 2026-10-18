@@ -368,6 +368,14 @@ asks for the actual pole number if possible; the two CKW online branches require
 it. Only online preparation is implemented; the published email does not enable
 alternate sending or retry. Water leaks instead go to the named Wassermeister,
 aquaregio; meter readings are separate administration.
+`MunicipalFormClient('sursee')` binds BFS1103. Its [municipal lighting page](https://www.sursee.ch/strom/25442)
+explicitly says the city owns the lighting and CKW operates/maintains it for the
+city. Lamp faults go to CKW (municipal phone referral); the provider's reviewed
+online single-lamp form supplies the preparation contract. Other physical damage
+goes to Tiefbau and is excluded. The actual brown-plaque number is requested if
+possible by the city, and required by the online branches. Sempach instead refers
+lighting questions to its municipal infrastructure department; it is not added
+from historical CKW locality options.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;

@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  sursee: {
+    name: 'Sursee',
+    bfsId: 1103,
+    referralUrl: 'https://www.sursee.ch/strom/25442',
+  },
   schenkon: {
     name: 'Schenkon',
     bfsId: 1099,
@@ -137,6 +142,11 @@ export function ckwRequirements(name: CkwMunicipality): Record<string, Requireme
           },
         ],
         notes: [
+          ...(name === 'sursee'
+            ? [
+                'Die Stadt ist Eigentümerin; CKW betreibt und unterhält die Beleuchtung. Sonstige Beschädigungen gehören zum Bereich Tiefbau und sind in diesen beiden Vorbereitungsklassen nicht enthalten.',
+              ]
+            : []),
           ...(name === 'oberkirch'
             ? [
                 'Die Gemeinde nennt im Normalfall zwei bis drei Wochen bis zur Reparatur. Dies ist keine Notfallmeldung und keine Zusage für einen bestimmten Termin.',
