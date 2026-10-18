@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  schoetz: {
+    name: 'Schötz',
+    bfsId: 1143,
+    referralUrl: 'https://www.schoetz.ch/de/verwaltung/dienstleistungen/',
+  },
   ettiswil: {
     name: 'Ettiswil',
     bfsId: 1128,

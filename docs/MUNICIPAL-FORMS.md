@@ -391,6 +391,13 @@ online form. This explicit fault referral qualifies independently of electricity
 supply. The two provider single-lamp branches require the actual plaque number;
 the municipal page does not publish its own number format. Page-wide WordPress
 login overlays do not gate the public referral or provider metadata.
+`MunicipalFormClient('schoetz')` binds BFS1143. The current municipal
+[service catalogue](https://www.schoetz.ch/de/verwaltung/dienstleistungen/)
+explicitly links defective streetlamps to CKW's fault route. This independently
+qualifies preparation; the provider locality list alone does not. Municipal
+water services cover Ohmstal separately from the Schötz water cooperative and
+do not expand this lighting scope. Luthern's own municipal lighting contact
+is not a CKW mandate and does not qualify a CKW profile.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
