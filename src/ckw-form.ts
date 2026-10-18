@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  eich: {
+    name: 'Eich',
+    bfsId: 1084,
+    referralUrl: 'https://www.eich.ch/freizeit-wirtschaft/umwelt-und-energie/versorgung/',
+  },
   bueron: {
     name: 'Büron',
     bfsId: 1082,

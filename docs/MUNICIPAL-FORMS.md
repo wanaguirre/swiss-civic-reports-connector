@@ -321,7 +321,7 @@ synthetic upload or live report was performed. A supported receipt/session
 contract and an approved genuine report or authorized test environment remain
 necessary before verified delivery. Unknown outcomes never authorize retries.
 
-## CKW / Werthenstein, Adligenswil and Büron lighting preparation (18 October 2026)
+## CKW / Werthenstein, Adligenswil, Büron and Eich lighting preparation (18 October 2026)
 
 `MunicipalFormClient('werthenstein')` binds BFS1009 before provider reads. The
 [municipal works page](https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/)
@@ -338,6 +338,11 @@ refer defective streetlighting to CKW, separately from general municipal concern
 The provider's single-lamp branches require the actual plaque number. The general
 Dorfmelder's visible lighting category does not override this municipal referral,
 and no general Büron damage-form adapter is implied.
+`MunicipalFormClient('eich')` separately binds BFS1084. Eich's official
+[supply page](https://www.eich.ch/freizeit-wirtschaft/umwelt-und-energie/versorgung/)
+explicitly directs defective streetlamp reports online to CKW. Its separate
+water-purchase and wastewater-treatment arrangements do not extend this lighting
+profile to other utility defects. The provider requires the actual lamp number.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
