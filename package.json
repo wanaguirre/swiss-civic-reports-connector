@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.58",
+  "version": "0.4.0-rc.59",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -296,6 +296,10 @@
     "./energia-engiadina-form": {
       "types": "./dist/energia-engiadina-form.d.ts",
       "import": "./dist/energia-engiadina-form.js"
+    },
+    "./rabiosa-form": {
+      "types": "./dist/rabiosa-form.d.ts",
+      "import": "./dist/rabiosa-form.js"
     }
   }
 }

@@ -150,3 +150,19 @@ problems. Combined name, email and comment are required; private postal contacts
 and phone are optional. Confirm the actual public asset and responsibility, exclude
 photos, and keep sending, external completion and tracking disabled. See the
 [Falera contract](docs/MUNICIPAL-FORMS.md#falera--municipal-works-questions-and-problems-18-october-2026).
+
+### Rabiosa Energie: Churwalden lighting preparation
+
+`rabiosa-churwalden` binds BFS3911 and an actual public lamp maintained by Rabiosa
+Energie. The dedicated form requires street and locality; lamp number, description
+and all reporter contacts are optional in the source. Civic adds a useful description,
+maintained-asset confirmation and local length caps. Preserve real lamp numbers,
+including leading zeros. Contacts remain private; photos are excluded.
+
+The complete selected accordion and all 27 scripts are pinned. Only strictly shaped
+read-time request-token and trap-name/value strings are discarded. No trap swapping,
+client/protection execution, POST payload, external completion or tracking is
+implemented. Preparation is GET-only; global and experimental switches cannot enable
+sending. Exact public-lamp responsibility still requires confirmation; boundaries
+do not verify ownership. An uncertain outcome never permits retry, recreation or
+another channel. The consuming Civic flag remains false.

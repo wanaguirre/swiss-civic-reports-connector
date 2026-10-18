@@ -936,3 +936,19 @@ explicitly excluded. No transport payload, municipal POST, upload, external comp
 tracking, receipt or acceptance is implemented or verified. An approved genuine
 report or authorized environment is required for delivery verification; uncertain
 outcomes never permit automatic retry, recreation or another sending channel.
+
+### Rabiosa Energie: Churwalden lighting preparation
+
+`rabiosa-churwalden` binds BFS3911 and an actual public lamp maintained by Rabiosa
+Energie. The dedicated form requires street and locality; lamp number, description
+and all reporter contacts are optional in the source. Civic adds a useful description,
+maintained-asset confirmation and local length caps. Preserve real lamp numbers,
+including leading zeros. Contacts remain private; photos are excluded.
+
+The complete selected accordion and all 27 scripts are pinned. Only strictly shaped
+read-time request-token and trap-name/value strings are discarded. No trap swapping,
+client/protection execution, POST payload, external completion or tracking is
+implemented. Preparation is GET-only; global and experimental switches cannot enable
+sending. Exact public-lamp responsibility still requires confirmation; boundaries
+do not verify ownership. An uncertain outcome never permits retry, recreation or
+another channel. The consuming Civic flag remains false.
