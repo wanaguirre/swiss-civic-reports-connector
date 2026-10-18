@@ -1,3 +1,20 @@
+## Titterten preparation — 18 October 2026
+
+Exact BFS2894 supports one text-only public streetlight defect class from the
+actual municipal form. Residents choose the published Herr/Frau salutation;
+first name, surname and phone are required. No email or postal address control
+exists, so account email is excluded. Civic requires a confirmed useful lamp
+location and description although the source free-text question is unstarred.
+All length limits are conservative local preparation bounds, not source maxima.
+
+The complete selected Weblication form is pinned; only its generated local cached
+action and session token rotate. No CAPTCHA/file/iframe observed. Drift in fields,
+labels, requiredness, action or protection stops preparation. Source photos must
+be explicitly excluded. No POST, external completion, sending or tracking. Actual
+server validation/acceptance/receipt requires an approved genuine report or an
+authorized test environment. Uncertain outcomes never authorize automatic retry,
+recreation or another sending channel.
+
 ## Wintersingen preparation — 18 October 2026
 
 The exact BFS2866 route is linked on the second online-catalogue page. Four
