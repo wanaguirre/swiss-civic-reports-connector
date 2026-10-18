@@ -285,3 +285,38 @@ The selected form pins technical empty-field semantics and all attributes/text. 
 ## Münchenbuchsee (BFS546), checked 2026-10-18
 
 Preparation-only Energie Buchsi street-light form. Municipal energy service explicitly refers lighting to EMAG; emag.energy redirects to energiebuchsi.ch. Online-Schalter links the dedicated form. Require reporter first/last name, street, house number, postcode, town, email; phone optional. Require actual lamp number, lamp street, adjacent house number and description; optional location details. No photo or salutation control; empty technical subject-b field is not resident data. Full selected-form fingerprint pins validators and cached local action, normalizing only token/action. No scripts, POST or validation calls. Initial HTML already contains a success message, so it cannot establish delivery. Sending remains unverified and blocked; genuine approved report or authorized environment required for acceptance/reconciliation verification.
+
+
+## NetZulg lighting preparation — 18 October 2026
+
+`MunicipalFormClient('oberhofen')` (BFS934) and `('steffisburg')` (BFS939)
+prepare text-only reports for defective public streetlamps. The municipalities
+explicitly refer residents to NetZulg: [Oberhofen infrastructure](https://www.oberhofen.ch/verwaltung/bauwesen/infrastruktur)
+and [Steffisburg lighting](https://www.steffisburg.ch/de/verwaltung/dienstleistungen/115_strassenbeleuchtung).
+The shared [official lighting form](https://www.netzulg.ch/kundenservice/notfall/defekte-strassenbeleuchtung)
+is read without login or script execution. Its other three area options do not
+automatically create supported adapters or establish a lighting mandate for other
+NetZulg utility partners.
+
+The complete selected form is pinned, including area option values with their
+leading spaces, field types/requirements and action. The namespaced Cloudrexx
+frontend configuration must still declare German and `csrf:false`; new challenge
+markup or changed fields stop preparation. This is a read-only contract check,
+not a claim that runtime protection or acceptance has been verified.
+
+Required: salutation, first name, surname, email, actual street/location and
+confirmation that this is a public lamp in the selected municipality. Phone is
+optional. Steffisburg additionally requires the actual lamp number because its
+municipal instructions request it; Oberhofen asks for it if possible. Never invent
+one. Civic requires a description and applies local text limits (250 location,
+5,000 description); those are preparation limits, not stated provider limits.
+The form has no photo field. Public ownership still needs resident evidence;
+BFS containment does not prove lamp ownership. Private lights, outages, emergencies
+and unrelated defects are excluded. Repairs are grouped into periodic maintenance
+several times yearly.
+
+Both profiles remain `unverified`, cannot opt into experimental sending, offer
+no external completion handoff and cannot track reports. No POST, validation,
+synthetic upload or live report was performed. A supported receipt/session
+contract and an approved genuine report or authorized test environment remain
+necessary before verified delivery. Unknown outcomes never authorize retries.
