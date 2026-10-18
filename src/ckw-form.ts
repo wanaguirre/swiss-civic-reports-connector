@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  ettiswil: {
+    name: 'Ettiswil',
+    bfsId: 1128,
+    referralUrl: 'https://ettiswil.ch/infrastruktur-sicherheit/strom-und-kommunikationsnetze/',
+  },
   dagmersellen: {
     name: 'Dagmersellen',
     bfsId: 1125,

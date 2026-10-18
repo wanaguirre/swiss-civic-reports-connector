@@ -384,6 +384,13 @@ two individual-lamp classes with no photos or sending. Dagmersellen/Uffikon and
 Buchs have separate water cooperatives; their water roles are not this lighting
 mandate. Wolhusen's shared Werthenstein water supply and Altbüron's CKW electricity
 service do not establish a lighting mandate, so neither is added.
+`MunicipalFormClient('ettiswil')` binds BFS1128. Its official [electricity and
+communications page](https://ettiswil.ch/infrastruktur-sicherheit/strom-und-kommunikationsnetze/)
+separately instructs residents to report defective streetlamps through the CKW
+online form. This explicit fault referral qualifies independently of electricity
+supply. The two provider single-lamp branches require the actual plaque number;
+the municipal page does not publish its own number format. Page-wide WordPress
+login overlays do not gate the public referral or provider metadata.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
