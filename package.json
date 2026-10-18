@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.40",
+  "version": "0.4.0-rc.41",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -232,6 +232,10 @@
     "./erstfeld-form": {
       "types": "./dist/erstfeld-form.d.ts",
       "import": "./dist/erstfeld-form.js"
+    },
+    "./ebs-form": {
+      "types": "./dist/ebs-form.d.ts",
+      "import": "./dist/ebs-form.js"
     }
   }
 }

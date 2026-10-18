@@ -1,4 +1,13 @@
 import {
+  ebsFormUrl,
+  ebsMandateUrl,
+  ebsMunicipalities,
+  isEbsMunicipality,
+  ebsScope,
+  ebsRequirements,
+  inspectEbsForm,
+} from './ebs-form.js';
+import {
   erstfeldFormUrl,
   erstfeldMandateUrl,
   erstfeldScope,
@@ -89,6 +98,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  schwyz: Object.freeze({
+    bfsId: 1372,
+    municipality: 'Schwyz',
+    language: 'de' as const,
+    formUrl: ebsFormUrl,
+    reportingUrl: ebsFormUrl,
+  }),
   erstfeld: Object.freeze({
     bfsId: 1206,
     municipality: 'Erstfeld',
@@ -378,6 +394,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (isEbsMunicipality(name)) return inspectEbsForm(html);
   if (name === 'erstfeld') return inspectErstfeldForm(html);
   if (isCkwMunicipality(name)) return inspectCkwForm(html);
   if (name === 'oberhofen' || name === 'steffisburg') return inspectNetzulgForm(html);
@@ -588,8 +605,9 @@ export class MunicipalFormClient implements ReportingAdapter {
                 : name === 'gossau'
                   ? config.formUrl
                   : undefined;
-    this.reportingService =
-      name === 'erstfeld'
+    this.reportingService = isEbsMunicipality(name)
+      ? 'ebs Energie AG – Strassenbeleuchtung'
+      : name === 'erstfeld'
         ? 'Gemeindewerke Erstfeld – Öffentliche Beleuchtung'
         : isCkwMunicipality(name)
           ? 'CKW – Strassenbeleuchtung'
@@ -630,6 +648,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
+        isEbsMunicipality(name) ||
         name === 'erstfeld' ||
         isCkwMunicipality(name) ||
         name === 'buchsi' ||
@@ -652,6 +671,15 @@ export class MunicipalFormClient implements ReportingAdapter {
               ? '2026-10-16'
               : '2026-10-15',
       sources: [
+        ...(isEbsMunicipality(name)
+          ? [
+              {
+                title: 'Municipal streetlight-fault referral to ebs',
+                url: ebsMunicipalities[name].referralUrl,
+              },
+              { title: 'ebs public-lighting maintenance and fault mandate', url: ebsMandateUrl },
+            ]
+          : []),
         ...(name === 'erstfeld'
           ? [
               {
@@ -753,8 +781,9 @@ export class MunicipalFormClient implements ReportingAdapter {
             ]
           : []),
       ],
-      scope:
-        name === 'erstfeld'
+      scope: isEbsMunicipality(name)
+        ? ebsScope(name)
+        : name === 'erstfeld'
           ? erstfeldScope
           : isCkwMunicipality(name)
             ? ckwScope(name)
@@ -920,6 +949,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (isEbsMunicipality(this.name)) return ebsRequirements(this.name);
     if (this.name === 'erstfeld') return erstfeldRequirements();
     if (isCkwMunicipality(this.name)) return ckwRequirements(this.name);
     if (this.name === 'oberhofen' || this.name === 'steffisburg')

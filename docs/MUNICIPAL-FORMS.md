@@ -456,3 +456,33 @@ not prove acceptance, durable receipt, duplicates, CAPTCHA behavior at dispatch
 or an asset match. No send, upload, validation, external completion or tracking
 is available, including under global/experimental send flags. An uncertain
 outcome remains unconfirmed and never authorizes an automatic retry.
+
+
+## Schwyz / ebs public streetlamps (18 October 2026)
+
+Schwyz's [lighting service](https://www.gemeindeschwyz.ch/dienstleistungen/60689)
+explicitly directs faults to [ebs's public form](https://www.ebs.swiss/privatkunden/service/kundendienst/strassenlampen/).
+The [provider mandate](https://www.ebs.swiss/geschaeftskunden/energie/netz/oeffentliche-beleuchtung/)
+confirms public-lighting upkeep and repairs. Only Schwyz BFS1372 is implemented;
+the other six choices on the provider form need independent municipal assessment.
+
+The single non-emergency public-streetlamp class requires first/last name,
+email, phone, actual street and nearest house number, defect description and
+additional remarks. Remarks is required by aria/validation class despite its
+unstarred visible label. Lamp number is optional and must never be invented.
+Description/remarks max2000 and other text max400 come from public markup;
+Civic caps additional remarks at500 (its existing extra-field limit). Civic's
+location label max250, confirmed point and public-lamp confirmation are
+preparation safeguards, not provider asset verification. No photos: sources may
+help drafting but must be excluded from delivery. Name/phone/email are contact
+data and stay out of AI drafting.
+
+The complete selected CF7 form semantic hash pins all seven municipality options,
+labels, validation, limits, action, hidden values and five empty honeypots. Only
+the four generated honeypot IDs normalize after strict pair/uniqueness checks.
+New fields, protection or altered semantics stop preparation and invalidate cache.
+No scripts, POST, validation, upload, CAPTCHA or real report was executed. Public
+GET does not require municipal login; unrelated municipal login overlay is not a
+gate. The form posts to its CF7 action; AJAX/receipt behavior is unverified.
+Sending, external completion and tracking remain unavailable even if global or
+experimental flags are set. Uncertain outcomes stay unconfirmed with no retry.
