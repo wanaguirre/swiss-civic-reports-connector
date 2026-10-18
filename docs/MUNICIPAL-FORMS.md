@@ -1,3 +1,26 @@
+## Waldstatt (BFS3007), 18 October 2026
+
+Ortskorporation explicitly operates public lighting on municipal mandate: roads
+in the built-up area and pedestrian crossings on cantonal roads. The municipal
+referral and operator scope/form were read publicly without login. Text-only
+preparation requires source name-or-company, reporter address, phone, fault
+text and a resident-entered date. Reporter address is separate from lamp location;
+name/address/date/phone stay out of AI drafting. No date format is claimed from
+the free-text source. There is no email or upload control: account email is
+unsupported and source photos must be explicitly excluded. Local name/date100,
+address/location250 and description5000 bounds are conservative preparation limits.
+
+The full selected DynPG form is pinned. Two successful source captures differ
+only in the uppercase-hex32 `dynpgform` and ten-digit `from_ts` values; those
+shapes are checked and values masked/discarded. Their write-time purpose is
+unverified; no token/time simulation, validation, upload or form POST occurred.
+Other controls, recipients, native local action and labels remain pinned. Sanitized
+fixtures use offline technical placeholders. Source drift stops preparation.
+
+Sending, external completion, receipt and tracking are unavailable. An approved
+genuine report or authorized test environment is needed for delivery verification.
+An unclear outcome never permits automatic retry, recreation or a channel switch.
+
 ## Titterten preparation — 18 October 2026
 
 Exact BFS2894 supports one text-only public streetlight defect class from the

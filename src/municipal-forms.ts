@@ -1,4 +1,12 @@
 import {
+  waldstattFormUrl,
+  waldstattReferralUrl,
+  waldstattMandateUrl,
+  waldstattScope,
+  waldstattRequirements,
+  inspectWaldstattForm,
+} from './waldstatt-form.js';
+import {
   tittertenFormUrl,
   tittertenReferralUrl,
   tittertenScope,
@@ -146,6 +154,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  waldstatt: Object.freeze({
+    bfsId: 3007,
+    municipality: 'Waldstatt',
+    language: 'de' as const,
+    formUrl: waldstattFormUrl,
+    reportingUrl: waldstattFormUrl,
+  }),
   titterten: Object.freeze({
     bfsId: 2894,
     municipality: 'Titterten',
@@ -498,6 +513,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'waldstatt') return inspectWaldstattForm(html);
   if (name === 'titterten') return inspectTittertenForm(html);
   if (name === 'wintersingen') return inspectWintersingenForm(html);
   if (name === 'therwil') return inspectTherwilForm(html);
@@ -772,7 +788,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'titterten' || name === 'wintersingen'
+        name === 'waldstatt' || name === 'titterten' || name === 'wintersingen'
           ? '2026-10-18'
           : name === 'therwil'
             ? '2026-10-18'
@@ -804,6 +820,15 @@ export class MunicipalFormClient implements ReportingAdapter {
                     ? '2026-10-16'
                     : '2026-10-15',
       sources: [
+        ...(name === 'waldstatt'
+          ? [
+              { title: 'Municipal Ortskorporation lighting referral', url: waldstattReferralUrl },
+              {
+                title: 'Operator public-lighting mandate and asset scope',
+                url: waldstattMandateUrl,
+              },
+            ]
+          : []),
         ...(name === 'titterten'
           ? [
               {
@@ -940,55 +965,57 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'titterten'
-          ? tittertenScope
-          : name === 'wintersingen'
-            ? wintersingenScope
-            : name === 'therwil'
-              ? therwilScope
-              : name === 'reinach-bl'
-                ? reinachBlScope
-                : name === 'val-de-charmey'
-                  ? valDeCharmeyScope
-                  : name === 'wuennewil-flamatt'
-                    ? wuennewilScope
-                    : name === 'lungern'
-                      ? lungernScope
-                      : isEbsMunicipality(name)
-                        ? ebsScope(name)
-                        : name === 'erstfeld'
-                          ? erstfeldScope
-                          : isCkwMunicipality(name)
-                            ? ckwScope(name)
-                            : name === 'oberhofen' || name === 'steffisburg'
-                              ? netzulgScope(name)
-                              : name === 'buchsi'
-                                ? buchsiScope
-                                : name === 'dotzigen'
-                                  ? dotzigenScope
-                                  : name === 'bueren'
-                                    ? evbScope
-                                    : name === 'ostermundigen'
-                                      ? ostermundigenScope
-                                      : name === 'wohlen-be'
-                                        ? wohlenBeScope
-                                        : name === 'roggwil'
-                                          ? roggwilScope
-                                          : name === 'langenthal'
-                                            ? langenthalScope
-                                            : name === 'staefa'
-                                              ? staefaScope
-                                              : name === 'erlenbach' || name === 'zollikon'
-                                                ? wazScope
-                                                : name === 'marthalen'
-                                                  ? marthalenScope
-                                                  : name === 'boenigen'
-                                                    ? boenigenScope
-                                                    : name === 'gossau'
-                                                      ? gossauScope
-                                                      : name === 'meggen'
-                                                        ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                                                        : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'waldstatt'
+          ? waldstattScope
+          : name === 'titterten'
+            ? tittertenScope
+            : name === 'wintersingen'
+              ? wintersingenScope
+              : name === 'therwil'
+                ? therwilScope
+                : name === 'reinach-bl'
+                  ? reinachBlScope
+                  : name === 'val-de-charmey'
+                    ? valDeCharmeyScope
+                    : name === 'wuennewil-flamatt'
+                      ? wuennewilScope
+                      : name === 'lungern'
+                        ? lungernScope
+                        : isEbsMunicipality(name)
+                          ? ebsScope(name)
+                          : name === 'erstfeld'
+                            ? erstfeldScope
+                            : isCkwMunicipality(name)
+                              ? ckwScope(name)
+                              : name === 'oberhofen' || name === 'steffisburg'
+                                ? netzulgScope(name)
+                                : name === 'buchsi'
+                                  ? buchsiScope
+                                  : name === 'dotzigen'
+                                    ? dotzigenScope
+                                    : name === 'bueren'
+                                      ? evbScope
+                                      : name === 'ostermundigen'
+                                        ? ostermundigenScope
+                                        : name === 'wohlen-be'
+                                          ? wohlenBeScope
+                                          : name === 'roggwil'
+                                            ? roggwilScope
+                                            : name === 'langenthal'
+                                              ? langenthalScope
+                                              : name === 'staefa'
+                                                ? staefaScope
+                                                : name === 'erlenbach' || name === 'zollikon'
+                                                  ? wazScope
+                                                  : name === 'marthalen'
+                                                    ? marthalenScope
+                                                    : name === 'boenigen'
+                                                      ? boenigenScope
+                                                      : name === 'gossau'
+                                                        ? gossauScope
+                                                        : name === 'meggen'
+                                                          ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                                                          : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -1136,6 +1163,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'waldstatt') return waldstattRequirements();
     if (this.name === 'titterten') return tittertenRequirements();
     if (this.name === 'wintersingen') return wintersingenRequirements();
     if (this.name === 'therwil') return therwilRequirements();
