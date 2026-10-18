@@ -1,3 +1,41 @@
+## Aarau individual hornet sightings (BFS4001), 19 October 2026
+
+`MunicipalFormClient('hornet-aarau')` prepares an individual suspected Asian-hornet
+observation through the national platform explicitly referred by Aarau. This first
+profile excludes nest, hive, destruction, privileged/certified and emergency routes;
+those native workflows require separate qualification. It does not diagnose species
+or dispatch repairs. Keep your distance; do not approach an insect/nest for evidence.
+
+Exact BFS4001 is checked before eight fixed public source GETs. The complete HTML,
+current index/announcement/terms/loader sources and German/French privacy JSON are
+byte-pinned. No client execution, cookies, resident contact lookup, geocoding,
+location-phone-policy API, validation, upload or submission occurs. The verifier
+streams bounded bytes, rejects unexpected types/redirects/drift and respects retry
+cooldown. Provider code and policy prose are not bundled/copied in tests. Generic
+verifier fixtures are independently authored; production pins are separately checked
+against actual dated captures. Source identity is not live write verification.
+
+Require the actual observation point and a real past/current calendar date in
+YYYY-MM-DD, using Europe/Zurich for the current-day boundary. Require private split
+names (100 characters each), email and explicit provider privacy consent. Phone is
+optional (20 characters). A useful description is locally required; the source
+comment cap is1000. No count, nest metadata, hive ID or privileged options are guessed.
+Exactly one locally normalized JPEG up to5MB; these tighter image limits are local.
+Native ordinary anonymous observation requires at least one file below32million
+bytes, and per-file sighting flags. Original metadata is removed; no silent location
+change. Source details are documented in the consuming app's dated contract.
+
+The policy permits contacts to reach competent responders and observation data to
+be shared under its rules; high-resolution coordinate publication has conditions.
+French policy is authoritative. No fixed retention duration was established. Local
+preparation does not disclose these data. Privacy consent is stored locally, never
+submitted; a generic thank-you stage is not a durable report receipt.
+
+Sending, external completion and tracking remain unavailable under every global or
+experimental flag. An approved genuine report or authorized environment and a
+supported acceptance/reconciliation contract are required for any future sending.
+Uncertain outcomes must not trigger retry, recreation or a channel change.
+
 ## Scuol — EE Energia Engiadina lighting (BFS3762), 19 October 2026
 
 `MunicipalFormClient('ee-engiadina-scuol')` supports GET-only local preparation.

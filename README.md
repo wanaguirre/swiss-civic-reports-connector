@@ -166,3 +166,12 @@ implemented. Preparation is GET-only; global and experimental switches cannot en
 sending. Exact public-lamp responsibility still requires confirmation; boundaries
 do not verify ownership. An uncertain outcome never permits retry, recreation or
 another channel. The consuming Civic flag remains false.
+
+## Aarau species preparation (core 0.4.0-rc.60)
+
+The shared `hornet-aarau` profile prepares individual suspected Asian-hornet sightings
+within Aarau through its explicit national-platform referral. Actual date/point,
+private names/email, consent and a local normalized photo are required. Eight public
+source fingerprints are checked with GET only; no provider client, contact lookup
+or sending is implemented. Nest/hive/privileged workflows remain outside this first
+profile. See [requirements and limits](docs/MUNICIPAL-FORMS.md).

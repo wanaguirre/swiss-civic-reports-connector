@@ -99,6 +99,7 @@ export type Receipt = {
 };
 export type Requirements = {
   photo_required: boolean;
+  report_kind?: 'maintenance' | 'species_observation';
   // Omitted preserves the existing required-email behavior.
   email_required?: boolean;
   /** False rejects reporter email; omitted preserves existing adapters. */
@@ -118,6 +119,7 @@ export type Requirements = {
   phone_required: boolean;
   /** Exact number of ASCII digits required by the municipal phone field. */
   phone_digits?: number;
+  phone_max_length?: number;
   bodies: string[];
   extra_fields: {
     code: string;
@@ -126,7 +128,12 @@ export type Requirements = {
     datatype?: string;
     max_length?: number;
     /** Bounded formats; never execute provider-supplied regular expressions. */
-    format?: 'postcode_4_5_digits' | 'numeric_date' | 'ckw_lamp_number' | 'digit_identifier';
+    format?:
+      | 'postcode_4_5_digits'
+      | 'numeric_date'
+      | 'past_iso_date'
+      | 'ckw_lamp_number'
+      | 'digit_identifier';
     // Public report text that clients translate alongside the description.
     translate?: boolean;
     /** Contact fields are collected separately from public report details. */
