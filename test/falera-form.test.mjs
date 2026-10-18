@@ -12,7 +12,10 @@ import {
 import { MunicipalFormClient } from '../dist/municipal-forms.js';
 import { ReportService } from '../dist/service.js';
 import { Store } from '../dist/store.js';
-const html = await readFile(new URL('fixtures/falera-form.html', import.meta.url), 'utf8');
+// JSON preserves the exact published inline-script whitespace without trailing source-file spaces.
+const html = JSON.parse(
+  await readFile(new URL('fixtures/falera-form.json', import.meta.url), 'utf8'),
+).html;
 test('Falera pins all selected fields, ARIA, empty Akismet controls and 37 scripts; only shaped read-time state and matched slider IDs vary', () => {
   assert.deepEqual(inspectFaleraForm(html), faleraCategories);
   assert.deepEqual(
