@@ -216,9 +216,9 @@ export function ewbuchsRequirements(): Record<string, Requirements> {
         notes: [
           'Nur öffentliche Lampen in Buchs SG in kommunaler/EWB-Zuständigkeit; genaue Lage und Zuständigkeit selbst bestätigen. Keine unabhängige Eigentumsprüfung.',
           'Name, Vorname, eigene Postadresse, PLZ/Ort, Telefon und Lampenstrasse sind erforderlich. E-Mail, Anrede, Firma und nahe Hausnummer sind freiwillig. Keine Anrede oder Adresse aus Quellplatzhaltern übernehmen.',
-          'Quelltext Kanderlaber beschädigt unverändert; keine amtliche Kategorie- oder Lampennummer erfinden. Civic verlangt zusätzlich eine nützliche Fehlerbeschreibung und Bestätigung der öffentlichen Lampe.',
-          'Reine Textvorbereitung: Quellfotos ausdrücklich ausschliessen. Lokale Textlängen sind keine verifizierten Servergrenzen.',
-          'Senden, externe Erledigung und Status bleiben gesperrt. Konfigurierter Dankestext und aufgelöste Serveraktion sind kein verifizierter Fallbeleg. Bei unklarem Ausgang nie automatisch erneut senden, neu erstellen oder Sendekanal wechseln.',
+          'Beschreiben Sie den sichtbaren Defekt und den tatsächlichen Lampenstandort. Bestätigen Sie eine öffentliche Lampe in kommunaler/EWB-Zuständigkeit.',
+          'Vorbereitung ohne Fotoanhänge: Quellfotos ausdrücklich aus dem Bericht ausschliessen.',
+          'Senden, externe Erledigung und Status bleiben nicht verfügbar. Bei unklarem Sendeausgang nie automatisch erneut melden oder einen anderen Sendekanal verwenden.',
         ],
       },
     ]),
