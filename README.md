@@ -131,6 +131,12 @@ Stäfa and the fourteen independently qualified CKW lighting profiles reject
 reporter email because their supported forms have no email control. Account email
 is excluded from preparation; optional email on other supported forms is retained.
 
+Thusis (BFS3668) has GET-only local preparation through
+`MunicipalFormClient('thusis')` for damage to confirmed municipal leisure facilities.
+A location, description and local photo are required; reporter contacts are excluded.
+No municipal upload or sending is implemented. See the
+[Thusis contract](docs/MUNICIPAL-FORMS.md#thusis-leisure-infrastructure-damage-bfs3668-18-october-2026).
+
 Falera (BFS3572) has source-pinned text preparation through
 `MunicipalFormClient('falera')` for nonurgent municipal public-works questions and
 problems. Combined name, email and comment are required; private postal contacts

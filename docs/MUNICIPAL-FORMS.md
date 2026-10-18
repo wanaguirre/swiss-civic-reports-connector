@@ -1,3 +1,40 @@
+## Thusis leisure-infrastructure damage (BFS3668), 18 October 2026
+
+`MunicipalFormClient('thusis')` provides GET-only local preparation for nonurgent
+damage to municipal leisure facilities, such as playgrounds and barbecues. The
+municipality's notice dated 12 June 2026 links the dedicated GravityForms36 form.
+Exact BFS binding precedes form reads; the resident separately confirms the actual
+public municipal asset. This does not independently verify ownership. Other public
+works, private property and emergencies are excluded.
+
+The selected form requires a free-text location, damage description and photos.
+It has no reporter contact, consent or category controls. The leisure category and
+ownership confirmation are local review fields. Contact details are rejected.
+Local preparation accepts one to three normalized photos under the core's bounded
+image import rules, with EXIF removed. These are local restrictions, not the
+municipality's published server limits. The source displays 300 MB and embeds a
+314572800-byte Plupload limit, wildcard extensions with a separate blocked list,
+and max_files0. No server MIME/count enforcement, photo retention or incident photo
+privacy policy is verified. An apparently permissive client configuration is not
+an upload acceptance guarantee.
+
+Two complete static captures match the selected form and all33script elements.
+Runtime pins the full form semantics, upload configuration and all client
+references/inline bodies. Only shaped read-time state_36, upload nonce and the two
+exact Gravitytheme configuration nonce values are masked and discarded. The upload
+URL, field IDs, limits, generic honeypot version configuration and all other source
+semantics remain pinned. No client, trap, nonce, temporary upload, AJAX/postback or
+POST is executed, simulated or returned for sending. The fixture contains shaped
+local placeholders rather than live nonces. Script references are pinned; client
+bytes are not downloaded or executed. A generic theme honeypot configuration is
+not evidence of a selected challenge. Server protection remains unverified.
+
+Municipal upload, sending, external completion and tracking are unavailable even
+under global/experimental flags. A public readable form and generic confirmation
+code are not proof of acceptance. Uncertain outcomes stay unconfirmed without
+retry, recreation or another sending channel. Genuine sending verification needs
+an approved real report or authorized environment.
+
 ## Wil SG independent lighting form (BFS3427), 18 October 2026
 
 `wil-lighting` prepares four exact municipal lamp-fault choices through the independent
