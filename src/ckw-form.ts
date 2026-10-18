@@ -11,7 +11,7 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const werthensteinLightingScope =
-  'Non-emergency flickering or unlit individual public streetlamps in Werthenstein (BFS1009), explicitly referred to CKW by the municipality. Requires the actual lamp number from its plaque. Not private lights, electricity outages, whole-street faults, damaged fixtures or other municipal defects. Municipal boundary and resident confirmation do not independently verify CKW ownership of an individual asset.';
+  'Non-emergency flickering or unlit individual public streetlamps in Werthenstein, explicitly referred to CKW by the municipality. Requires the actual lamp number from its plaque. Not private lights, electricity outages, whole-street faults, damaged fixtures or other municipal defects. Municipal boundary and resident confirmation do not independently verify CKW ownership of an individual asset.';
 type Node = DefaultTreeAdapterMap['node'];
 const all = (node: Node): Node[] => [
   node,
@@ -93,7 +93,7 @@ export function werthensteinLightingRequirements(): Record<string, Requirements>
           'Nur flackernde oder ausgefallene einzelne öffentliche Strassenlampen in Werthenstein. Andere Störungen und ganze Strassenzüge sind in dieser Vorbereitung nicht enthalten.',
           'Die Gemeinde verlangt die tatsächliche Nummer auf der Plakette. CKW erwartet einen Grossbuchstaben, ein bis zwei Ziffern, einen Bindestrich, ein bis zwei Ziffern und optional einen Grossbuchstaben. Keine Nummer erfinden.',
           'Keine Fotoanhänge oder Kontaktangaben für diese beiden Formularzweige. Civic benötigt einen bestätigten Standort und eine Beschreibung; seine Textgrenzen sind keine veröffentlichten CKW-Grenzen.',
-          'Vorbereitung prüft die öffentliche Konfiguration und referenzierte Komponentenversion ohne Skriptausführung. Zustellung, Annahme und Tracking bleiben ungeprüft; Senden ist deaktiviert.',
+          'Der Entwurf bleibt in Civic. Es wird nichts übermittelt. Senden, Fortsetzen im offiziellen Formular und Statusabfragen sind derzeit nicht verfügbar.',
         ],
       } satisfies Requirements,
     ]),
