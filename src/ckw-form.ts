@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  dagmersellen: {
+    name: 'Dagmersellen',
+    bfsId: 1125,
+    referralUrl: 'https://dagmersellen.ch/wirtschaft/versorgung/',
+  },
   sursee: {
     name: 'Sursee',
     bfsId: 1103,

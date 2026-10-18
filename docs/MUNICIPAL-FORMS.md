@@ -376,6 +376,14 @@ goes to Tiefbau and is excluded. The actual brown-plaque number is requested if
 possible by the city, and required by the online branches. Sempach instead refers
 lighting questions to its municipal infrastructure department; it is not added
 from historical CKW locality options.
+`MunicipalFormClient('dagmersellen')` binds BFS1125 independently. The official
+[supply page](https://dagmersellen.ch/wirtschaft/versorgung/) explicitly directs
+defective streetlamps to CKW online or by phone and requires the actual number
+from the brown plaque. The online branch contract still limits preparation to
+two individual-lamp classes with no photos or sending. Dagmersellen/Uffikon and
+Buchs have separate water cooperatives; their water roles are not this lighting
+mandate. Wolhusen's shared Werthenstein water supply and Altbüron's CKW electricity
+service do not establish a lighting mandate, so neither is added.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
