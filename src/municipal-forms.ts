@@ -82,6 +82,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  ruswil: Object.freeze({
+    bfsId: 1098,
+    municipality: 'Ruswil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
   oberkirch: Object.freeze({
     bfsId: 1095,
     municipality: 'Oberkirch',

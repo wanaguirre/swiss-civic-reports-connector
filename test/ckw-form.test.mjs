@@ -47,6 +47,7 @@ test('CKW membership requires an independently qualified own key, not a provider
   for (const name of [
     'alberswil',
     'grosswangen',
+    'rickenbach',
     'Knutwil',
     'constructor',
     'toString',

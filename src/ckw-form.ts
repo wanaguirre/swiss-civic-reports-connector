@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  ruswil: {
+    name: 'Ruswil',
+    bfsId: 1098,
+    referralUrl: 'https://ruswil.ch/institutionsweiterleitungen/abteilung-bau-infrastruktur/',
+  },
   oberkirch: {
     name: 'Oberkirch',
     bfsId: 1095,

@@ -321,7 +321,7 @@ synthetic upload or live report was performed. A supported receipt/session
 contract and an approved genuine report or authorized test environment remain
 necessary before verified delivery. Unknown outcomes never authorize retries.
 
-## CKW / independently referred municipal lighting lighting preparation (18 October 2026)
+## CKW / independently referred municipal lighting preparation (18 October 2026)
 
 `MunicipalFormClient('werthenstein')` binds BFS1009 before provider reads. The
 [municipal works page](https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/)
@@ -355,6 +355,12 @@ explicitly refers reports to CKW, independently of the road department's broader
 maintenance role. It normally expects repairs within two to three weeks; this is
 not an emergency route or a guaranteed completion date. Published phone contact
 does not authorize alternate-channel sending or retry.
+`MunicipalFormClient('ruswil')` separately binds BFS1098. The municipality's
+[infrastructure department](https://ruswil.ch/institutionsweiterleitungen/abteilung-bau-infrastruktur/)
+explicitly lists ‘Meldung defekte Strassenlampe’ with a CKW destination. Its older
+CKW URL redirects to the current public fault page, which links the same lamp
+form. This is an independent municipal referral, not inferred from CKW locality
+options. Rickenbach's CKW connection/plan contacts do not qualify lighting intake.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
