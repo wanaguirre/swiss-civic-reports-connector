@@ -10,7 +10,7 @@ export const lungernConfigUrl =
 export const lungernReferralUrl = 'https://www.lungern.ch/aemter/6448';
 export const lungernPrivacyUrl = 'https://www.maengelmelder.eu/de/datenschutz/index.php?c=lungern';
 export const lungernScope =
-  'Non-emergency public-space defects in Lungern (BFS1405), through its explicitly referred Mängelmelder. Only the reviewed defect classes; Sonstiges remains limited to public-space maintenance. Not emergencies, private-property disputes or administrative requests. The provider polygon is empty: exact BFS and resident confirmation are required and do not independently prove responsibility for an individual asset.';
+  'Non-emergency public-space defects in Lungern (BFS1405), through its explicitly referred Mängelmelder. Only the reviewed defect classes; Sonstiges remains limited to public-space maintenance. Not emergencies, private-property disputes or administrative requests. An exact location and resident confirmation are required; they do not independently prove responsibility for an individual asset.';
 export const lungernCategories = [
   'Abfall im Wald wild deponiert',
   'Abfallkübel defekt / überfüllt',
@@ -241,9 +241,9 @@ export function lungernRequirements(): Record<string, Requirements> {
         notes: [
           'Vorname, Nachname, E-Mail, Beschreibung und detaillierte Ortsangabe sind erforderlich. Kein Telefon und keine Kontaktadresse; Kontaktdaten gehören nicht in die öffentliche Beschreibung.',
           'Ein optionales Foto. Civic begrenzt die Vorbereitung auf ein normalisiertes JPEG bis 5 MB; diese sowie die Zeichenlimits sind lokale Grenzen, keine veröffentlichten Anbieterlimits.',
-          'Nur bestätigte, nicht dringende Anliegen im öffentlichen Raum in Lungern. Auch Sonstiges bleibt auf Unterhalt im öffentlichen Raum beschränkt. Der Anbieter liefert kein Polygon; Gemeindegrenze und Verantwortung müssen unabhängig geprüft werden.',
+          'Nur bestätigte, nicht dringende Anliegen im öffentlichen Raum in Lungern. Auch Sonstiges bleibt auf Unterhalt im öffentlichen Raum beschränkt. Bestätigen Sie, dass der betroffene Ort in Lungern liegt und die Gemeinde zuständig ist.',
           'Die offizielle Datenschutzerklärung muss bewusst gelesen und akzeptiert werden. Civic speichert diese Auswahl lokal und sendet sie nicht an den Anbieter.',
-          'Nur Vorbereitung. Senden, externe Fertigstellung und Tracking sind gesperrt. Der Erfolgscode id=0 ist keine Fallnummer. Bei unklarem Ausgang niemals automatisch erneut senden oder den Kanal wechseln.',
+          'Nur Vorbereitung. Senden, externe Fertigstellung und Tracking sind gesperrt. Bei unklarem Ausgang niemals automatisch erneut senden oder den Kanal wechseln.',
         ],
       },
     ]),
