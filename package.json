@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.46",
+  "version": "0.4.0-rc.47",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -248,6 +248,10 @@
     "./val-de-charmey-form": {
       "types": "./dist/val-de-charmey-form.d.ts",
       "import": "./dist/val-de-charmey-form.js"
+    },
+    "./reinach-bl-form": {
+      "types": "./dist/reinach-bl-form.d.ts",
+      "import": "./dist/reinach-bl-form.js"
     }
   }
 }

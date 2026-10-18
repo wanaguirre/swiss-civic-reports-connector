@@ -1,3 +1,19 @@
+## Reinach BL preparation — 18 October 2026
+
+Exact BFS2773 has three text-only classes matching the published form sections:
+public streetlighting, waste and other municipal Werkhof defects. The complete
+selected Weblication contract is pinned; changes to fields, labels, requiredness,
+protection or local action stop preparation. Generated action/token values are
+masked and never persisted. Only surname is municipally required; first name,
+phone and email are optional. Civic requires a genuine confirmed location and
+useful description. No upload field exists in the current selected form, despite
+older cached upload wording. Source photos must be explicitly excluded.
+
+Preparation cannot fill the official form, POST, send, track or claim acceptance.
+The municipality's approximate two-week lamp repair wording is not a receipt.
+A genuine approved report or authorized environment is required for delivery and
+receipt verification. Uncertain outcomes never authorize retry or channel switch.
+
 # Bern and Fribourg preparation adapters
 
 `MunicipalFormClient` (exported at `/municipal-forms`) implements anonymous
