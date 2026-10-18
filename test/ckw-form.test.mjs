@@ -11,6 +11,7 @@ import {
   werthensteinLightingRequirements,
   ckwRequirements,
   ckwMunicipalities,
+  isCkwMunicipality,
 } from '../dist/ckw-form.js';
 import { MunicipalFormClient } from '../dist/municipal-forms.js';
 import { ReportService } from '../dist/service.js';
@@ -40,6 +41,19 @@ test('CKW pins the complete selected configuration, historical locality list and
     inspectCkwForm(html + '<form id="newsletter"><div class="g-recaptcha"></div></form>').length,
     2,
   );
+});
+test('CKW membership requires an independently qualified own key, not a provider-listed place or inherited property', () => {
+  for (const name of Object.keys(ckwMunicipalities)) assert.equal(isCkwMunicipality(name), true);
+  for (const name of [
+    'alberswil',
+    'grosswangen',
+    'Knutwil',
+    'constructor',
+    'toString',
+    '__proto__',
+    '',
+  ])
+    assert.equal(isCkwMunicipality(name), false);
 });
 test('CKW retains the original Werthenstein requirements export', () => {
   assert.deepEqual(werthensteinLightingRequirements(), ckwRequirements('werthenstein'));

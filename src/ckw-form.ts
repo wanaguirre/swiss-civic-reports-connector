@@ -11,6 +11,7 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  knutwil: { name: 'Knutwil', bfsId: 1089, referralUrl: 'https://www.knutwil.ch/strom' },
   eich: {
     name: 'Eich',
     bfsId: 1084,
@@ -34,6 +35,9 @@ export const ckwMunicipalities = {
   },
 } as const;
 export type CkwMunicipality = keyof typeof ckwMunicipalities;
+export function isCkwMunicipality(name: string): name is CkwMunicipality {
+  return Object.hasOwn(ckwMunicipalities, name);
+}
 export function ckwScope(name: CkwMunicipality): string {
   return `Non-emergency flickering or unlit individual public streetlamps in ${ckwMunicipalities[name].name}, explicitly referred to CKW by the municipality. Requires the actual lamp number from its plaque. Not private lights, electricity outages, whole-street faults, damaged fixtures or other municipal defects. Municipal boundary and resident confirmation do not independently verify CKW ownership of an individual asset.`;
 }

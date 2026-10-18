@@ -15,7 +15,7 @@ export async function startTelegram(service: ReportService) {
   if (!['manual', 'codex'].includes(ai))
     throw new Error('ZURI_TELEGRAM_AI must be manual or codex.');
   const server = createServer(service),
-    client = new Client({ name: 'zurich-telegram', version: '0.4.0-rc.30' });
+    client = new Client({ name: 'zurich-telegram', version: '0.4.0-rc.31' });
   const [serverTransport, clientTransport] = InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
   await client.connect(clientTransport);
