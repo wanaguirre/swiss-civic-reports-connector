@@ -1,3 +1,37 @@
+## EWB Buchs SG (BFS3271), 18 October 2026
+
+The city's organisational regulation dated16June2025, article2, identifies EWB
+as a city unit without separate legal identity. Its current dedicated public
+lighting form explicitly invites lamp faults. Preparation is limited to confirmed
+municipal public lamps in Buchs SG; no wider regional electricity/customer coverage
+or independent ownership verification is inferred. The separately published EWB
+lighting page is robots-disallowed and was not fetched.
+
+Three exact readable source choices are retained, including the spelling
+Kanderlaber beschädigt. Required private first name, surname, postal street/number,
+combined postcode/locality and phone stay separate from the required lamp street.
+Email, salutation, company, nearby lamp house number and remarks are optional.
+The source default Frau is not used to infer a resident's identity. Civic requires
+additional useful issue details and explicit public-lamp confirmation. Local
+name/house100, address/company/location250 and description5000 limits are not
+claimed as server maxima. There is no source lamp-number or photo control; source
+photos must be explicitly excluded.
+
+The complete selected server-rendered form and its literal published Next flight
+JSON configuration are pinned. Parsing uses JSON only, never evaluation of source
+scripts. Immutable script references and the selected Form module identity are
+pinned after the published client was read statically; changed references stop
+preparation. The live client asset is not re-downloaded for each preparation.
+Two successful allowed form GETs match exactly. Shared client file-upload code is
+not photo support for this selected form, which has no upload field. Client native
+required validation and the Next sendMail server-action reference were observed
+only. Neither configured thank-you text nor a resolved client action establishes
+a durable municipal receipt. No server action, form, validation or upload is run.
+
+Sending, external completion and tracking remain unavailable. A real acceptance
+check needs an approved genuine report or authorized test environment. An unclear
+outcome never permits automatic retry, recreation or another sending channel.
+
 ## St. Margrethen (BFS3236), 18 October 2026
 
 The municipal online counter explicitly invites public streetlight fault reports.
