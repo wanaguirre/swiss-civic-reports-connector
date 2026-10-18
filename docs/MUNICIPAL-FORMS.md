@@ -1,3 +1,37 @@
+## Wil SG independent lighting form (BFS3427), 18 October 2026
+
+`wil-lighting` prepares four exact municipal lamp-fault choices through the independent
+stadtwil.ch OneGov form. This is separate from the previously blocked Citymobile
+route; no retry or protection workaround is involved. Exact BFS validation precedes
+form reads. The resident confirms the actual municipal public lamp. This does not
+independently verify lamp ownership. Private fixtures, power outages and other
+municipal report classes are excluded.
+
+First name, surname, phone, email, actual lamp street and locality are required.
+Nearby house number and readable lamp number are optional; preserve leading zeros,
+never invent them. Contacts stay separate from the lamp location. No reporter postal
+address or photo field is selected. The generic image/file registry attributes are
+not photo support and are never fetched. Source photos must be explicitly excluded.
+The official form has no free description field: Civic's useful description and
+public-lamp confirmation are local review requirements, not provider payload fields.
+Local 250/100/5000 character caps are not published server maxima.
+
+Two official GET captures match the pinned complete selected form and all seven
+script references/attributes/inline bodies. Required labels and aria-required,
+empty lazy-wolves duplicate_of decoy and uploader URL prefixes remain pinned.
+Only validated timestamp/hex hidden CSRF and signed uploader CSRF values are masked
+and discarded. No technical tokens enter metadata. Clients, protection, decoys,
+uploads and POSTs are never executed or simulated. Runtime pins references, not
+freshly fetched client bytes. No selected login or CAPTCHA appears in either GET;
+server-side protection and validation are unverified.
+
+The displayed Formular/Kontrolle/Bestätigung steps do not prove acceptance. Only the
+first GET and native multipart POST action were observed. No Next-step POST, server
+review, case ID, receipt or reconciliation was tested. Sending, external completion
+and tracking remain unavailable even under global or experimental flags. An approved
+genuine report or authorized environment is needed for delivery verification.
+Uncertain results remain unconfirmed without retries, recreation or channel switches.
+
 ## EW Sennwald partial village lighting (18 October 2026)
 
 `ewsennwald-sennwald` (BFS3274: Sennwald, Salez) and `ewsennwald-altstaetten`
