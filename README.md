@@ -131,6 +131,13 @@ Stäfa and the fourteen independently qualified CKW lighting profiles reject
 reporter email because their supported forms have no email control. Account email
 is excluded from preparation; optional email on other supported forms is retained.
 
+Scuol (BFS3762) has GET-only text preparation through
+`MunicipalFormClient('ee-engiadina-scuol')` for public streetlights maintained by
+EE Energia Engiadina. Exact point, municipality, provider responsibility, street
+and one published fault choice are required; contacts are optional and photos
+excluded. No Antibot execution, sending, external completion or tracking. See the
+[Scuol contract](docs/MUNICIPAL-FORMS.md#scuol--ee-energia-engiadina-lighting-bfs3762-19-october-2026).
+
 Thusis (BFS3668) has GET-only local preparation through
 `MunicipalFormClient('thusis')` for damage to confirmed municipal leisure facilities.
 A location, description and local photo are required; reporter contacts are excluded.

@@ -1,3 +1,40 @@
+## Scuol — EE Energia Engiadina lighting (BFS3762), 19 October 2026
+
+`MunicipalFormClient('ee-engiadina-scuol')` supports GET-only local preparation.
+The [operator mandate](https://www.ee-energia-engiadina.ch/de/oeffentliche-beleuchtung)
+explicitly names Scuol. The [dedicated form](https://www.ee-energia-engiadina.ch/de/defekte-strassenlaterne)
+was read twice on18October; both captures match. Other unnamed Unterengadin
+municipalities and Zernez are not included from electricity/outage geography.
+
+The actual point must resolve to BFS3762 before a form read. The resident confirms
+an actual public lamp maintained by EE, municipality Scuol and separate lamp street.
+Civic selects one of the five published fault labels; the source permits multiple
+checkboxes and marks the group required without individual native required flags.
+A useful description and responsibility confirmation are local preparation rules,
+not invented municipal fields. Nearby house, genuine mast number and landmark are
+optional. All private reporter fields (surname, first name, postal street, postcode,
+locality, phone and email) are optional, distinct from the lamp location and excluded
+from AI drafting. Source text fields have255character limits, email254 and phone128;
+Civic's existing phone/description/location limits can be stricter. No photos.
+
+The inspector pins every selected form node/attribute/text and all five script
+elements, including complete Drupal settings and referenced client URLs. Only a
+shaped43character build identity with matching selector,22character CSP nonce,
+43character trusted-action signature and43character Antibot configuration value
+are masked and discarded. Empty hidden `antibot_key`, `/antibot` action, actual
+`data-action`, form identity, validation and all remaining settings stay pinned.
+No client asset, key transformation, challenge, unlock, timing, validation POST or
+Antibot action is executed or simulated. Sanitized offline fixture values cannot
+establish municipal acceptance. Drift invalidates rules and enforces cooldown.
+
+No sending, prefilled external completion, upload, receipt or status transport is
+implemented, including under global or experimental submission switches. Live
+sending needs an approved genuine report or authorized environment plus an inspected
+supported contract. Uncertain outcomes remain unconfirmed; never retry, recreate
+or switch channel automatically. The general privacy statement does not establish
+photo acceptance or specific lamp-report retention. Local preparation is distinct
+from verified municipal delivery.
+
 ## Thusis leisure-infrastructure damage (BFS3668), 18 October 2026
 
 `MunicipalFormClient('thusis')` provides GET-only local preparation for nonurgent
