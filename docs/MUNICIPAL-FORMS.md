@@ -1,3 +1,27 @@
+## St. Margrethen (BFS3236), 18 October 2026
+
+The municipal online counter explicitly invites public streetlight fault reports.
+Text-only preparation requires first/surname, phone, actual lamp street and a
+location description. Nearby house number is optional. There is no reporter
+email/postal address or photo control; account email is excluded and source photos
+must be explicitly excluded. Civic additionally requires useful confirmed issue
+location and fault details. Local name/house100, street/location250 and details5000
+bounds are conservative preparation limits; no source maximum is claimed.
+
+The entire selected Comet builder and its client validation are pinned after two
+successful public source captures. Only shape-checked token/submission-key values,
+four structurally identified telemetry/honeypot names and the13-digit time value
+are masked and discarded. Other controls, labels, dispatcher/form identity, action,
+validation and scripts remain pinned. These technical fields are never simulated,
+executed or submitted; no CAPTCHA was observed in the selected source. The generic
+client upload URL does not establish photo acceptance. Sanitized offline fixtures
+contain placeholder technical values. Source changes stop preparation.
+
+No sending, external completion, receipt or tracking is available. Actual server
+validation and acceptance require an approved genuine report or authorized test
+environment. An uncertain outcome never permits automatic retry, recreation or
+switching sending channels.
+
 ## Waldstatt (BFS3007), 18 October 2026
 
 Ortskorporation explicitly operates public lighting on municipal mandate: roads

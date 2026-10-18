@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.51",
+  "version": "0.4.0-rc.52",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -268,6 +268,10 @@
     "./waldstatt-form": {
       "types": "./dist/waldstatt-form.d.ts",
       "import": "./dist/waldstatt-form.js"
+    },
+    "./stmargrethen-form": {
+      "types": "./dist/stmargrethen-form.d.ts",
+      "import": "./dist/stmargrethen-form.js"
     }
   }
 }
