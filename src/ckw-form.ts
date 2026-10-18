@@ -11,6 +11,16 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  wauwil: {
+    name: 'Wauwil',
+    bfsId: 1146,
+    referralUrl: 'https://www.wauwil.ch/umwelt/ver-entsorgung.html/109',
+  },
+  wikon: {
+    name: 'Wikon',
+    bfsId: 1147,
+    referralUrl: 'https://www.wikon.ch/wirtschaft/entsorgung-versorgung.html/28',
+  },
   schoetz: {
     name: 'Schötz',
     bfsId: 1143,

@@ -398,6 +398,13 @@ qualifies preparation; the provider locality list alone does not. Municipal
 water services cover Ohmstal separately from the Schötz water cooperative and
 do not expand this lighting scope. Luthern's own municipal lighting contact
 is not a CKW mandate and does not qualify a CKW profile.
+`MunicipalFormClient('wauwil')` binds BFS1146 and `MunicipalFormClient('wikon')`
+binds BFS1147. Wauwil's [public lighting section](https://www.wauwil.ch/umwelt/ver-entsorgung.html/109)
+explicitly directs defective public lamps to CKW online; Wikon's
+[utility page](https://www.wikon.ch/wirtschaft/entsorgung-versorgung.html/28)
+links its defective-lamp action to CKW's former fault URL, which resolves to the
+current fault service. These are independent municipal referrals. Their water
+contacts and Wikon corporation's supply role do not broaden lighting coverage.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;

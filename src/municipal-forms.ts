@@ -82,6 +82,20 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  wauwil: Object.freeze({
+    bfsId: 1146,
+    municipality: 'Wauwil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  wikon: Object.freeze({
+    bfsId: 1147,
+    municipality: 'Wikon',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
   schoetz: Object.freeze({
     bfsId: 1143,
     municipality: 'Schötz',
