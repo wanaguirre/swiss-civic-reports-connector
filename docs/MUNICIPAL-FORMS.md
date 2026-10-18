@@ -432,3 +432,27 @@ remain unverified. Sending, external completion and tracking are unavailable,
 including with experimental switches. Unknown outcomes remain unconfirmed and
 must never trigger a retry or alternate-channel send. A genuine approved report
 or authorized test environment is required for live delivery verification.
+
+
+## Erstfeld public streetlamps (preparation only)
+
+`MunicipalFormClient('erstfeld')` binds BFS1206 before provider reads. The
+[municipal utility page](https://erstfeld.ch/infrastruktur/wasser-strom) assigns
+public lighting to GWE; its [lighting service](https://www.gemeindewerke-erstfeld.ch/dienstleistungen/weitere-dienstleistungen/oeffentliche-beleuchtung/)
+explicitly accepts faults/damage through the linked public form. This single
+class does not cover private lamps, outages, general municipal issues or emergencies.
+
+The complete selected Avia form, including labels, required markers, validator
+classes, action and empty honeypot, is pinned without executing scripts. Required
+reporter first/last name, postal street/postcode/locality, phone and email remain
+separate from the affected lamp location. A known lamp number is optional and
+must never be invented. Civic additionally requires a confirmed point, street
+with nearby house number, description and public-lamp confirmation. Limits of
+250/5000 characters are local preparation limits, not published provider limits.
+The form accepts no photos; drafting photos must be explicitly excluded.
+
+Only preparation is implemented. The public POST action and Avia AJAX class do
+not prove acceptance, durable receipt, duplicates, CAPTCHA behavior at dispatch
+or an asset match. No send, upload, validation, external completion or tracking
+is available, including under global/experimental send flags. An uncertain
+outcome remains unconfirmed and never authorizes an automatic retry.
