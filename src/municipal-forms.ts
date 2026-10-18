@@ -1,4 +1,12 @@
 import {
+  ewsennwaldFormUrl,
+  ewsennwaldMandateUrl,
+  ewsennwaldScope,
+  ewsennwaldRequirements,
+  inspectEwsennwaldForm,
+  isEwsennwaldMunicipality,
+} from './ewsennwald-form.js';
+import {
   ewbuchsFormUrl,
   ewbuchsOrganisationUrl,
   ewbuchsPrivacyUrl,
@@ -169,6 +177,20 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'ewsennwald-sennwald': Object.freeze({
+    bfsId: 3274,
+    municipality: 'Sennwald',
+    language: 'de' as const,
+    formUrl: ewsennwaldFormUrl,
+    reportingUrl: ewsennwaldFormUrl,
+  }),
+  'ewsennwald-altstaetten': Object.freeze({
+    bfsId: 3251,
+    municipality: 'Altstätten',
+    language: 'de' as const,
+    formUrl: ewsennwaldFormUrl,
+    reportingUrl: ewsennwaldFormUrl,
+  }),
   ewbuchs: Object.freeze({
     bfsId: 3271,
     municipality: 'Buchs (SG)',
@@ -542,6 +564,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (isEwsennwaldMunicipality(name)) return inspectEwsennwaldForm(html);
   if (name === 'ewbuchs') return inspectEwbuchsForm(html);
   if (name === 'stmargrethen') return inspectStmargrethenForm(html);
   if (name === 'waldstatt') return inspectWaldstattForm(html);
@@ -771,8 +794,9 @@ export class MunicipalFormClient implements ReportingAdapter {
                     : name === 'gossau'
                       ? config.formUrl
                       : undefined;
-    this.reportingService =
-      name === 'ewbuchs'
+    this.reportingService = isEwsennwaldMunicipality(name)
+      ? 'EW Sennwald – Strassenbeleuchtung'
+      : name === 'ewbuchs'
         ? 'ewb Buchs SG – Öffentliche Beleuchtung'
         : name === 'stmargrethen'
           ? 'St. Margrethen – Strassenbeleuchtung'
@@ -825,6 +849,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
+        isEwsennwaldMunicipality(name) ||
         name === 'ewbuchs' ||
         name === 'stmargrethen' ||
         name === 'waldstatt' ||
@@ -861,6 +886,21 @@ export class MunicipalFormClient implements ReportingAdapter {
                     ? '2026-10-16'
                     : '2026-10-15',
       sources: [
+        ...(isEwsennwaldMunicipality(name)
+          ? [
+              {
+                title: 'Explicit municipal mandate and four-village scope',
+                url: ewsennwaldMandateUrl,
+              },
+              {
+                title: 'Official municipal village membership',
+                url:
+                  name === 'ewsennwald-sennwald'
+                    ? 'https://www.sennwald.ch/einwohnerzahl'
+                    : 'https://www.altstaetten.ch/uebersichtportrait',
+              },
+            ]
+          : []),
         ...(name === 'ewbuchs'
           ? [
               {
@@ -1021,8 +1061,9 @@ export class MunicipalFormClient implements ReportingAdapter {
             ]
           : []),
       ],
-      scope:
-        name === 'ewbuchs'
+      scope: isEwsennwaldMunicipality(name)
+        ? ewsennwaldScope(this.bfsId)
+        : name === 'ewbuchs'
           ? ewbuchsScope
           : name === 'stmargrethen'
             ? stmargrethenScope
@@ -1224,6 +1265,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (isEwsennwaldMunicipality(this.name)) return ewsennwaldRequirements(this.bfsId);
     if (this.name === 'ewbuchs') return ewbuchsRequirements();
     if (this.name === 'stmargrethen') return stmargrethenRequirements();
     if (this.name === 'waldstatt') return waldstattRequirements();

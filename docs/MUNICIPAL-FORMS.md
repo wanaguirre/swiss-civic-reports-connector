@@ -1,3 +1,42 @@
+## EW Sennwald partial village lighting (18 October 2026)
+
+`ewsennwald-sennwald` (BFS3274: Sennwald, Salez) and `ewsennwald-altstaetten`
+(BFS3251: Lienz, Plona) share text-only preparation. The operator explicitly names
+both political municipalities and these four villages in its lighting mandate.
+Current municipal portraits/facts corroborate village membership. Other villages
+are excluded. Exact municipality validation precedes the provider GET, then a
+required resident village choice is restricted to that municipality's two villages.
+An additional resident confirmation covers the actual municipal public lamp. This
+is not an independent village boundary or asset ownership check.
+
+Five published fault labels are retained, including missing mast door. Required:
+lamp street, reporter first/surname, own postal address, combined postcode/locality
+and email. Phone, actual mast number, date noticed and remarks are optional. Never
+infer the date, fabricate a lamp number or use the reporter address for the lamp.
+The source date input is blank, native type=date with DD.MM.YYYY display metadata;
+local preparation retains the resident's supplied date as text, without claiming
+server date parsing/acceptance. Civic requires useful details and confirmed location;
+250/100/5000 character limits are local, not published server limits.
+
+The complete selected Powermail form, labels/validation/hidden constants, empty
+honeypot and exact 23 published script references are pinned. Only the 40-hex signed
+suffixes of three hidden fields are shape checked, masked and discarded; their
+full literal payload prefixes remain pinned. No signature or honeypot is simulated
+or submitted. Both official GET captures pass. The statically reviewed Form.min.js
+(SHA256 70e015c031b64665eaa4b187061e4f4f773601905ba0c2b09e22fa00fe40e628)
+validates required/email fields and sets novalidate. Its generic AJAX handler needs
+data-powermail-ajax, absent from this selected form, so only the observed native
+multipart POST action is supported as source evidence. Runtime checks references,
+not freshly downloaded JS bytes. No provider scripts execute in preparation.
+
+No selected upload, login or CAPTCHA observed. Footer map/cookie controls and generic
+client CAPTCHA/file support are not selected report features. Photos are excluded.
+Sending, external completion and tracking remain unconditionally unavailable even
+with global/experimental switches. Repair promises and initial text are not durable
+acceptance. Server protection/validation, case ID, receipt and reconciliation require
+an approved genuine report or authorized environment. Uncertain delivery remains
+unconfirmed without automatic retry, recreation or alternate-channel sending.
+
 ## EWB Buchs SG (BFS3271), 18 October 2026
 
 The city's organisational regulation dated16June2025, article2, identifies EWB
