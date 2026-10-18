@@ -534,3 +534,38 @@ test environment and durable acceptance/duplicate reconciliation are required
 before implementing sending. An uncertain result must never trigger a retry or
 alternate channel. Offline engine/schema tests use fictional data; packaged
 smoke checks use locally captured source bytes without redistributing them.
+
+
+## Wünnewil-Flamatt streetlighting (18 October 2026)
+
+The municipal [Bauamt form](https://wuennewil-flamatt.ch/formulaires/storungsmeldung-strassenbeleuchtung/)
+publishes all four Gravity Forms30 steps without login.
+`MunicipalFormClient('wuennewil-flamatt')` prepares four exact damage choices for
+municipal public lamps in BFS2309: unlit, irregular, destroyed and other defects.
+The complete selected form, all labels/validation/page controls and the published
+conditional configuration are pinned. Only the dynamic signed state value is
+normalized; it is never retained. Gravity Forms script references3.1.3 are checked,
+never loaded or executed. Unrelated global CAPTCHA CSS/configuration is not proof
+of a selected challenge; actual server protections remain unverified. Source
+drift clears preparation cache and applies read cooldown. Exact BFS is checked
+before provider access; resident confirmation of the individual municipal lamp
+is also required and does not become independent proof of ownership.
+
+Required municipal fields are salutation(Frau/Herr), names, reporter street/number,
+postal locality and postcode, personal/mobile phone, affected street/number and
+locality, and damage class. Email, work phone, actual lamp number and affected
+district are optional. Reporter and issue addresses remain distinct; district is
+not a house-number control. The other-defect control is conditionally shown but
+has no required marker. Civic conservatively requires its details for that choice
+and a review description for every preparation; the native comment is optional.
+Contact fields stay excluded from AI drafting. There is no native file control:
+photos cannot be attached to this destination. Imported drafting photos stay local.
+
+Native multipart same-page POST and four step contents are published, but Civic
+never validates, advances or submits the municipal form. No later-step server
+response, receipt, case ID or reconciliation is verified. Preparation is available
+while sending, external completion and tracking remain unavailable, including
+under global/experimental send switches. An uncertain response must remain
+unconfirmed without retry or alternate sending. No synthetic live report or upload
+was used. A genuine approved report or authorized environment is needed for sending
+verification. This limitation does not prevent source-pinned local preparation.

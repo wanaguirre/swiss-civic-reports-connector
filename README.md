@@ -109,6 +109,12 @@ private contact fields, one photo and linked terms. Sending is unconditionally
 disabled; no municipal writes or real receipts were verified. See
 [municipal forms](docs/MUNICIPAL-FORMS.md#gossau-zh--16-october-2026).
 
+Wünnewil-Flamatt (BFS2309) has preparation-only municipal streetlamp support through
+`MunicipalFormClient('wuennewil-flamatt')`: four damage choices, separate reporter
+and affected addresses, required personal/mobile phone, optional email/lamp number,
+no photos. All four published form steps and their conditional data are pinned.
+Sending, external completion and tracking remain unavailable.
+
 Lungern (BFS1405) has source-pinned preparation through its municipal
 Mängelmelder: eleven reviewed defect classes, required names/email and precise
 location, and one optional local photo. Its four metadata POSTs are named
