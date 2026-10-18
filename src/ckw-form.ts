@@ -143,6 +143,7 @@ export function ckwRequirements(name: CkwMunicipality): Record<string, Requireme
         photo_required: false,
         max_photos: 0,
         email_required: false,
+        email_supported: false,
         phone_required: false,
         contact_fields: [],
         description_max_length: 5000,

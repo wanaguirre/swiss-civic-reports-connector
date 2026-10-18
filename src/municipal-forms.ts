@@ -714,6 +714,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       delivery_language: this.deliveryLanguage,
       verified_on:
         name === 'val-de-charmey' ||
+        name === 'staefa' ||
         name === 'wuennewil-flamatt' ||
         name === 'lungern' ||
         isEbsMunicipality(name) ||
@@ -729,7 +730,6 @@ export class MunicipalFormClient implements ReportingAdapter {
               name === 'wohlen-be' ||
               name === 'roggwil' ||
               name === 'langenthal' ||
-              name === 'staefa' ||
               name === 'erlenbach' ||
               name === 'zollikon' ||
               name === 'boenigen' ||

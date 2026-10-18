@@ -221,7 +221,9 @@ protection or selected wording drift pauses preparation. One megabyte response
 limits, five-minute cache/backoff and Retry-After handling apply.
 
 Four lighting classes require first/last name and phone; there is no email or
-file field. Civic additionally requires a meaningful confirmed location/street
+file field. Renewed public metadata on18October2026 is unchanged. Reporter email
+is explicitly unsupported and rejected by the shared service, including account
+email. Civic hides the email control and excludes it from the frozen report. Civic additionally requires a meaningful confirmed location/street
 and description. Nearby house number and actual pole number are optional.
 Source photos require explicit exclusion. No token, login or municipal write
 is performed. The public activity helper serializes mapped fields and uses
@@ -422,6 +424,9 @@ from that component is redistributed; the fixture contains public form metadata.
 Actual lamp identifiers must match `[A-Z][0-9]{1,2}-[0-9]{1,2}[A-Z]?`, with no
 extra whitespace or newline. Never invent one or derive it from coordinates.
 These two official branches do not display reporter contact or photo controls.
+Reporter email is explicitly unsupported and rejected for all14 independently
+qualified profiles; account email must not enter their previews. This differs from
+forms with optional email, which retain support.
 Civic additionally requires a confirmed point and description; its 250/5000 text
 bounds are preparation limits, not published CKW bounds. Source photos must be
 excluded. Other provider-listed localities are not inferred municipal coverage.

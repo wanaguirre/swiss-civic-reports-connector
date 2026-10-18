@@ -135,6 +135,7 @@ export function staefaRequirements(): Record<string, Requirements> {
         photo_required: false,
         max_photos: 0,
         email_required: false,
+        email_supported: false,
         phone_required: true,
         contact_fields: ['phone'],
         description_max_length: 5000,

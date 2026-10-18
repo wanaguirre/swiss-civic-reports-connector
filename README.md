@@ -126,3 +126,7 @@ Mängelmelder: eleven reviewed defect classes, required names/email and precise
 location, and one optional local photo. Its four metadata POSTs are named
 configuration queries with no resident/report data. Sending, external completion
 and tracking remain unavailable; see [the contract](docs/MUNICIPAL-FORMS.md#lungern--municipal-mängelmelder-18-october-2026).
+
+Stäfa and the fourteen independently qualified CKW lighting profiles reject
+reporter email because their supported forms have no email control. Account email
+is excluded from preparation; optional email on other supported forms is retained.

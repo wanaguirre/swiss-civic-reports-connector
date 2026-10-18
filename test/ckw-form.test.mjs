@@ -122,6 +122,10 @@ for (const [name, config] of Object.entries(ckwMunicipalities))
       }),
       /Category/,
     );
+    await assert.rejects(
+      service.prepare({ ...input, email: 'fictional@example.invalid' }),
+      /does not accept a reporter email/,
+    );
     await assert.rejects(service.prepare({ ...input, name: 'Fictional' }), /reporter name/);
     const photo = await service.inspectPhoto({
       base64: (
@@ -149,6 +153,7 @@ for (const [name, config] of Object.entries(ckwMunicipalities))
         service_id: `${name}-defect-form`,
       });
       assert.equal(frozen.photos.length, 0);
+      assert.equal(frozen.input.email, '');
       assert.equal(frozen.input.extra_fields.lamp_number, 'S99-99Z');
       await assert.rejects(city.submit(frozen), /verification/);
     }

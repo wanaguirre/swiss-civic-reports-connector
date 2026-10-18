@@ -1,6 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, mkdtemp, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { ReportService } from '../dist/service.js';
+import { Store } from '../dist/store.js';
 import {
   inspectStaefaLayout,
   inspectStaefaTranslations,
@@ -153,4 +157,57 @@ test('Stäfa rejects schema drift before translations, clears stale cache, and b
   now += 300001;
   await assert.rejects(city.categories(), /changed/);
   assert.equal(count, 4);
+});
+
+test('Stäfa rejects reporter email and preserves required names/phone in a frozen no-send preview', async (t) => {
+  const dir = await mkdtemp(join(tmpdir(), 'civic-staefa-contact-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const calls = [];
+  const city = new MunicipalFormClient(
+    'staefa',
+    async (url, init) => {
+      calls.push([url, init.method]);
+      return new Response(JSON.stringify(url === staefaLayoutUrl ? layout : translations), {
+        headers: { 'content-type': 'application/json' },
+      });
+    },
+    { places: { municipality: async () => ({ bfs_id: 158 }) } },
+  );
+  const store = new Store(dir);
+  await store.initialize();
+  const service = new ReportService(city, store, { submissionEnabled: true, allowPaths: false });
+  const input = {
+    latitude: 47.24,
+    longitude: 8.72,
+    location_confirmed: true,
+    location_label: 'Offline street in Stäfa',
+    category: staefaCategories[0],
+    description: 'Fictional local lighting test, never sent.',
+    email: '',
+    phone: '+41440000000',
+    photo_ids: [],
+    extra_fields: {
+      first_name: 'Fictional',
+      last_name: 'Resident',
+      lighting_street: 'Offline street',
+    },
+  };
+  await assert.rejects(
+    service.prepare({ ...input, email: 'fictional@example.invalid' }),
+    /does not accept a reporter email/,
+  );
+  await assert.rejects(service.prepare({ ...input, phone: '' }), /phone/);
+  const preview = await service.prepare(input);
+  assert.equal(preview.report.email, '');
+  assert.equal(preview.report.phone, input.phone);
+  assert.equal(preview.report.extra_fields.first_name, 'Fictional');
+  assert.equal(preview.submission_enabled, false);
+  const frozen = await store.preview(preview.preview_id);
+  assert.equal(frozen.input.email, '');
+  assert.deepEqual(frozen.destination, { bfs_id: 158, service_id: 'staefa-defect-form' });
+  await assert.rejects(city.submit(frozen), /verification/);
+  assert.deepEqual(calls, [
+    [staefaLayoutUrl, 'GET'],
+    [staefaTranslationsUrl, 'GET'],
+  ]);
 });
