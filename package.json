@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.48",
+  "version": "0.4.0-rc.49",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -256,6 +256,10 @@
     "./therwil-form": {
       "types": "./dist/therwil-form.d.ts",
       "import": "./dist/therwil-form.js"
+    },
+    "./wintersingen-form": {
+      "types": "./dist/wintersingen-form.d.ts",
+      "import": "./dist/wintersingen-form.js"
     }
   }
 }

@@ -1,3 +1,25 @@
+## Wintersingen preparation — 18 October 2026
+
+The exact BFS2866 route is linked on the second online-catalogue page. Four
+source-labelled preparation choices cover unlit, intermittent, destroyed and other municipal
+streetlights. Required reporter names, street/house, postcode/locality, email and
+daytime phone remain private contact fields; affected street/house is separate.
+The source labels the reporter street as in Wintersingen. Never infer residence
+from issue coordinates. The actual lamp number and comment are optional.
+
+The complete selected Drupal form is pinned, masking only rotating build identity
+and opaque time token after checking their shapes. Neither these nor the empty
+honeypot are simulated or submitted. Field, requiredness, action, category and
+protection changes stop preparation. No CAPTCHA or upload exists in the inspected
+form. Source photos must be explicitly excluded. Text fields use source255 limits;
+description5000/location-label250 are conservative local limits. Local preparation
+requires a useful description although the source comment is optional.
+
+No POST, form completion, sending or tracking. Actual server validation,
+acceptance and durable receipt remain unverified, requiring an approved genuine
+report or authorized test environment. An uncertain result never permits automatic
+retry, recreation or a different sending channel.
+
 ## Therwil preparation — 18 October 2026
 
 Exact BFS2775 has three source-pinned public streetlamp fault choices. Names,
