@@ -82,6 +82,8 @@ export class ReportService {
       throw new Error(
         `This category accepts a location label of at most ${rule.location_label_max_length} characters.`,
       );
+    if (rule.email_supported === false && input.email.trim())
+      throw new Error('This municipality does not accept a reporter email.');
     if (rule.email_required !== false && !input.email)
       throw new Error('This reporting service requires an email address.');
     if (

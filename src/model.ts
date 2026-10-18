@@ -101,8 +101,10 @@ export type Requirements = {
   photo_required: boolean;
   // Omitted preserves the existing required-email behavior.
   email_required?: boolean;
+  /** False rejects reporter email; omitted preserves existing adapters. */
+  email_supported?: boolean;
   name_required?: boolean;
-  // Omitted preserves existing adapters' name/phone support; [] means email only.
+  // Omitted preserves existing adapters' name/phone support; [] rejects name/phone.
   contact_fields?: ('name' | 'phone')[];
   max_photos?: number;
   max_photo_bytes?: number;

@@ -96,7 +96,7 @@ export class SwissPlaces {
     const response = await this.request(url, {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.44 (independent civic reporting client)',
+        'User-Agent': 'zueri-wie-neu-mcp/0.4.0-rc.45 (independent civic reporting client)',
       },
       signal: AbortSignal.timeout(20_000),
       redirect: 'error',

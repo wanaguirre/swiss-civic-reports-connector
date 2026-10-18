@@ -1,4 +1,10 @@
 import {
+  valDeCharmeyFormUrl,
+  valDeCharmeyScope,
+  valDeCharmeyRequirements,
+  inspectValDeCharmeyForm,
+} from './val-de-charmey-form.js';
+import {
   wuennewilFormUrl,
   wuennewilScope,
   wuennewilRequirements,
@@ -113,6 +119,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'val-de-charmey': Object.freeze({
+    bfsId: 2163,
+    municipality: 'Val-de-Charmey',
+    language: 'fr' as const,
+    formUrl: valDeCharmeyFormUrl,
+    reportingUrl: valDeCharmeyFormUrl,
+  }),
   'wuennewil-flamatt': Object.freeze({
     bfsId: 2309,
     municipality: 'Wünnewil-Flamatt',
@@ -433,6 +446,7 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'lungern')
     throw new Error('The Lungern portal requires its complete tenant configuration.');
   if (isEbsMunicipality(name)) return inspectEbsForm(html);
+  if (name === 'val-de-charmey') return inspectValDeCharmeyForm(html);
   if (name === 'wuennewil-flamatt') return inspectWuennewilForm(html);
   if (name === 'erstfeld') return inspectErstfeldForm(html);
   if (isCkwMunicipality(name)) return inspectCkwForm(html);
@@ -626,6 +640,9 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.submissionMode === 'direct'
         ? 'After your approval, Civic sends your reviewed contact details, report and optional normalized photo to the municipality. Its service emails a ticket reference; Civic does not request a personal-data copy by email.'
         : 'Preparation keeps contact details and normalized photos in Civic. Sending is disabled pending a genuine municipal delivery pilot.';
+    if (name === 'val-de-charmey')
+      this.privacy =
+        'Preparation stays in Civic and accepts no reporter contact fields. The official portal is configured to publish title, details, coordinates and any attached photo publicly. Choose publication yourself after review; Civic does not send or publish anything.';
     this.bfsId = config.bfsId;
     this.municipality = config.municipality;
     this.deliveryLanguage = config.language;
@@ -647,45 +664,47 @@ export class MunicipalFormClient implements ReportingAdapter {
                     ? config.formUrl
                     : undefined;
     this.reportingService =
-      name === 'wuennewil-flamatt'
-        ? 'Bauamt Wünnewil-Flamatt – Strassenbeleuchtung'
-        : name === 'lungern'
-          ? 'Mängelmelder Lungern'
-          : isEbsMunicipality(name)
-            ? 'ebs Energie AG – Strassenbeleuchtung'
-            : name === 'erstfeld'
-              ? 'Gemeindewerke Erstfeld – Öffentliche Beleuchtung'
-              : isCkwMunicipality(name)
-                ? 'CKW – Strassenbeleuchtung'
-                : name === 'oberhofen' || name === 'steffisburg'
-                  ? 'NetZulg – Strassenbeleuchtung'
-                  : name === 'buchsi'
-                    ? 'Energie Buchsi – Strassenbeleuchtung'
-                    : name === 'dotzigen'
-                      ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
-                      : name === 'bueren'
-                        ? 'EVB – Strassenbeleuchtung'
-                        : name === 'ostermundigen'
-                          ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
-                          : name === 'wohlen-be'
-                            ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
-                            : name === 'roggwil'
-                              ? 'GBR – Strassenbeleuchtung'
-                              : name === 'langenthal'
-                                ? 'IB Langenthal – Strassenbeleuchtung'
-                                : name === 'staefa'
-                                  ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
-                                  : name === 'erlenbach' || name === 'zollikon'
-                                    ? 'Werke am Zürichsee – Strassenbeleuchtung'
-                                    : name === 'marthalen'
-                                      ? 'EGM – Öffentliche Beleuchtung'
-                                      : name === 'gossau'
-                                        ? 'Problem melden'
-                                        : name === 'meggen'
-                                          ? 'Meldung Sicherheitsproblem'
-                                          : name !== 'fribourg'
-                                            ? 'Schaden melden'
-                                            : 'Avis de défectuosité';
+      name === 'val-de-charmey'
+        ? 'Commune Val-de-Charmey – Signalement de défauts'
+        : name === 'wuennewil-flamatt'
+          ? 'Bauamt Wünnewil-Flamatt – Strassenbeleuchtung'
+          : name === 'lungern'
+            ? 'Mängelmelder Lungern'
+            : isEbsMunicipality(name)
+              ? 'ebs Energie AG – Strassenbeleuchtung'
+              : name === 'erstfeld'
+                ? 'Gemeindewerke Erstfeld – Öffentliche Beleuchtung'
+                : isCkwMunicipality(name)
+                  ? 'CKW – Strassenbeleuchtung'
+                  : name === 'oberhofen' || name === 'steffisburg'
+                    ? 'NetZulg – Strassenbeleuchtung'
+                    : name === 'buchsi'
+                      ? 'Energie Buchsi – Strassenbeleuchtung'
+                      : name === 'dotzigen'
+                        ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
+                        : name === 'bueren'
+                          ? 'EVB – Strassenbeleuchtung'
+                          : name === 'ostermundigen'
+                            ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
+                            : name === 'wohlen-be'
+                              ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+                              : name === 'roggwil'
+                                ? 'GBR – Strassenbeleuchtung'
+                                : name === 'langenthal'
+                                  ? 'IB Langenthal – Strassenbeleuchtung'
+                                  : name === 'staefa'
+                                    ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+                                    : name === 'erlenbach' || name === 'zollikon'
+                                      ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                                      : name === 'marthalen'
+                                        ? 'EGM – Öffentliche Beleuchtung'
+                                        : name === 'gossau'
+                                          ? 'Problem melden'
+                                          : name === 'meggen'
+                                            ? 'Meldung Sicherheitsproblem'
+                                            : name !== 'fribourg'
+                                              ? 'Schaden melden'
+                                              : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -694,6 +713,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
+        name === 'val-de-charmey' ||
         name === 'wuennewil-flamatt' ||
         name === 'lungern' ||
         isEbsMunicipality(name) ||
@@ -836,45 +856,47 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'wuennewil-flamatt'
-          ? wuennewilScope
-          : name === 'lungern'
-            ? lungernScope
-            : isEbsMunicipality(name)
-              ? ebsScope(name)
-              : name === 'erstfeld'
-                ? erstfeldScope
-                : isCkwMunicipality(name)
-                  ? ckwScope(name)
-                  : name === 'oberhofen' || name === 'steffisburg'
-                    ? netzulgScope(name)
-                    : name === 'buchsi'
-                      ? buchsiScope
-                      : name === 'dotzigen'
-                        ? dotzigenScope
-                        : name === 'bueren'
-                          ? evbScope
-                          : name === 'ostermundigen'
-                            ? ostermundigenScope
-                            : name === 'wohlen-be'
-                              ? wohlenBeScope
-                              : name === 'roggwil'
-                                ? roggwilScope
-                                : name === 'langenthal'
-                                  ? langenthalScope
-                                  : name === 'staefa'
-                                    ? staefaScope
-                                    : name === 'erlenbach' || name === 'zollikon'
-                                      ? wazScope
-                                      : name === 'marthalen'
-                                        ? marthalenScope
-                                        : name === 'boenigen'
-                                          ? boenigenScope
-                                          : name === 'gossau'
-                                            ? gossauScope
-                                            : name === 'meggen'
-                                              ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                                              : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'val-de-charmey'
+          ? valDeCharmeyScope
+          : name === 'wuennewil-flamatt'
+            ? wuennewilScope
+            : name === 'lungern'
+              ? lungernScope
+              : isEbsMunicipality(name)
+                ? ebsScope(name)
+                : name === 'erstfeld'
+                  ? erstfeldScope
+                  : isCkwMunicipality(name)
+                    ? ckwScope(name)
+                    : name === 'oberhofen' || name === 'steffisburg'
+                      ? netzulgScope(name)
+                      : name === 'buchsi'
+                        ? buchsiScope
+                        : name === 'dotzigen'
+                          ? dotzigenScope
+                          : name === 'bueren'
+                            ? evbScope
+                            : name === 'ostermundigen'
+                              ? ostermundigenScope
+                              : name === 'wohlen-be'
+                                ? wohlenBeScope
+                                : name === 'roggwil'
+                                  ? roggwilScope
+                                  : name === 'langenthal'
+                                    ? langenthalScope
+                                    : name === 'staefa'
+                                      ? staefaScope
+                                      : name === 'erlenbach' || name === 'zollikon'
+                                        ? wazScope
+                                        : name === 'marthalen'
+                                          ? marthalenScope
+                                          : name === 'boenigen'
+                                            ? boenigenScope
+                                            : name === 'gossau'
+                                              ? gossauScope
+                                              : name === 'meggen'
+                                                ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                                                : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -1022,6 +1044,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'val-de-charmey') return valDeCharmeyRequirements();
     if (this.name === 'lungern') return lungernRequirements();
     if (isEbsMunicipality(this.name)) return ebsRequirements(this.name);
     if (this.name === 'wuennewil-flamatt') return wuennewilRequirements();

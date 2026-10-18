@@ -109,6 +109,12 @@ private contact fields, one photo and linked terms. Sending is unconditionally
 disabled; no municipal writes or real receipts were verified. See
 [municipal forms](docs/MUNICIPAL-FORMS.md#gossau-zh--16-october-2026).
 
+Val-de-Charmey (BFS2163) supports disabled local preparation of anonymous public-space
+reports. It requires title, description, exact municipal location, responsibility
+confirmation and an explicit local choice about public publication. The official
+form has no reporter contact controls or category selector. One optional normalized
+JPEG up to 5 MB is a Civic limit. No sending, external completion or tracking.
+
 Wünnewil-Flamatt (BFS2309) has preparation-only municipal streetlamp support through
 `MunicipalFormClient('wuennewil-flamatt')`: four damage choices, separate reporter
 and affected addresses, required personal/mobile phone, optional email/lamp number,

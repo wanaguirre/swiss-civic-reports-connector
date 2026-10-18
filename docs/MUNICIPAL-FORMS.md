@@ -569,3 +569,44 @@ under global/experimental send switches. An uncertain response must remain
 unconfirmed without retry or alternate sending. No synthetic live report or upload
 was used. A genuine approved report or authorized environment is needed for sending
 verification. This limitation does not prevent source-pinned local preparation.
+
+
+## Val-de-Charmey public defects (18 October 2026)
+
+`MunicipalFormClient('val-de-charmey')` is local preparation only for BFS2163.
+The [official defect form](https://val-de-charmey.ch/administration/guichet-virtuel/signalement-de-defauts/)
+invites reports about faulty streetlights, impassable paths and vandalism.
+The local single class `Signalement de défauts` is not a municipal category ID.
+Exact BFS validation precedes the provider read; a separate resident confirmation
+covers public space and municipal responsibility. Map centre/viewport restrictions
+do not establish the boundary or ownership.
+
+The complete selected multipart form and all selected map settings, submission
+configuration and relevant client references are pinned. Only two dynamic nonce
+values are normalized, never retained. Full title/description/coordinate validation,
+optional address, hidden constants, honeypot and single-image controls are covered.
+The form declares anonymous access and reCAPTCHA=no; generic translated CAPTCHA
+messages are not an active selected challenge. No municipal scripts are executed.
+Server-side protections remain unverified.
+
+Title and description are required, one image optional; no reporter contact fields
+are rendered. `email_supported:false` makes the shared service reject email, while
+`contact_fields:[]` rejects name/phone. Existing adapters retain email support by
+default. The local publication choice is a required resident selection frozen into
+the preview, not an invented provider consent checkbox. Title, details, coordinates
+and attached image are intended to be public (`post_status=publish`). Personal or
+sensitive details must stay out. Civic's 100/5000/250 character and 5 MB normalized
+JPEG limits are local. Markup declares one file and 314572800 bytes (300 MiB), which
+is not proof of the deployed server's acceptance limit.
+
+The map config declares a required `etats` status taxonomy with IDs81/82/83, but
+no selector appears in the rendered form. No status/category ID is invented.
+The published upload client (SHA256
+5c38115229420f1481884969ff6a850fd0f79b7900174d3a1ebb232163db8baf)
+uses admin-ajax action `cspmsl_upload_files`, then the native form POST. Neither is
+implemented or called. Its client continues after upload errors; Civic must fail
+closed in any future transport. Upload acceptance, server status defaults, orphan
+attachment cleanup, final redirect/report binding and reconciliation are unknown.
+`cspmsl_sbmt` is a success-notice parameter, not a verified receipt. Sending,
+external completion and tracking remain unavailable even with experimental/global
+switches. Never retry or switch channels after uncertain delivery.
