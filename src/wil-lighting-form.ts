@@ -152,8 +152,8 @@ export function wilLightingRequirements(): Record<string, Requirements> {
         notes: [
           'Nur nicht dringende Störungen an öffentlichen Strassenlampen der Stadt Wil (SG). Private Leuchten, Stromausfälle und andere Schäden sind ausgeschlossen.',
           'Vorname, Nachname, Telefon und E-Mail sind erforderlich. Die tatsächliche Strasse und der Ort der Lampe bleiben von Ihren Kontaktdaten getrennt. Haus- und Lampennummer nur angeben, wenn tatsächlich bekannt oder ablesbar.',
-          'Die Beschreibung und die Bestätigung der öffentlichen Lampe dienen nur der lokalen Prüfung in Civic. Das gelesene offizielle Formular hat kein freies Beschreibungsfeld. Lokale Zeichenlimits sind keine veröffentlichten Serverlimits.',
-          'Keine Fotoanhänge. Quellfotos ausdrücklich ausschliessen. Allgemeine Upload-Konfiguration ist kein ausgewähltes Fotofeld.',
+          'Die Beschreibung und die Bestätigung der öffentlichen Lampe dienen nur der lokalen Prüfung in Civic. Das gelesene offizielle Formular hat kein freies Beschreibungsfeld.',
+          'Keine Fotoanhänge. Quellfotos ausdrücklich ausschliessen.',
           'Nur Vorbereitung. Senden, externe Erledigung und Statusabfrage sind nicht verfügbar. Bei unklarem Ausgang niemals automatisch erneut melden, einen Entwurf neu anlegen oder den Sendekanal wechseln.',
         ],
       } as Requirements,
