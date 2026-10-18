@@ -349,6 +349,12 @@ or municipal administration and explicitly requires the number on the brown pole
 plate. Only the CKW preparation route is implemented; alternate-channel sending
 is unavailable. `isCkwMunicipality` checks the independently qualified own-key
 registry, never the provider's historical locality options or inherited keys.
+`MunicipalFormClient('oberkirch')` separately binds BFS1095. The public
+[municipal lamp-fault service](https://www.oberkirch.ch/online-schalter/84767/detail)
+explicitly refers reports to CKW, independently of the road department's broader
+maintenance role. It normally expects repairs within two to three weeks; this is
+not an emergency route or a guaranteed completion date. Published phone contact
+does not authorize alternate-channel sending or retry.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;

@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  oberkirch: {
+    name: 'Oberkirch',
+    bfsId: 1095,
+    referralUrl: 'https://www.oberkirch.ch/online-schalter/84767/detail',
+  },
   knutwil: { name: 'Knutwil', bfsId: 1089, referralUrl: 'https://www.knutwil.ch/strom' },
   eich: {
     name: 'Eich',
@@ -121,6 +126,11 @@ export function ckwRequirements(name: CkwMunicipality): Record<string, Requireme
           },
         ],
         notes: [
+          ...(name === 'oberkirch'
+            ? [
+                'Die Gemeinde nennt im Normalfall zwei bis drei Wochen bis zur Reparatur. Dies ist keine Notfallmeldung und keine Zusage für einen bestimmten Termin.',
+              ]
+            : []),
           `Nur flackernde oder ausgefallene einzelne öffentliche Strassenlampen in ${municipality}. Andere Störungen und ganze Strassenzüge sind in dieser Vorbereitung nicht enthalten.`,
           'Für diese Vorbereitung wird die tatsächliche Nummer auf der Plakette benötigt. CKW erwartet einen Grossbuchstaben, ein bis zwei Ziffern, einen Bindestrich, ein bis zwei Ziffern und optional einen Grossbuchstaben. Keine Nummer erfinden.',
           'Keine Fotoanhänge oder Kontaktangaben für diese beiden Formularzweige. Civic benötigt einen bestätigten Standort und eine Beschreibung; seine Textgrenzen sind keine veröffentlichten CKW-Grenzen.',
