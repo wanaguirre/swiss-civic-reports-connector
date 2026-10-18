@@ -8,6 +8,11 @@ export const ebsMandateUrl =
 export const ebsCategory = 'Defekte Strassenlampe';
 // Other choices on the provider form require independent municipal assessment.
 export const ebsMunicipalities = {
+  sattel: {
+    name: 'Sattel',
+    bfsId: 1371,
+    referralUrl: 'https://www.sattel.ch/online-schalter/74653/detail',
+  },
   schwyz: {
     name: 'Schwyz',
     bfsId: 1372,

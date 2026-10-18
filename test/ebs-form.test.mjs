@@ -4,14 +4,21 @@ import { readFile, mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
-import { inspectEbsForm, ebsCategory, ebsFormUrl, ebsRequirements } from '../dist/ebs-form.js';
+import {
+  inspectEbsForm,
+  ebsCategory,
+  ebsFormUrl,
+  ebsRequirements,
+  ebsMunicipalities,
+  isEbsMunicipality,
+} from '../dist/ebs-form.js';
 import { MunicipalFormClient } from '../dist/municipal-forms.js';
 import { ReportService } from '../dist/service.js';
 import { Store } from '../dist/store.js';
 const html = await readFile(new URL('fixtures/ebs-lighting.html', import.meta.url), 'utf8');
-const point = { latitude: 47.02, longitude: 8.654 };
-const input = {
-  ...point,
+const basePoint = { latitude: 47.02, longitude: 8.654 };
+const baseInput = {
+  ...basePoint,
   location_confirmed: true,
   location_label: 'Offline issue location 2',
   category: ebsCategory,
@@ -67,134 +74,159 @@ test('ebs pins municipalities, validation, remarks and protection while allowing
   ])
     assert.throws(() => inspectEbsForm(bad), /changed/);
 });
-test('Ebs rejects other municipalities before provider access and cannot enable experimental sending', async () => {
-  let count = 0;
-  const city = new MunicipalFormClient(
-    'schwyz',
-    async () => {
-      count++;
-      throw Error('Unexpected read');
-    },
-    { places: { municipality: async () => ({ bfs_id: 1373 }) } },
-  );
-  await assert.rejects(city.requirements(point), /outside/);
-  assert.equal(count, 0);
-  assert.throws(
-    () => new MunicipalFormClient('schwyz', fetch, { experimentalSubmission: true }),
-    /only implemented/,
-  );
-});
-test('Ebs requires required contact, defect description and remarks with actual street and house number; photos are rejected and lamp number stays optional', async (t) => {
-  const dir = await mkdtemp(join(tmpdir(), 'civic-ebs-offline-'));
-  t.after(() => rm(dir, { recursive: true, force: true }));
-  const calls = [];
-  const city = new MunicipalFormClient(
-    'schwyz',
-    async (url, init) => {
-      calls.push([url, init.method]);
-      return new Response(html, { headers: { 'content-type': 'text/html' } });
-    },
-    { places: { municipality: async () => ({ bfs_id: 1372 }) } },
-  );
-  const store = new Store(dir);
-  await store.initialize();
-  const service = new ReportService(city, store, { submissionEnabled: true, allowPaths: false });
-  const rules = (await city.requirements(point))[ebsCategory];
-  assert.deepEqual(rules, ebsRequirements('schwyz')[ebsCategory]);
-  for (const field of ['first_name', 'last_name'])
-    assert.equal(rules.extra_fields.find((f) => f.code === field).contact, true);
-  assert.equal(rules.extra_fields.find((f) => f.code === 'lighting_street').contact, undefined);
-  for (const field of [
-    'first_name',
-    'last_name',
-    'lighting_street',
-    'nearby_house_number',
-    'additional_remarks',
-    'public_lamp_confirmed',
+test('ebs registry does not inherit properties or enable unreviewed provider localities', () => {
+  assert.equal(isEbsMunicipality('sattel'), true);
+  assert.equal(isEbsMunicipality('schwyz'), true);
+  for (const key of [
+    'illgau',
+    'lauerz',
+    'muotathal',
+    'steinen',
+    'unteriberg',
+    'constructor',
+    '__proto__',
+    'toString',
   ])
-    await assert.rejects(
-      service.prepare({ ...input, extra_fields: { ...input.extra_fields, [field]: '' } }),
-      /requires|required/,
+    assert.equal(isEbsMunicipality(key), false);
+});
+for (const [key, profile] of Object.entries(ebsMunicipalities)) {
+  const point = key === 'sattel' ? { latitude: 47.08, longitude: 8.635 } : basePoint;
+  const input = { ...baseInput, ...point, extra_fields: { ...baseInput.extra_fields } };
+  test(`${key}: reject other municipalities before provider access and experimental sending`, async () => {
+    let count = 0;
+    const city = new MunicipalFormClient(
+      key,
+      async () => {
+        count++;
+        throw Error('Unexpected read');
+      },
+      { places: { municipality: async () => ({ bfs_id: profile.bfsId === 1372 ? 1371 : 1372 }) } },
     );
-  await assert.rejects(service.prepare({ ...input, email: '' }), /email/i);
-  await assert.rejects(service.prepare({ ...input, phone: '' }), /phone/i);
-  await assert.rejects(
-    service.prepare({
-      ...input,
-      extra_fields: { ...input.extra_fields, public_lamp_confirmed: 'Private light' },
-    }),
-    /Invalid/,
-  );
-  const photo = await service.inspectPhoto({
-    base64: (
-      await sharp({ create: { width: 8, height: 8, channels: 3, background: '#456789' } })
-        .jpeg()
-        .toBuffer()
-    ).toString('base64'),
+    await assert.rejects(city.requirements(point), /outside/);
+    assert.equal(count, 0);
+    assert.throws(
+      () => new MunicipalFormClient(key, fetch, { experimentalSubmission: true }),
+      /only implemented/,
+    );
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [photo.metadata.id] }), /at most 0/);
-  const preview = await service.prepare(input);
-  assert.equal(preview.municipality.bfs_id, 1372);
-  assert.equal(preview.submission_enabled, false);
-  assert.equal(preview.submission_mode, 'unverified');
-  const frozen = await store.preview(preview.preview_id);
-  assert.deepEqual(frozen.destination, { bfs_id: 1372, service_id: 'schwyz-defect-form' });
-  assert.equal(frozen.photos.length, 0);
-  assert.equal(frozen.input.extra_fields.lamp_number, undefined);
-  input.extra_fields.additional_remarks = 'Changed after preparation';
-  assert.equal(
-    (await store.preview(preview.preview_id)).input.extra_fields.additional_remarks,
-    'Additional fictional remarks',
-  );
-  input.extra_fields.additional_remarks = 'Additional fictional remarks';
-  await assert.rejects(
-    service.prepare({ ...input, description: 'x'.repeat(2001) }),
-    /2000|long|length/i,
-  );
-  await assert.rejects(
-    service.prepare({
-      ...input,
-      extra_fields: { ...input.extra_fields, additional_remarks: 'x'.repeat(501) },
-    }),
-    /500|long|length/i,
-  );
-  await assert.rejects(city.submit(frozen), /verification/);
-  await assert.rejects(city.report('offline'), /unverified/);
-  assert.equal(city.guidance.verified_on, '2026-10-18');
-  assert.equal(city.guidance.sources.length, 3);
-  assert.deepEqual(calls, [[ebsFormUrl, 'GET']]);
-});
-test('Ebs fresh contract drift invalidates cached categories and enforces read cooldown', async () => {
-  let body = html,
-    count = 0;
-  const city = new MunicipalFormClient(
-    'schwyz',
-    async () => {
-      count++;
-      return new Response(body, { headers: { 'content-type': 'text/html' } });
-    },
-    { places: { municipality: async () => ({ bfs_id: 1372 }) } },
-  );
-  await city.requirements(point);
-  body = html.replace('Bemerkungen', 'Different');
-  await assert.rejects(city.requirements(point, { fresh: true }), /changed/);
-  await assert.rejects(city.requirements(point), /changed/);
-  assert.equal(count, 2);
-});
-test('Ebs honors rate-limit cooldown without retrying or retaining a usable stale schema', async () => {
-  let count = 0;
-  const city = new MunicipalFormClient(
-    'schwyz',
-    async () => {
-      count++;
-      return new Response('limited', {
-        status: 429,
-        headers: { 'retry-after': '600', 'content-type': 'text/html' },
-      });
-    },
-    { places: { municipality: async () => ({ bfs_id: 1372 }) }, now: () => 1000 },
-  );
-  await assert.rejects(city.requirements(point), /changed/);
-  await assert.rejects(city.requirements(point), /changed/);
-  assert.equal(count, 1);
-});
+  test(`${key}: require contact, actual street/nearest number and remarks; photos rejected and lamp number optional`, async (t) => {
+    const dir = await mkdtemp(join(tmpdir(), 'civic-ebs-offline-'));
+    t.after(() => rm(dir, { recursive: true, force: true }));
+    const calls = [];
+    const city = new MunicipalFormClient(
+      key,
+      async (url, init) => {
+        calls.push([url, init.method]);
+        return new Response(html, { headers: { 'content-type': 'text/html' } });
+      },
+      { places: { municipality: async () => ({ bfs_id: profile.bfsId }) } },
+    );
+    const store = new Store(dir);
+    await store.initialize();
+    const service = new ReportService(city, store, { submissionEnabled: true, allowPaths: false });
+    const rules = (await city.requirements(point))[ebsCategory];
+    assert.deepEqual(rules, ebsRequirements(key)[ebsCategory]);
+    for (const field of ['first_name', 'last_name'])
+      assert.equal(rules.extra_fields.find((f) => f.code === field).contact, true);
+    assert.equal(rules.extra_fields.find((f) => f.code === 'lighting_street').contact, undefined);
+    for (const field of [
+      'first_name',
+      'last_name',
+      'lighting_street',
+      'nearby_house_number',
+      'additional_remarks',
+      'public_lamp_confirmed',
+    ])
+      await assert.rejects(
+        service.prepare({ ...input, extra_fields: { ...input.extra_fields, [field]: '' } }),
+        /requires|required/,
+      );
+    await assert.rejects(service.prepare({ ...input, email: '' }), /email/i);
+    await assert.rejects(service.prepare({ ...input, phone: '' }), /phone/i);
+    await assert.rejects(
+      service.prepare({
+        ...input,
+        extra_fields: { ...input.extra_fields, public_lamp_confirmed: 'Private light' },
+      }),
+      /Invalid/,
+    );
+    const photo = await service.inspectPhoto({
+      base64: (
+        await sharp({ create: { width: 8, height: 8, channels: 3, background: '#456789' } })
+          .jpeg()
+          .toBuffer()
+      ).toString('base64'),
+    });
+    await assert.rejects(
+      service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+      /at most 0/,
+    );
+    const preview = await service.prepare(input);
+    assert.equal(preview.municipality.bfs_id, profile.bfsId);
+    assert.equal(preview.submission_enabled, false);
+    assert.equal(preview.submission_mode, 'unverified');
+    const frozen = await store.preview(preview.preview_id);
+    assert.deepEqual(frozen.destination, {
+      bfs_id: profile.bfsId,
+      service_id: `${key}-defect-form`,
+    });
+    assert.equal(frozen.photos.length, 0);
+    assert.equal(frozen.input.extra_fields.lamp_number, undefined);
+    input.extra_fields.additional_remarks = 'Changed after preparation';
+    assert.equal(
+      (await store.preview(preview.preview_id)).input.extra_fields.additional_remarks,
+      'Additional fictional remarks',
+    );
+    input.extra_fields.additional_remarks = 'Additional fictional remarks';
+    await assert.rejects(
+      service.prepare({ ...input, description: 'x'.repeat(2001) }),
+      /2000|long|length/i,
+    );
+    await assert.rejects(
+      service.prepare({
+        ...input,
+        extra_fields: { ...input.extra_fields, additional_remarks: 'x'.repeat(501) },
+      }),
+      /500|long|length/i,
+    );
+    await assert.rejects(city.submit(frozen), /verification/);
+    await assert.rejects(city.report('offline'), /unverified/);
+    assert.equal(city.guidance.verified_on, '2026-10-18');
+    assert.equal(city.guidance.sources.length, 3);
+    assert.deepEqual(calls, [[ebsFormUrl, 'GET']]);
+  });
+  test(`${key}: fresh contract drift invalidates cached categories and enforces cooldown`, async () => {
+    let body = html,
+      count = 0;
+    const city = new MunicipalFormClient(
+      key,
+      async () => {
+        count++;
+        return new Response(body, { headers: { 'content-type': 'text/html' } });
+      },
+      { places: { municipality: async () => ({ bfs_id: profile.bfsId }) } },
+    );
+    await city.requirements(point);
+    body = html.replace('Bemerkungen', 'Different');
+    await assert.rejects(city.requirements(point, { fresh: true }), /changed/);
+    await assert.rejects(city.requirements(point), /changed/);
+    assert.equal(count, 2);
+  });
+  test(`${key}: rate-limit cooldown prevents retry and stale schema`, async () => {
+    let count = 0;
+    const city = new MunicipalFormClient(
+      key,
+      async () => {
+        count++;
+        return new Response('limited', {
+          status: 429,
+          headers: { 'retry-after': '600', 'content-type': 'text/html' },
+        });
+      },
+      { places: { municipality: async () => ({ bfs_id: profile.bfsId }) }, now: () => 1000 },
+    );
+    await assert.rejects(city.requirements(point), /changed/);
+    await assert.rejects(city.requirements(point), /changed/);
+    assert.equal(count, 1);
+  });
+}

@@ -458,13 +458,17 @@ is available, including under global/experimental send flags. An uncertain
 outcome remains unconfirmed and never authorizes an automatic retry.
 
 
-## Schwyz / ebs public streetlamps (18 October 2026)
+## Schwyz and Sattel / ebs public streetlamps (18 October 2026)
 
 Schwyz's [lighting service](https://www.gemeindeschwyz.ch/dienstleistungen/60689)
 explicitly directs faults to [ebs's public form](https://www.ebs.swiss/privatkunden/service/kundendienst/strassenlampen/).
 The [provider mandate](https://www.ebs.swiss/geschaeftskunden/energie/netz/oeffentliche-beleuchtung/)
-confirms public-lighting upkeep and repairs. Only Schwyz BFS1372 is implemented;
-the other six choices on the provider form need independent municipal assessment.
+confirms public-lighting upkeep and repairs. Sattel's [actual public lighting service](https://www.sattel.ch/online-schalter/74653/detail)
+independently invites everyone to report individual streetlamp faults to the same
+ebs form. The newly observed detail page was read with redirects to the earlier
+timed-out download explicitly blocked; the failed download was not retried.
+Only Schwyz BFS1372 and Sattel BFS1371 are implemented; the five other choices
+still need independent municipal referral assessment.
 
 The single non-emergency public-streetlamp class requires first/last name,
 email, phone, actual street and nearest house number, defect description and
