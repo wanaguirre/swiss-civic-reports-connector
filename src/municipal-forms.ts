@@ -81,6 +81,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  bueron: Object.freeze({
+    bfsId: 1082,
+    municipality: 'Büron',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
   adligenswil: Object.freeze({
     bfsId: 1051,
     municipality: 'Adligenswil',
@@ -279,7 +286,8 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
-  if (name === 'werthenstein' || name === 'adligenswil') return inspectCkwForm(html);
+  if (name === 'werthenstein' || name === 'adligenswil' || name === 'bueron')
+    return inspectCkwForm(html);
   if (name === 'oberhofen' || name === 'steffisburg') return inspectNetzulgForm(html);
   if (name === 'buchsi') return inspectBuchsiForm(html);
   if (name === 'dotzigen') return inspectDotzigenForm(html);
@@ -489,7 +497,7 @@ export class MunicipalFormClient implements ReportingAdapter {
                   ? config.formUrl
                   : undefined;
     this.reportingService =
-      name === 'werthenstein' || name === 'adligenswil'
+      name === 'werthenstein' || name === 'adligenswil' || name === 'bueron'
         ? 'CKW – Strassenbeleuchtung'
         : name === 'oberhofen' || name === 'steffisburg'
           ? 'NetZulg – Strassenbeleuchtung'
@@ -530,6 +538,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       verified_on:
         name === 'werthenstein' ||
         name === 'adligenswil' ||
+        name === 'bueron' ||
         name === 'buchsi' ||
         name === 'dotzigen' ||
         name === 'oberhofen' ||
@@ -550,10 +559,10 @@ export class MunicipalFormClient implements ReportingAdapter {
               ? '2026-10-16'
               : '2026-10-15',
       sources: [
-        ...(name === 'werthenstein' || name === 'adligenswil'
+        ...(name === 'werthenstein' || name === 'adligenswil' || name === 'bueron'
           ? [
               {
-                title: 'Municipal public-lighting referral and actual lamp number requirement',
+                title: 'Municipal public-lighting referral',
                 url: ckwMunicipalities[name].referralUrl,
               },
               {
@@ -643,7 +652,7 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'werthenstein' || name === 'adligenswil'
+        name === 'werthenstein' || name === 'adligenswil' || name === 'bueron'
           ? ckwScope(name)
           : name === 'oberhofen' || name === 'steffisburg'
             ? netzulgScope(name)
@@ -807,7 +816,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
-    if (this.name === 'werthenstein' || this.name === 'adligenswil')
+    if (this.name === 'werthenstein' || this.name === 'adligenswil' || this.name === 'bueron')
       return ckwRequirements(this.name);
     if (this.name === 'oberhofen' || this.name === 'steffisburg')
       return netzulgRequirements(this.name);

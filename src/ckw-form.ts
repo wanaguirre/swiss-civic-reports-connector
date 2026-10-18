@@ -11,6 +11,11 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  bueron: {
+    name: 'Büron',
+    bfsId: 1082,
+    referralUrl: 'https://www.bueron.ch/index.php?apid=11679111',
+  },
   werthenstein: {
     name: 'Werthenstein',
     bfsId: 1009,
@@ -108,7 +113,7 @@ export function ckwRequirements(name: CkwMunicipality): Record<string, Requireme
         ],
         notes: [
           `Nur flackernde oder ausgefallene einzelne öffentliche Strassenlampen in ${municipality}. Andere Störungen und ganze Strassenzüge sind in dieser Vorbereitung nicht enthalten.`,
-          'Die Gemeinde verlangt die tatsächliche Nummer auf der Plakette. CKW erwartet einen Grossbuchstaben, ein bis zwei Ziffern, einen Bindestrich, ein bis zwei Ziffern und optional einen Grossbuchstaben. Keine Nummer erfinden.',
+          'Für diese Vorbereitung wird die tatsächliche Nummer auf der Plakette benötigt. CKW erwartet einen Grossbuchstaben, ein bis zwei Ziffern, einen Bindestrich, ein bis zwei Ziffern und optional einen Grossbuchstaben. Keine Nummer erfinden.',
           'Keine Fotoanhänge oder Kontaktangaben für diese beiden Formularzweige. Civic benötigt einen bestätigten Standort und eine Beschreibung; seine Textgrenzen sind keine veröffentlichten CKW-Grenzen.',
           'Der Entwurf bleibt in Civic. Es wird nichts übermittelt. Senden, Fortsetzen im offiziellen Formular und Statusabfragen sind derzeit nicht verfügbar.',
         ],
