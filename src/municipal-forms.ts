@@ -1,4 +1,11 @@
 import {
+  ckwFormUrl,
+  ckwComponentUrl,
+  inspectCkwForm,
+  werthensteinLightingRequirements,
+  werthensteinLightingScope,
+} from './ckw-form.js';
+import {
   buchsiFormUrl,
   buchsiScope,
   buchsiRequirements,
@@ -73,6 +80,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  werthenstein: Object.freeze({
+    bfsId: 1009,
+    municipality: 'Werthenstein',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
   oberhofen: Object.freeze({
     bfsId: 934,
     municipality: 'Oberhofen am Thunersee',
@@ -257,6 +271,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'werthenstein') return inspectCkwForm(html);
   if (name === 'oberhofen' || name === 'steffisburg') return inspectNetzulgForm(html);
   if (name === 'buchsi') return inspectBuchsiForm(html);
   if (name === 'dotzigen') return inspectDotzigenForm(html);
@@ -466,35 +481,37 @@ export class MunicipalFormClient implements ReportingAdapter {
                   ? config.formUrl
                   : undefined;
     this.reportingService =
-      name === 'oberhofen' || name === 'steffisburg'
-        ? 'NetZulg – Strassenbeleuchtung'
-        : name === 'buchsi'
-          ? 'Energie Buchsi – Strassenbeleuchtung'
-          : name === 'dotzigen'
-            ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
-            : name === 'bueren'
-              ? 'EVB – Strassenbeleuchtung'
-              : name === 'ostermundigen'
-                ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
-                : name === 'wohlen-be'
-                  ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
-                  : name === 'roggwil'
-                    ? 'GBR – Strassenbeleuchtung'
-                    : name === 'langenthal'
-                      ? 'IB Langenthal – Strassenbeleuchtung'
-                      : name === 'staefa'
-                        ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
-                        : name === 'erlenbach' || name === 'zollikon'
-                          ? 'Werke am Zürichsee – Strassenbeleuchtung'
-                          : name === 'marthalen'
-                            ? 'EGM – Öffentliche Beleuchtung'
-                            : name === 'gossau'
-                              ? 'Problem melden'
-                              : name === 'meggen'
-                                ? 'Meldung Sicherheitsproblem'
-                                : name !== 'fribourg'
-                                  ? 'Schaden melden'
-                                  : 'Avis de défectuosité';
+      name === 'werthenstein'
+        ? 'CKW – Strassenbeleuchtung'
+        : name === 'oberhofen' || name === 'steffisburg'
+          ? 'NetZulg – Strassenbeleuchtung'
+          : name === 'buchsi'
+            ? 'Energie Buchsi – Strassenbeleuchtung'
+            : name === 'dotzigen'
+              ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
+              : name === 'bueren'
+                ? 'EVB – Strassenbeleuchtung'
+                : name === 'ostermundigen'
+                  ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
+                  : name === 'wohlen-be'
+                    ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+                    : name === 'roggwil'
+                      ? 'GBR – Strassenbeleuchtung'
+                      : name === 'langenthal'
+                        ? 'IB Langenthal – Strassenbeleuchtung'
+                        : name === 'staefa'
+                          ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+                          : name === 'erlenbach' || name === 'zollikon'
+                            ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                            : name === 'marthalen'
+                              ? 'EGM – Öffentliche Beleuchtung'
+                              : name === 'gossau'
+                                ? 'Problem melden'
+                                : name === 'meggen'
+                                  ? 'Meldung Sicherheitsproblem'
+                                  : name !== 'fribourg'
+                                    ? 'Schaden melden'
+                                    : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -503,7 +520,11 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'buchsi' || name === 'dotzigen' || name === 'oberhofen' || name === 'steffisburg'
+        name === 'werthenstein' ||
+        name === 'buchsi' ||
+        name === 'dotzigen' ||
+        name === 'oberhofen' ||
+        name === 'steffisburg'
           ? '2026-10-18'
           : name === 'bueren' ||
               name === 'ostermundigen' ||
@@ -520,6 +541,18 @@ export class MunicipalFormClient implements ReportingAdapter {
               ? '2026-10-16'
               : '2026-10-15',
       sources: [
+        ...(name === 'werthenstein'
+          ? [
+              {
+                title: 'Municipal public-lighting referral and actual lamp number requirement',
+                url: 'https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/',
+              },
+              {
+                title: 'CKW public component source, reviewed without execution',
+                url: ckwComponentUrl,
+              },
+            ]
+          : []),
         ...(name === 'oberhofen' || name === 'steffisburg'
           ? [
               {
@@ -601,35 +634,37 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'oberhofen' || name === 'steffisburg'
-          ? netzulgScope(name)
-          : name === 'buchsi'
-            ? buchsiScope
-            : name === 'dotzigen'
-              ? dotzigenScope
-              : name === 'bueren'
-                ? evbScope
-                : name === 'ostermundigen'
-                  ? ostermundigenScope
-                  : name === 'wohlen-be'
-                    ? wohlenBeScope
-                    : name === 'roggwil'
-                      ? roggwilScope
-                      : name === 'langenthal'
-                        ? langenthalScope
-                        : name === 'staefa'
-                          ? staefaScope
-                          : name === 'erlenbach' || name === 'zollikon'
-                            ? wazScope
-                            : name === 'marthalen'
-                              ? marthalenScope
-                              : name === 'boenigen'
-                                ? boenigenScope
-                                : name === 'gossau'
-                                  ? gossauScope
-                                  : name === 'meggen'
-                                    ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                                    : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'werthenstein'
+          ? werthensteinLightingScope
+          : name === 'oberhofen' || name === 'steffisburg'
+            ? netzulgScope(name)
+            : name === 'buchsi'
+              ? buchsiScope
+              : name === 'dotzigen'
+                ? dotzigenScope
+                : name === 'bueren'
+                  ? evbScope
+                  : name === 'ostermundigen'
+                    ? ostermundigenScope
+                    : name === 'wohlen-be'
+                      ? wohlenBeScope
+                      : name === 'roggwil'
+                        ? roggwilScope
+                        : name === 'langenthal'
+                          ? langenthalScope
+                          : name === 'staefa'
+                            ? staefaScope
+                            : name === 'erlenbach' || name === 'zollikon'
+                              ? wazScope
+                              : name === 'marthalen'
+                                ? marthalenScope
+                                : name === 'boenigen'
+                                  ? boenigenScope
+                                  : name === 'gossau'
+                                    ? gossauScope
+                                    : name === 'meggen'
+                                      ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                                      : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -763,6 +798,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'werthenstein') return werthensteinLightingRequirements();
     if (this.name === 'oberhofen' || this.name === 'steffisburg')
       return netzulgRequirements(this.name);
     if (this.name === 'buchsi') return buchsiRequirements();

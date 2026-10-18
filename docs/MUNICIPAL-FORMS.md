@@ -320,3 +320,36 @@ no external completion handoff and cannot track reports. No POST, validation,
 synthetic upload or live report was performed. A supported receipt/session
 contract and an approved genuine report or authorized test environment remain
 necessary before verified delivery. Unknown outcomes never authorize retries.
+
+## CKW / Werthenstein lighting preparation (18 October 2026)
+
+`MunicipalFormClient('werthenstein')` binds BFS1009 before provider reads. The
+[municipal works page](https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/)
+explicitly refers streetlamp faults to CKW and requires the actual plaque number.
+Only an individual lamp that flickers or no longer lights is implemented. Private
+lights, whole-street faults, damaged fixtures, outages and other municipal issues
+are outside these two preparation classes. The resident confirms a public lamp;
+BFS membership and that confirmation do not independently establish CKW ownership.
+
+The adapter pins the complete public incident configuration, including historical
+localities, German labels, destinations and referenced component URLs. It does not
+execute JavaScript or independently verify component bytes during preparation.
+The reviewed component (`bust=c3a88c6e`, SHA256
+`b6d147406db7407106fa270f49382e17842fefe5eee255907f357b7d50443410`)
+shows JSON `/api/incident/report/api` for the two single-lamp classes and a separate
+`/mail` branch for other faults. No endpoint is called by this adapter. No code
+from that component is redistributed; the fixture contains public form metadata.
+
+Actual lamp identifiers must match `[A-Z][0-9]{1,2}-[0-9]{1,2}[A-Z]?`, with no
+extra whitespace or newline. Never invent one or derive it from coordinates.
+These two official branches do not display reporter contact or photo controls.
+Civic additionally requires a confirmed point and description; its 250/5000 text
+bounds are preparation limits, not published CKW bounds. Source photos must be
+excluded. Other provider-listed localities are not inferred municipal coverage.
+
+The frontend's truthy `OK` response displays a thank-you message, but durable
+acceptance, case identifiers, duplicate reconciliation and deployed asset routing
+remain unverified. Sending, external completion and tracking are unavailable,
+including with experimental switches. Unknown outcomes remain unconfirmed and
+must never trigger a retry or alternate-channel send. A genuine approved report
+or authorized test environment is required for live delivery verification.

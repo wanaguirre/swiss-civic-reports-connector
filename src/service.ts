@@ -128,9 +128,13 @@ export class ReportService {
       if (field.datatype && !['string', 'text'].includes(field.datatype))
         throw new Error(`Use the official form for this category's typed field: ${key}`);
       if (value.trim() && field.format) {
-        const formats = { postcode_4_5_digits: /^[0-9]{4,5}$/, numeric_date: /^[0-9.,]+$/ };
+        const formats = {
+          postcode_4_5_digits: /^[0-9]{4,5}$/,
+          numeric_date: /^[0-9.,]+$/,
+          ckw_lamp_number: /^[A-Z][0-9]{1,2}-[0-9]{1,2}[A-Z]?$/,
+        };
         const pattern = formats[field.format];
-        if (!pattern || !pattern.test(value))
+        if (!pattern || pattern.exec(value)?.[0] !== value)
           throw new Error(`Invalid format for extra field: ${key}`);
       }
       if (value.trim() && field.values) {
