@@ -11,6 +11,12 @@ export const ckwCategories = [
   'Strassenlampe brennt nicht mehr',
 ] as const;
 export const ckwMunicipalities = {
+  schenkon: {
+    name: 'Schenkon',
+    bfsId: 1099,
+    referralUrl:
+      'https://www.schenkon.ch/gemeinde/verwaltung/dienstleistungen-nuetzliche-links.html/41/service/455',
+  },
   ruswil: {
     name: 'Ruswil',
     bfsId: 1098,

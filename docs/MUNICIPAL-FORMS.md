@@ -361,6 +361,13 @@ explicitly lists ‘Meldung defekte Strassenlampe’ with a CKW destination. Its
 CKW URL redirects to the current public fault page, which links the same lamp
 form. This is an independent municipal referral, not inferred from CKW locality
 options. Rickenbach's CKW connection/plan contacts do not qualify lighting intake.
+`MunicipalFormClient('schenkon')` binds BFS1099 independently. Its
+[streetlamp-fault service](https://www.schenkon.ch/gemeinde/verwaltung/dienstleistungen-nuetzliche-links.html/41/service/455)
+explicitly refers reports to CKW online or lampenersatz@ckw.ch. The municipality
+asks for the actual pole number if possible; the two CKW online branches require
+it. Only online preparation is implemented; the published email does not enable
+alternate sending or retry. Water leaks instead go to the named Wassermeister,
+aquaregio; meter readings are separate administration.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
