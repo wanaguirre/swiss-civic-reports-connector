@@ -10,8 +10,25 @@ export const ckwCategories = [
   'Strassenlampe flackert/pumpt',
   'Strassenlampe brennt nicht mehr',
 ] as const;
-export const werthensteinLightingScope =
-  'Non-emergency flickering or unlit individual public streetlamps in Werthenstein, explicitly referred to CKW by the municipality. Requires the actual lamp number from its plaque. Not private lights, electricity outages, whole-street faults, damaged fixtures or other municipal defects. Municipal boundary and resident confirmation do not independently verify CKW ownership of an individual asset.';
+export const ckwMunicipalities = {
+  werthenstein: {
+    name: 'Werthenstein',
+    bfsId: 1009,
+    referralUrl: 'https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/',
+  },
+  adligenswil: {
+    name: 'Adligenswil',
+    bfsId: 1051,
+    referralUrl:
+      'https://www.adligenswil.ch/public/upload/assets/5652/2026-04-21%20%C3%9Cbersicht%20Werke%20Partner.pdf?fp=5',
+  },
+} as const;
+export type CkwMunicipality = keyof typeof ckwMunicipalities;
+export function ckwScope(name: CkwMunicipality): string {
+  return `Non-emergency flickering or unlit individual public streetlamps in ${ckwMunicipalities[name].name}, explicitly referred to CKW by the municipality. Requires the actual lamp number from its plaque. Not private lights, electricity outages, whole-street faults, damaged fixtures or other municipal defects. Municipal boundary and resident confirmation do not independently verify CKW ownership of an individual asset.`;
+}
+// Retained for consumers of the original Werthenstein-only API.
+export const werthensteinLightingScope = ckwScope('werthenstein');
 type Node = DefaultTreeAdapterMap['node'];
 const all = (node: Node): Node[] => [
   node,
@@ -56,12 +73,13 @@ export function inspectCkwForm(html: string) {
   }
 }
 
-export function werthensteinLightingRequirements(): Record<string, Requirements> {
+export function ckwRequirements(name: CkwMunicipality): Record<string, Requirements> {
+  const municipality = ckwMunicipalities[name].name;
   return Object.fromEntries(
     ckwCategories.map((category) => [
       category,
       {
-        scope: werthensteinLightingScope,
+        scope: ckwScope(name),
         photo_required: false,
         max_photos: 0,
         email_required: false,
@@ -69,7 +87,7 @@ export function werthensteinLightingRequirements(): Record<string, Requirements>
         contact_fields: [],
         description_max_length: 5000,
         location_label_max_length: 250,
-        bodies: ['Werthenstein'],
+        bodies: [municipality],
         extra_fields: [
           {
             code: 'lamp_number',
@@ -82,15 +100,14 @@ export function werthensteinLightingRequirements(): Record<string, Requirements>
           },
           {
             code: 'public_lamp_confirmed',
-            description:
-              'Confirm an individual public streetlamp in Werthenstein, referred to CKW; exclude private lamps and emergencies',
+            description: `Confirm an individual public streetlamp in ${municipality}, referred to CKW; exclude private lamps and emergencies`,
             required: true,
             datatype: 'string',
             values: ['Public streetlamp confirmed'],
           },
         ],
         notes: [
-          'Nur flackernde oder ausgefallene einzelne öffentliche Strassenlampen in Werthenstein. Andere Störungen und ganze Strassenzüge sind in dieser Vorbereitung nicht enthalten.',
+          `Nur flackernde oder ausgefallene einzelne öffentliche Strassenlampen in ${municipality}. Andere Störungen und ganze Strassenzüge sind in dieser Vorbereitung nicht enthalten.`,
           'Die Gemeinde verlangt die tatsächliche Nummer auf der Plakette. CKW erwartet einen Grossbuchstaben, ein bis zwei Ziffern, einen Bindestrich, ein bis zwei Ziffern und optional einen Grossbuchstaben. Keine Nummer erfinden.',
           'Keine Fotoanhänge oder Kontaktangaben für diese beiden Formularzweige. Civic benötigt einen bestätigten Standort und eine Beschreibung; seine Textgrenzen sind keine veröffentlichten CKW-Grenzen.',
           'Der Entwurf bleibt in Civic. Es wird nichts übermittelt. Senden, Fortsetzen im offiziellen Formular und Statusabfragen sind derzeit nicht verfügbar.',
@@ -98,4 +115,8 @@ export function werthensteinLightingRequirements(): Record<string, Requirements>
       } satisfies Requirements,
     ]),
   );
+}
+
+export function werthensteinLightingRequirements(): Record<string, Requirements> {
+  return ckwRequirements('werthenstein');
 }

@@ -2,8 +2,9 @@ import {
   ckwFormUrl,
   ckwComponentUrl,
   inspectCkwForm,
-  werthensteinLightingRequirements,
-  werthensteinLightingScope,
+  ckwMunicipalities,
+  ckwRequirements,
+  ckwScope,
 } from './ckw-form.js';
 import {
   buchsiFormUrl,
@@ -80,6 +81,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  adligenswil: Object.freeze({
+    bfsId: 1051,
+    municipality: 'Adligenswil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
   werthenstein: Object.freeze({
     bfsId: 1009,
     municipality: 'Werthenstein',
@@ -271,7 +279,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
-  if (name === 'werthenstein') return inspectCkwForm(html);
+  if (name === 'werthenstein' || name === 'adligenswil') return inspectCkwForm(html);
   if (name === 'oberhofen' || name === 'steffisburg') return inspectNetzulgForm(html);
   if (name === 'buchsi') return inspectBuchsiForm(html);
   if (name === 'dotzigen') return inspectDotzigenForm(html);
@@ -481,7 +489,7 @@ export class MunicipalFormClient implements ReportingAdapter {
                   ? config.formUrl
                   : undefined;
     this.reportingService =
-      name === 'werthenstein'
+      name === 'werthenstein' || name === 'adligenswil'
         ? 'CKW – Strassenbeleuchtung'
         : name === 'oberhofen' || name === 'steffisburg'
           ? 'NetZulg – Strassenbeleuchtung'
@@ -521,6 +529,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       delivery_language: this.deliveryLanguage,
       verified_on:
         name === 'werthenstein' ||
+        name === 'adligenswil' ||
         name === 'buchsi' ||
         name === 'dotzigen' ||
         name === 'oberhofen' ||
@@ -541,11 +550,11 @@ export class MunicipalFormClient implements ReportingAdapter {
               ? '2026-10-16'
               : '2026-10-15',
       sources: [
-        ...(name === 'werthenstein'
+        ...(name === 'werthenstein' || name === 'adligenswil'
           ? [
               {
                 title: 'Municipal public-lighting referral and actual lamp number requirement',
-                url: 'https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/',
+                url: ckwMunicipalities[name].referralUrl,
               },
               {
                 title: 'CKW public component source, reviewed without execution',
@@ -634,8 +643,8 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'werthenstein'
-          ? werthensteinLightingScope
+        name === 'werthenstein' || name === 'adligenswil'
+          ? ckwScope(name)
           : name === 'oberhofen' || name === 'steffisburg'
             ? netzulgScope(name)
             : name === 'buchsi'
@@ -798,7 +807,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
-    if (this.name === 'werthenstein') return werthensteinLightingRequirements();
+    if (this.name === 'werthenstein' || this.name === 'adligenswil')
+      return ckwRequirements(this.name);
     if (this.name === 'oberhofen' || this.name === 'steffisburg')
       return netzulgRequirements(this.name);
     if (this.name === 'buchsi') return buchsiRequirements();

@@ -321,11 +321,17 @@ synthetic upload or live report was performed. A supported receipt/session
 contract and an approved genuine report or authorized test environment remain
 necessary before verified delivery. Unknown outcomes never authorize retries.
 
-## CKW / Werthenstein lighting preparation (18 October 2026)
+## CKW / Werthenstein and Adligenswil lighting preparation (18 October 2026)
 
 `MunicipalFormClient('werthenstein')` binds BFS1009 before provider reads. The
 [municipal works page](https://werthenstein.ch/wirtschaft-finanzen/infrastruktur/werkdienst/)
 explicitly refers streetlamp faults to CKW and requires the actual plaque number.
+`MunicipalFormClient('adligenswil')` separately binds BFS1051. The municipality's
+[21 April 2026 utility partner sheet](https://www.adligenswil.ch/public/upload/assets/5652/2026-04-21%20%C3%9Cbersicht%20Werke%20Partner.pdf?fp=5)
+explicitly directs defective lamps to CKW and asks for the number on the pole.
+`ckwRequirements(name)` and `ckwScope(name)` provide municipality-specific rules;
+the original Werthenstein exports remain compatible. Other CKW-listed localities
+require independent municipal evidence before inclusion.
 Only an individual lamp that flickers or no longer lights is implemented. Private
 lights, whole-street faults, damaged fixtures, outages and other municipal issues
 are outside these two preparation classes. The resident confirms a public lamp;
