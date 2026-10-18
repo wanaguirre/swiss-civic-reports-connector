@@ -1,4 +1,11 @@
 import {
+  therwilFormUrl,
+  therwilReferralUrl,
+  therwilScope,
+  therwilRequirements,
+  inspectTherwilForm,
+} from './therwil-form.js';
+import {
   reinachBlFormUrl,
   reinachBlScope,
   reinachBlRequirements,
@@ -125,6 +132,13 @@ import type { ReportingAdapter } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  therwil: Object.freeze({
+    bfsId: 2775,
+    municipality: 'Therwil',
+    language: 'de' as const,
+    formUrl: therwilFormUrl,
+    reportingUrl: therwilFormUrl,
+  }),
   'reinach-bl': Object.freeze({
     bfsId: 2773,
     municipality: 'Reinach (BL)',
@@ -456,6 +470,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'therwil') return inspectTherwilForm(html);
   if (name === 'reinach-bl') return inspectReinachBlForm(html);
   if (name === 'lungern')
     throw new Error('The Lungern portal requires its complete tenant configuration.');
@@ -727,34 +742,39 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'reinach-bl'
+        name === 'therwil'
           ? '2026-10-18'
-          : name === 'val-de-charmey' ||
-              name === 'staefa' ||
-              name === 'wuennewil-flamatt' ||
-              name === 'lungern' ||
-              isEbsMunicipality(name) ||
-              name === 'erstfeld' ||
-              isCkwMunicipality(name) ||
-              name === 'buchsi' ||
-              name === 'dotzigen' ||
-              name === 'oberhofen' ||
-              name === 'steffisburg'
+          : name === 'reinach-bl'
             ? '2026-10-18'
-            : name === 'bueren' ||
-                name === 'ostermundigen' ||
-                name === 'wohlen-be' ||
-                name === 'roggwil' ||
-                name === 'langenthal' ||
-                name === 'erlenbach' ||
-                name === 'zollikon' ||
-                name === 'boenigen' ||
-                name === 'marthalen'
-              ? '2026-10-17'
-              : name === 'gossau' || name === 'ebikon' || name === 'meggen'
-                ? '2026-10-16'
-                : '2026-10-15',
+            : name === 'val-de-charmey' ||
+                name === 'staefa' ||
+                name === 'wuennewil-flamatt' ||
+                name === 'lungern' ||
+                isEbsMunicipality(name) ||
+                name === 'erstfeld' ||
+                isCkwMunicipality(name) ||
+                name === 'buchsi' ||
+                name === 'dotzigen' ||
+                name === 'oberhofen' ||
+                name === 'steffisburg'
+              ? '2026-10-18'
+              : name === 'bueren' ||
+                  name === 'ostermundigen' ||
+                  name === 'wohlen-be' ||
+                  name === 'roggwil' ||
+                  name === 'langenthal' ||
+                  name === 'erlenbach' ||
+                  name === 'zollikon' ||
+                  name === 'boenigen' ||
+                  name === 'marthalen'
+                ? '2026-10-17'
+                : name === 'gossau' || name === 'ebikon' || name === 'meggen'
+                  ? '2026-10-16'
+                  : '2026-10-15',
       sources: [
+        ...(name === 'therwil'
+          ? [{ title: 'Official municipal streetlighting fault referral', url: therwilReferralUrl }]
+          : []),
         ...(name === 'lungern'
           ? [
               { title: 'Municipal infrastructure defect portal referral', url: lungernReferralUrl },
@@ -872,49 +892,51 @@ export class MunicipalFormClient implements ReportingAdapter {
           : []),
       ],
       scope:
-        name === 'reinach-bl'
-          ? reinachBlScope
-          : name === 'val-de-charmey'
-            ? valDeCharmeyScope
-            : name === 'wuennewil-flamatt'
-              ? wuennewilScope
-              : name === 'lungern'
-                ? lungernScope
-                : isEbsMunicipality(name)
-                  ? ebsScope(name)
-                  : name === 'erstfeld'
-                    ? erstfeldScope
-                    : isCkwMunicipality(name)
-                      ? ckwScope(name)
-                      : name === 'oberhofen' || name === 'steffisburg'
-                        ? netzulgScope(name)
-                        : name === 'buchsi'
-                          ? buchsiScope
-                          : name === 'dotzigen'
-                            ? dotzigenScope
-                            : name === 'bueren'
-                              ? evbScope
-                              : name === 'ostermundigen'
-                                ? ostermundigenScope
-                                : name === 'wohlen-be'
-                                  ? wohlenBeScope
-                                  : name === 'roggwil'
-                                    ? roggwilScope
-                                    : name === 'langenthal'
-                                      ? langenthalScope
-                                      : name === 'staefa'
-                                        ? staefaScope
-                                        : name === 'erlenbach' || name === 'zollikon'
-                                          ? wazScope
-                                          : name === 'marthalen'
-                                            ? marthalenScope
-                                            : name === 'boenigen'
-                                              ? boenigenScope
-                                              : name === 'gossau'
-                                                ? gossauScope
-                                                : name === 'meggen'
-                                                  ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-                                                  : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'therwil'
+          ? therwilScope
+          : name === 'reinach-bl'
+            ? reinachBlScope
+            : name === 'val-de-charmey'
+              ? valDeCharmeyScope
+              : name === 'wuennewil-flamatt'
+                ? wuennewilScope
+                : name === 'lungern'
+                  ? lungernScope
+                  : isEbsMunicipality(name)
+                    ? ebsScope(name)
+                    : name === 'erstfeld'
+                      ? erstfeldScope
+                      : isCkwMunicipality(name)
+                        ? ckwScope(name)
+                        : name === 'oberhofen' || name === 'steffisburg'
+                          ? netzulgScope(name)
+                          : name === 'buchsi'
+                            ? buchsiScope
+                            : name === 'dotzigen'
+                              ? dotzigenScope
+                              : name === 'bueren'
+                                ? evbScope
+                                : name === 'ostermundigen'
+                                  ? ostermundigenScope
+                                  : name === 'wohlen-be'
+                                    ? wohlenBeScope
+                                    : name === 'roggwil'
+                                      ? roggwilScope
+                                      : name === 'langenthal'
+                                        ? langenthalScope
+                                        : name === 'staefa'
+                                          ? staefaScope
+                                          : name === 'erlenbach' || name === 'zollikon'
+                                            ? wazScope
+                                            : name === 'marthalen'
+                                              ? marthalenScope
+                                              : name === 'boenigen'
+                                                ? boenigenScope
+                                                : name === 'gossau'
+                                                  ? gossauScope
+                                                  : name === 'meggen'
+                                                    ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                                                    : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -1062,6 +1084,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'therwil') return therwilRequirements();
     if (this.name === 'reinach-bl') return reinachBlRequirements();
     if (this.name === 'val-de-charmey') return valDeCharmeyRequirements();
     if (this.name === 'lungern') return lungernRequirements();

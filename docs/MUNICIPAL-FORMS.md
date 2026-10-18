@@ -1,3 +1,15 @@
+## Therwil preparation — 18 October 2026
+
+Exact BFS2775 has three source-pinned public streetlamp fault choices. Names,
+phone, email, affected street and actual lamp number are required; Other needs
+additional defect details. The source number control is conservatively prepared
+as an ASCII-digit identifier without numeric coercion, preserving leading zeros.
+No photos, POST, external completion, sending or tracking. Delivery, actual server
+validation and durable receipt remain unverified. Published repair cadence differs
+between the service and selected form; neither is an acceptance guarantee. Source
+changes stop preparation. Local length caps and the digit-only restriction are
+conservative Civic limits, not claimed server maxima.
+
 ## Reinach BL preparation — 18 October 2026
 
 Exact BFS2773 has three text-only classes matching the published form sections:

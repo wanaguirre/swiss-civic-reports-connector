@@ -126,7 +126,7 @@ export type Requirements = {
     datatype?: string;
     max_length?: number;
     /** Bounded formats; never execute provider-supplied regular expressions. */
-    format?: 'postcode_4_5_digits' | 'numeric_date' | 'ckw_lamp_number';
+    format?: 'postcode_4_5_digits' | 'numeric_date' | 'ckw_lamp_number' | 'digit_identifier';
     // Public report text that clients translate alongside the description.
     translate?: boolean;
     /** Contact fields are collected separately from public report details. */

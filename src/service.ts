@@ -132,6 +132,7 @@ export class ReportService {
       if (value.trim() && field.format) {
         const formats = {
           postcode_4_5_digits: /^[0-9]{4,5}$/,
+          digit_identifier: /^[0-9]+$/,
           numeric_date: /^[0-9.,]+$/,
           ckw_lamp_number: /^[A-Z][0-9]{1,2}-[0-9]{1,2}[A-Z]?$/,
         };
