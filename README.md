@@ -213,3 +213,7 @@ confirmed maintained public lamps. Five fixed source checks fail closed; private
 contacts remain outside AI. No postal address/email/photos, native client/state/
 hCaptcha execution or sending. The hCaptcha/reCAPTCHA privacy discrepancy and real
 acceptance remain unresolved. See [municipal forms](docs/MUNICIPAL-FORMS.md).
+
+Elektra Auw (`elektra-auw`, BFS4223) supports local text-only lamp preparation with
+private combined name/address/phone outside AI. Five raw source pins fail closed;
+no email/photos, native client/state execution or sending. See municipal forms.

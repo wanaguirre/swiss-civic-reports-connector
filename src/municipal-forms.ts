@@ -1,4 +1,14 @@
 import {
+  auwFormUrl,
+  auwPrivacyUrl,
+  auwReferralUrl,
+  auwScope,
+  auwCategories,
+  auwRequirements,
+  loadAuwCategories,
+  assertAuwSourcesAvailable,
+} from './auw-form.js';
+import {
   swlLightingFormUrl,
   swlLightingPrivacyUrl,
   swlReferralUrl,
@@ -336,6 +346,13 @@ export const municipalForms = Object.freeze({
     language: 'de' as const,
     formUrl: swlLightingFormUrl,
     reportingUrl: swlLightingFormUrl,
+  }),
+  'elektra-auw': Object.freeze({
+    bfsId: 4223,
+    municipality: 'Auw',
+    language: 'de' as const,
+    formUrl: auwFormUrl,
+    reportingUrl: auwFormUrl,
   }),
   'tbseon-egliswil': Object.freeze({
     bfsId: 4195,
@@ -835,6 +852,8 @@ const specs = {
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'swl-staufen') throw new Error('Use the complete pinned SWL source contract.');
+  if (name === 'elektra-auw')
+    throw new Error('Use the complete pinned Elektra Auw source manifest.');
   if (name === 'tbseon-egliswil')
     throw new Error('Use the complete pinned TB Seon source manifest.');
   if (name === 'egm-muelligen') throw new Error('Use the complete checked EGM source manifest.');
@@ -1674,6 +1693,21 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'elektra-auw') {
+      this.reportingService = 'Elektra Genossenschaft Auw – public streetlighting';
+      this.privacy =
+        'Local preparation keeps private combined reporter name, address/locality and phone outside AI. No email or photos. Provider processing is for service purposes, with contracted-provider/business-partner/legal disclosure exceptions and possible foreign recipients. No fixed lamp retention or absolute confidentiality promise. Local privacy-read acknowledgement is not a native consent checkbox. No native client/state/nonce execution or transmission; delivery and acceptance remain unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: auwScope,
+        sources: [
+          { title: 'Official municipal Elektra referral', url: auwReferralUrl },
+          { title: 'Dedicated native street/pavement lamp fault form', url: auwFormUrl },
+          { title: 'Provider privacy PDF', url: auwPrivacyUrl },
+        ],
+      };
+    }
     if (name === 'tbseon-egliswil') {
       this.reportingService = 'Technische Betriebe Seon AG – Egliswil Strassenbeleuchtung';
       this.privacy =
@@ -1712,6 +1746,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (this.name === 'elektra-auw') return Promise.resolve(auwCategories.map((c) => ({ ...c })));
     if (this.name === 'swl-staufen') return Promise.resolve(swlCategories.map((c) => ({ ...c })));
     if (this.name === 'tbseon-egliswil')
       return Promise.resolve(tbseonCategories.map((c) => ({ ...c })));
@@ -1724,6 +1759,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
     if (this.name === 'swl-staufen') assertSwlSourcesAvailable(this.request);
     if (this.name === 'tbseon-egliswil') assertTbseonSourcesAvailable(this.request);
     if (this.name === 'rwb-windisch') assertRwbWindischSourcesAvailable(this.request);
@@ -1739,6 +1775,7 @@ export class MunicipalFormClient implements ReportingAdapter {
         try {
           if (
             this.name === 'swl-staufen' ||
+            this.name === 'elektra-auw' ||
             this.name === 'tbseon-egliswil' ||
             this.name === 'egm-muelligen' ||
             this.name === 'ibw-wohlen-ag' ||
@@ -1752,29 +1789,31 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'swl-staufen'
-                ? loadSwlCategories
-                : this.name === 'tbseon-egliswil'
-                  ? loadTbseonCategories
-                  : this.name === 'egm-muelligen'
-                    ? loadEgmCategories
-                    : this.name === 'ibw-wohlen-ag'
-                      ? loadIbwCategories
-                      : this.name === 'eww-wettingen'
-                        ? loadEwwCategories
-                        : isEgsMunicipality(this.name)
-                          ? loadEgsCategories
-                          : this.name === 'ewn-neuenhof'
-                            ? loadEwnCategories
-                            : this.name === 'rwb-windisch'
-                              ? loadRwbWindischCategories
-                              : this.name === 'rwb-ennetbaden'
-                                ? loadRwbCategories
-                                : this.name === 'hornet-aarau'
-                                  ? loadHornetCategories
-                                  : this.name === 'tbs-suhr'
-                                    ? loadTbsCategories
-                                    : loadTbgraenichenCategories
+              this.name === 'elektra-auw'
+                ? loadAuwCategories
+                : this.name === 'swl-staufen'
+                  ? loadSwlCategories
+                  : this.name === 'tbseon-egliswil'
+                    ? loadTbseonCategories
+                    : this.name === 'egm-muelligen'
+                      ? loadEgmCategories
+                      : this.name === 'ibw-wohlen-ag'
+                        ? loadIbwCategories
+                        : this.name === 'eww-wettingen'
+                          ? loadEwwCategories
+                          : isEgsMunicipality(this.name)
+                            ? loadEgsCategories
+                            : this.name === 'ewn-neuenhof'
+                              ? loadEwnCategories
+                              : this.name === 'rwb-windisch'
+                                ? loadRwbWindischCategories
+                                : this.name === 'rwb-ennetbaden'
+                                  ? loadRwbCategories
+                                  : this.name === 'hornet-aarau'
+                                    ? loadHornetCategories
+                                    : this.name === 'tbs-suhr'
+                                      ? loadTbsCategories
+                                      : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1877,6 +1916,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
     if (this.name === 'swl-staufen') return swlRequirements();
+    if (this.name === 'elektra-auw') return auwRequirements();
     if (this.name === 'tbseon-egliswil') return tbseonRequirements();
     if (this.name === 'egm-muelligen') return egmRequirements();
     if (this.name === 'ibw-wohlen-ag') return ibwRequirements();

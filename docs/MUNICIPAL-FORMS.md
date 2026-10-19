@@ -1251,3 +1251,30 @@ state is executed/reused; no payload, sending, external completion or tracking i
 available under any flag. An uncertain outcome never permits replay or switching
 channels. Real verification requires an approved genuine report or authorized test
 environment.
+
+### Elektra Auw local preparation
+
+`elektra-auw` requires the exact Auw BFS4223 point and an actual maintained public
+street/pavement lamp. Five fixed complete source pins cover the native form,
+municipal referral, provider identity, privacy PDF and inert client. Two independent
+form captures were byte-identical: no state masking or normalization. Bounded
+cookie-free/no-redirect GETs share two-second starts, eight seconds cold. Any source
+failure stops the request context before cached peer requirements.
+
+Required public fields: fault location/street, defect type and genuine lamp number.
+Required private fields: combined reporter name, street/locality and phone. Email
+is optional natively and excluded locally; no photos. Native internal type names
+are misleading: firstname denotes defect type, address denotes lamp number, zip
+denotes reporter name and city denotes reporter street/locality. Their inert text
+input templates do not justify numeric coercion or privacy reclassification.
+
+Text caps, useful description, maintained-asset confirmation and a private policy
+read acknowledgement are local rules, not native constraints or a consent checkbox.
+The policy covers website interactions for service purposes with processor,
+business-partner/legal sharing and possible foreign recipients. No fixed lamp
+retention or unconditional confidentiality promise; portal/applicant terms are not
+lamp terms. No NinjaForms rendering, nonce/state/trap/challenge execution, payload,
+POST/upload, sending, external completion or tracking under any flag. Generic
+protection strings do not prove an active challenge or its absence. Real acceptance
+requires an approved genuine report or authorized environment; uncertainty never
+permits retry or changing channels.
