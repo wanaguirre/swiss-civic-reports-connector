@@ -1,4 +1,13 @@
 import {
+  rwbFormUrl,
+  rwbPrivacyUrl,
+  rwbInvitationUrl,
+  rwbReferralUrl,
+  rwbScope,
+  rwbRequirements,
+  loadRwbCategories,
+} from './rwb-form.js';
+import {
   tbsFormUrl,
   tbsPrivacyUrl,
   tbsReferralUrl,
@@ -232,10 +241,17 @@ import {
   type ReportInput,
   type Requirements,
 } from './model.js';
-import type { ReportingAdapter } from './municipalities.js';
+import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'rwb-ennetbaden': Object.freeze({
+    bfsId: 4026,
+    municipality: 'Ennetbaden',
+    language: 'de' as const,
+    formUrl: rwbFormUrl,
+    reportingUrl: rwbFormUrl,
+  }),
   'tbs-suhr': Object.freeze({
     bfsId: 4012,
     municipality: 'Suhr',
@@ -679,6 +695,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'rwb-ennetbaden') throw new Error('Use the complete pinned RWB source manifest.');
   if (name === 'hornet-aarau') throw new Error('Use the complete pinned hornet source manifest.');
   if (name === 'tbs-suhr') return inspectTbsForm(html);
   if (name === 'tbgraenichen') return inspectTbgraenichenForm(html);
@@ -868,7 +885,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   readonly placeMapUrl = 'https://map.geo.admin.ch/?center={longitude},{latitude}&z=10';
   readonly privacy: string;
   readonly termsUrl?: string;
-  readonly guidance;
+  readonly guidance: ReportingGuidance;
   private places: Pick<SwissPlaces, 'municipality'>;
   private now: () => number;
   private cached?: { expires: number; value: Category[] };
@@ -1374,6 +1391,23 @@ export class MunicipalFormClient implements ReportingAdapter {
           ? 'Experimental source-reviewed transport. A real municipal pilot remains pending. Only a verified ticket receipt means sent; uncertain responses must not be retried.'
           : 'Preparation only. Municipal delivery has not been pilot-verified; do not claim the report has been sent.',
     };
+    if (name === 'rwb-ennetbaden') {
+      this.reportingService = 'Regionalwerke AG Baden – Öffentliche Beleuchtung Ennetbaden';
+      this.termsUrl = rwbPrivacyUrl;
+      this.privacy =
+        'Local preparation keeps private salutation, names and full reporter address/email/phone outside AI and separate from the lamp point. Native privacy consent is required. The provider policy describes generally Swiss storage, broad service-provider/partner/authority sharing, cross-border conditions and purpose/legal retention; no fixed lamp-report retention or publication established. Civic sends nothing and never executes reCAPTCHA or the native client.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: rwbScope,
+        sources: [
+          { title: 'Municipal public-lighting responsibility', url: rwbReferralUrl },
+          { title: 'Explicit provider lamp-fault referral', url: rwbInvitationUrl },
+          { title: 'Native public contact form', url: rwbFormUrl },
+          { title: 'Provider privacy notice', url: rwbPrivacyUrl },
+        ],
+      };
+    }
   }
   mapUrl(point: Point) {
     coordinates.parse(point);
@@ -1407,16 +1441,19 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            this.name === 'rwb-ennetbaden' ||
             this.name === 'hornet-aarau' ||
             this.name === 'tbgraenichen' ||
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'hornet-aarau'
-                ? loadHornetCategories
-                : this.name === 'tbs-suhr'
-                  ? loadTbsCategories
-                  : loadTbgraenichenCategories
+              this.name === 'rwb-ennetbaden'
+                ? loadRwbCategories
+                : this.name === 'hornet-aarau'
+                  ? loadHornetCategories
+                  : this.name === 'tbs-suhr'
+                    ? loadTbsCategories
+                    : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1518,6 +1555,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'rwb-ennetbaden') return rwbRequirements();
     if (this.name === 'tbs-suhr') return tbsRequirements();
     if (this.name === 'tbgraenichen') return tbgraenichenRequirements();
     if (this.name === 'hornet-aarau') return hornetRequirements();

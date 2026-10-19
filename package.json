@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.62",
+  "version": "0.4.0-rc.63",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -312,6 +312,10 @@
     "./tbs-form": {
       "types": "./dist/tbs-form.d.ts",
       "import": "./dist/tbs-form.js"
+    },
+    "./rwb-form": {
+      "types": "./dist/rwb-form.d.ts",
+      "import": "./dist/rwb-form.js"
     }
   }
 }
