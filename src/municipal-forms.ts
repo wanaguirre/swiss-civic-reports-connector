@@ -1,4 +1,14 @@
 import {
+  ibwFormUrl,
+  ibwPrivacyUrl,
+  ibwIdentityUrl,
+  ibwScope,
+  ibwCategories,
+  ibwRequirements,
+  loadIbwCategories,
+} from './ibw-form.js';
+import { assertIbwSourcesAvailable } from './ibw-source.js';
+import {
   ewwFormUrl,
   ewwPrivacyUrl,
   ewwIdentityUrl,
@@ -274,6 +284,13 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'ibw-wohlen-ag': Object.freeze({
+    bfsId: 4082,
+    municipality: 'Wohlen (AG)',
+    language: 'de' as const,
+    formUrl: ibwFormUrl,
+    reportingUrl: ibwFormUrl,
+  }),
   'eww-wettingen': Object.freeze({
     bfsId: 4045,
     municipality: 'Wettingen',
@@ -750,6 +767,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'ibw-wohlen-ag') throw new Error('Use the complete checked ibw source manifest.');
   if (name === 'eww-wettingen')
     throw new Error('Use the complete checked Wettingen source manifest.');
   if (isEgsMunicipality(name)) throw new Error('Use the complete pinned EGS source manifest.');
@@ -1521,6 +1539,21 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'ibw-wohlen-ag') {
+      this.reportingService = 'ibw – Öffentliche Beleuchtung Wohlen AG';
+      this.privacy =
+        'Local text-only preparation keeps required private split names/email/privacy acknowledgement and optional salutation/phone outside AI. No private postal fields or photos. General contact-policy postal fields do not occur in the actual lamp form. Form-purpose processing plus broader marketing/statistics with objection rights, group/provider/authority sharing and foreign safeguards; no fixed lamp-specific retention or publication promise. Native protection and actual receipt/reconciliation remain unverified; no client execution, state reuse or sending.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: ibwScope,
+        sources: [
+          { title: 'Official explicit Wohlen AG public-lighting mandate', url: ibwIdentityUrl },
+          { title: 'Dedicated ordinary lamp-fault form', url: ibwFormUrl },
+          { title: 'Complete provider privacy policy', url: ibwPrivacyUrl },
+        ],
+      };
+    }
   }
   mapUrl(point: Point) {
     coordinates.parse(point);
@@ -1545,11 +1578,13 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   categories() {
     // Published metadata only; EGS source reads require the exact point gate.
+    if (this.name === 'ibw-wohlen-ag') return Promise.resolve(ibwCategories.map((c) => ({ ...c })));
     if (this.name === 'eww-wettingen') return Promise.resolve(ewwCategories.map((c) => ({ ...c })));
     if (isEgsMunicipality(this.name)) return Promise.resolve(egsCategories.map((c) => ({ ...c })));
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'ibw-wohlen-ag') assertIbwSourcesAvailable(this.request, this.now);
     if (this.name === 'eww-wettingen') assertEwwSourcesAvailable(this.request, this.now);
     if (isEgsMunicipality(this.name)) assertEgsSourcesAvailable(this.request, this.now);
     if (this.retryAt > this.now()) throw changed();
@@ -1559,6 +1594,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            this.name === 'ibw-wohlen-ag' ||
             this.name === 'eww-wettingen' ||
             isEgsMunicipality(this.name) ||
             this.name === 'ewn-neuenhof' ||
@@ -1568,19 +1604,21 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'eww-wettingen'
-                ? loadEwwCategories
-                : isEgsMunicipality(this.name)
-                  ? loadEgsCategories
-                  : this.name === 'ewn-neuenhof'
-                    ? loadEwnCategories
-                    : this.name === 'rwb-ennetbaden'
-                      ? loadRwbCategories
-                      : this.name === 'hornet-aarau'
-                        ? loadHornetCategories
-                        : this.name === 'tbs-suhr'
-                          ? loadTbsCategories
-                          : loadTbgraenichenCategories
+              this.name === 'ibw-wohlen-ag'
+                ? loadIbwCategories
+                : this.name === 'eww-wettingen'
+                  ? loadEwwCategories
+                  : isEgsMunicipality(this.name)
+                    ? loadEgsCategories
+                    : this.name === 'ewn-neuenhof'
+                      ? loadEwnCategories
+                      : this.name === 'rwb-ennetbaden'
+                        ? loadRwbCategories
+                        : this.name === 'hornet-aarau'
+                          ? loadHornetCategories
+                          : this.name === 'tbs-suhr'
+                            ? loadTbsCategories
+                            : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1682,6 +1720,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'ibw-wohlen-ag') return ibwRequirements();
     if (this.name === 'eww-wettingen') return ewwRequirements();
     if (isEgsMunicipality(this.name)) return egsRequirements(this.name);
     if (this.name === 'ewn-neuenhof') return ewnRequirements();

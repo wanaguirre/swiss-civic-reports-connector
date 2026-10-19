@@ -120,6 +120,7 @@ export type Requirements = {
   /** Exact number of ASCII digits required by the municipal phone field. */
   phone_digits?: number;
   phone_max_length?: number;
+  email_max_length?: number;
   bodies: string[];
   extra_fields: {
     code: string;

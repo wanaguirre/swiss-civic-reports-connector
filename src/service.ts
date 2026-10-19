@@ -86,6 +86,8 @@ export class ReportService {
       throw new Error('This municipality does not accept a reporter email.');
     if (rule.email_required !== false && !input.email)
       throw new Error('This reporting service requires an email address.');
+    if (rule.email_max_length !== undefined && input.email.length > rule.email_max_length)
+      throw new Error(`This service accepts at most ${rule.email_max_length} email characters.`);
     if (
       rule.description_max_length !== undefined &&
       input.description.length > rule.description_max_length

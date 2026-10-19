@@ -1113,3 +1113,33 @@ General inquiry/follow-up, possible existing customer-data/quality review and
 provider/partner/authority/foreign sharing conditions apply; no fixed lamp/photo
 retention or publication promise. Uncertainty never permits retry/recreation or
 channel switching. This profile does not change any consuming app’s enablement.
+
+Wohlen AG public-lamp preparation (`ibw-wohlen-ag`, BFS4082) is GET-only,
+preparation-only and never supports experimental sending, external completion or
+tracking. The explicit ibw mandate applies to actual maintained public lamps in
+Wohlen AG; no expansion to Wohlen BE, Büttikon or other electricity territories.
+Confirm actual fault, precise point/ownership, actual street and genuine numeric
+lamp number. Planned night-time switch-off alone is not a defect. Preserve zeros;
+local ASCII-digit rule is a conservative subset of native numeric validation.
+Names/email and read/understood privacy acknowledgement required outside AI;
+salutation/phone/nearby house number/multiple lamps on the same street optional.
+Native input caps50; no company/private postal fields, photos0. Generic privacy
+contact passage lists postal fields absent from this selected form; do not invent
+requirements. Broader policy6.13 also describes marketing/statistics with objection rights;
+form-purpose wording is not a blanket no-marketing promise. Native email/phone
+validation parity remains unresolved for sending.
+
+Complete original UTF8 fingerprint preserves CRLF/BOM/all other bytes, replacing
+only four independently shaped spans: inline state and displayed digits, paired
+input/inline field identifiers. No response comparison/calculation, state return,
+reuse, native code or protection execution. Parse errors/ambiguous bindings fail
+closed. Five raw pins cover explicit mandate, complete privacy, jQuery1.7.2,
+CreanetLibrary and formcheck. Six fixed GETs, two-second shared starts, minimum
+10seconds cold,5minute schema cache, shared403stop/429RetryAfter invalidates
+cached peers. No cookies, redirects, remote-derived follow-up URLs or payload.
+
+Selected native path is formcheck -> sendByAjax -> serialized URL-encoded POST
+to its action plus skipfurl=1. Returned HTML without top-level .error is displayed,
+not verified durable receipt/caseID/reconciliation. No selected upload input/path.
+Protection, private validation, selected privacy timing and genuine acceptance
+remain unverified. Uncertainty never permits retry, recreation or channel switch.
