@@ -1,4 +1,14 @@
 import {
+  obermumpfFormUrl,
+  obermumpfPrivacyUrl,
+  obermumpfReferralUrl,
+  obermumpfScope,
+  obermumpfCategories,
+  obermumpfRequirements,
+  loadObermumpfCategories,
+  assertObermumpfSourcesAvailable,
+} from './obermumpf-form.js';
+import {
   auwFormUrl,
   auwPrivacyUrl,
   auwReferralUrl,
@@ -333,6 +343,13 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'obermumpf-lighting': Object.freeze({
+    bfsId: 4256,
+    municipality: 'Obermumpf',
+    language: 'de' as const,
+    formUrl: obermumpfFormUrl,
+    reportingUrl: obermumpfFormUrl,
+  }),
   'egm-muelligen': Object.freeze({
     bfsId: 4107,
     municipality: 'Mülligen',
@@ -852,6 +869,8 @@ const specs = {
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'swl-staufen') throw new Error('Use the complete pinned SWL source contract.');
+  if (name === 'obermumpf-lighting')
+    throw new Error('Use the complete pinned Obermumpf source contract.');
   if (name === 'elektra-auw')
     throw new Error('Use the complete pinned Elektra Auw source manifest.');
   if (name === 'tbseon-egliswil')
@@ -1693,6 +1712,24 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'obermumpf-lighting') {
+      this.reportingService = 'Gemeinde Obermumpf – Strassenbeleuchtung';
+      this.privacy =
+        'Private names, full address, phone and email remain outside AI. Native lamp number is optional; no photos. Policy stores contact-form enquiries for processing and follow-up, with consent-based sharing and no guaranteed transmission security. No fixed lamp retention. Local read acknowledgement is not a native consent checkbox. No client/state/protection execution or sending; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: obermumpfScope,
+        sources: [
+          { title: 'Dedicated municipal lamp form', url: obermumpfFormUrl },
+          {
+            title: 'Explicit municipal lamp-maintenance and reporting responsibility',
+            url: obermumpfReferralUrl,
+          },
+          { title: 'Municipal privacy policy', url: obermumpfPrivacyUrl },
+        ],
+      };
+    }
     if (name === 'elektra-auw') {
       this.reportingService = 'Elektra Genossenschaft Auw – public streetlighting';
       this.privacy =
@@ -1746,6 +1783,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (this.name === 'obermumpf-lighting')
+      return Promise.resolve(obermumpfCategories.map((c) => ({ ...c })));
     if (this.name === 'elektra-auw') return Promise.resolve(auwCategories.map((c) => ({ ...c })));
     if (this.name === 'swl-staufen') return Promise.resolve(swlCategories.map((c) => ({ ...c })));
     if (this.name === 'tbseon-egliswil')
@@ -1759,6 +1798,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
     if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
     if (this.name === 'swl-staufen') assertSwlSourcesAvailable(this.request);
     if (this.name === 'tbseon-egliswil') assertTbseonSourcesAvailable(this.request);
@@ -1774,6 +1814,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            this.name === 'obermumpf-lighting' ||
             this.name === 'swl-staufen' ||
             this.name === 'elektra-auw' ||
             this.name === 'tbseon-egliswil' ||
@@ -1789,31 +1830,33 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'elektra-auw'
-                ? loadAuwCategories
-                : this.name === 'swl-staufen'
-                  ? loadSwlCategories
-                  : this.name === 'tbseon-egliswil'
-                    ? loadTbseonCategories
-                    : this.name === 'egm-muelligen'
-                      ? loadEgmCategories
-                      : this.name === 'ibw-wohlen-ag'
-                        ? loadIbwCategories
-                        : this.name === 'eww-wettingen'
-                          ? loadEwwCategories
-                          : isEgsMunicipality(this.name)
-                            ? loadEgsCategories
-                            : this.name === 'ewn-neuenhof'
-                              ? loadEwnCategories
-                              : this.name === 'rwb-windisch'
-                                ? loadRwbWindischCategories
-                                : this.name === 'rwb-ennetbaden'
-                                  ? loadRwbCategories
-                                  : this.name === 'hornet-aarau'
-                                    ? loadHornetCategories
-                                    : this.name === 'tbs-suhr'
-                                      ? loadTbsCategories
-                                      : loadTbgraenichenCategories
+              this.name === 'obermumpf-lighting'
+                ? loadObermumpfCategories
+                : this.name === 'elektra-auw'
+                  ? loadAuwCategories
+                  : this.name === 'swl-staufen'
+                    ? loadSwlCategories
+                    : this.name === 'tbseon-egliswil'
+                      ? loadTbseonCategories
+                      : this.name === 'egm-muelligen'
+                        ? loadEgmCategories
+                        : this.name === 'ibw-wohlen-ag'
+                          ? loadIbwCategories
+                          : this.name === 'eww-wettingen'
+                            ? loadEwwCategories
+                            : isEgsMunicipality(this.name)
+                              ? loadEgsCategories
+                              : this.name === 'ewn-neuenhof'
+                                ? loadEwnCategories
+                                : this.name === 'rwb-windisch'
+                                  ? loadRwbWindischCategories
+                                  : this.name === 'rwb-ennetbaden'
+                                    ? loadRwbCategories
+                                    : this.name === 'hornet-aarau'
+                                      ? loadHornetCategories
+                                      : this.name === 'tbs-suhr'
+                                        ? loadTbsCategories
+                                        : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1916,6 +1959,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
     if (this.name === 'swl-staufen') return swlRequirements();
+    if (this.name === 'obermumpf-lighting') return obermumpfRequirements();
     if (this.name === 'elektra-auw') return auwRequirements();
     if (this.name === 'tbseon-egliswil') return tbseonRequirements();
     if (this.name === 'egm-muelligen') return egmRequirements();

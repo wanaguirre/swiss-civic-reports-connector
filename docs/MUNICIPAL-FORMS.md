@@ -1278,3 +1278,34 @@ POST/upload, sending, external completion or tracking under any flag. Generic
 protection strings do not prove an active challenge or its absence. Real acceptance
 requires an approved genuine report or authorized environment; uncertainty never
 permits retry or changing channels.
+
+### Obermumpf municipal streetlights
+
+`obermumpf-lighting` binds BFS4256 and the confirmed actual municipal public lamp
+point. The municipality receives lamp reports and handles minor bulb replacement;
+AEW performs broader lighting maintenance. Neither electricity supply nor borders
+alone proves responsibility. Native form36 requires lamp street, one of four
+visible defect choices, private first/last names, street/house number, postcode/
+locality, phone and email. Lamp number is optional: preserve actual leading zeros
+and never invent a plate. There are no photo fields. Postcode rules1000–99999 are
+native; rejecting leading zeros, text caps,email254, useful description, asset
+confirmation and privacy-read acknowledgement are local rules.
+
+The full selected builder and every script are fingerprinted. Two independent
+captures agree after checking/discarding only four shaped interaction-field names,
+a13-digit read timestamp and64-hex token. The stable24-hex submitionKey stays in the
+fingerprint. Rotating decorative banner images are outside the selected builder;
+no other form/script changes are ignored. Four raw pins bind explicit municipal
+maintenance/referral, privacy and two inert first-party clients. Five bounded
+cookie-free/no-redirect GETs share two-second starts (eight seconds cold). Any
+source failure, drift, malformed state,403or429 stops the request context before
+cached peer requirements. No client, trap, interaction counter, map or challenge
+is executed or simulated. General client CAPTCHA code does not establish active
+CAPTCHA on the selected form or an absence of other protection.
+
+Policy stores enquiries/contact details for processing and follow-up, says no
+sharing without consent, and disclaims absolute transmission security. No fixed
+lamp-retention period is established; account/newsletter terms are not applied
+to lamp reports. Local policy acknowledgement is not a native consent checkbox.
+No native payload, POST/upload, sending, external completion, tracking or verified
+acceptance. Never retry or switch channels after an uncertain outcome.

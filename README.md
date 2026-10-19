@@ -217,3 +217,8 @@ acceptance remain unresolved. See [municipal forms](docs/MUNICIPAL-FORMS.md).
 Elektra Auw (`elektra-auw`, BFS4223) supports local text-only lamp preparation with
 private combined name/address/phone outside AI. Five raw source pins fail closed;
 no email/photos, native client/state execution or sending. See municipal forms.
+
+Obermumpf BFS4256 has `obermumpf-lighting` local preparation for confirmed municipal
+public lamps. Private names, full address, phone and email remain outside AI. Lamp
+number is optional; no photos. Exact geography precedes five paced source reads.
+No client/state/trap execution, sending, external completion or tracking.
