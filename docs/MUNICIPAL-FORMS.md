@@ -990,3 +990,35 @@ implemented. Preparation is GET-only; global and experimental switches cannot en
 sending. Exact public-lamp responsibility still requires confirmation; boundaries
 do not verify ownership. An uncertain outcome never permits retry, recreation or
 another channel. The consuming Civic flag remains false.
+
+### TB Gränichen: public streetlight preparation (19 October 2026)
+
+`tbgraenichen` binds exact BFS4006 before source requests and requires confirmation
+of the actual public lamp maintained by TB Gränichen. The municipality explicitly
+links this utility, whose dedicated form invites defective streetlight reports.
+Street/number, separate private first/surnames, phone and email are required in the
+source; lamp number and comment are optional. Preserve real lamp numbers and leading
+zeros. Civic adds a useful description and maintained-asset confirmation. Local
+100-character name/lamp-number,255-character street,50-character phone and5000-character
+description caps are conservative; the source declares no maxlength. Photos are
+excluded. Private fixtures, supply outages, emergencies and other assets/municipalities
+remain outside this profile. Contacts are private and excluded from AI drafting.
+
+The complete selected form and all19script semantics are pinned, plus the exact bytes
+of its actual published CMS client. Only strictly shaped read-time CSRF and numeric
+record values are discarded; both changed independently between two captures. The
+empty trap and all other fields/attributes/scripts are retained in the fingerprints.
+No native state is reused, client executed, reCAPTCHA fetched/executed or POST/payload
+constructed. Source drift invalidates preparation and applies cooldown/Retry-After.
+The normalizer tests use independently authored markup, not copied provider code;
+two actual dated source captures separately pass the production fingerprints in local
+response mocks, including field/CMS drift, caching, cooldown and recovery.
+
+The linked privacy page returned its title/navigation/footer without substantive
+policy text, so sharing/retention remain unresolved; no consent checkbox is invented.
+Static client success replaces content only when JSON status is `success`. No durable
+caseID, actual acceptance or email delivery is verified. `sendMailYN` is not proof of
+email delivery. Sending, external completion and tracking are unavailable even under
+global/experimental switches. Uncertain outcomes never permit retry, recreation or
+another channel. The consuming Civic flag remains false. The separate cantonal
+infrastructure Meldeservice referral does not share this preparation contract.

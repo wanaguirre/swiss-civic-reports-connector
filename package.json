@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.60",
+  "version": "0.4.0-rc.61",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -304,6 +304,10 @@
     "./hornet-form": {
       "types": "./dist/hornet-form.d.ts",
       "import": "./dist/hornet-form.js"
+    },
+    "./tbgraenichen-form": {
+      "types": "./dist/tbgraenichen-form.d.ts",
+      "import": "./dist/tbgraenichen-form.js"
     }
   }
 }

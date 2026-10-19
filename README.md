@@ -175,3 +175,12 @@ private names/email, consent and a local normalized photo are required. Eight pu
 source fingerprints are checked with GET only; no provider client, contact lookup
 or sending is implemented. Nest/hive/privileged workflows remain outside this first
 profile. See [requirements and limits](docs/MUNICIPAL-FORMS.md).
+
+## Gränichen utility lighting preparation (core 0.4.0-rc.61)
+
+`tbgraenichen` prepares only actual TB Gränichen public-lamp defects in exact BFS4006.
+Street/number and private split names, phone and email are required; lamp number is
+optional and photos excluded. Complete form/scripts and the CMS client are checked
+by GET only. No native client, reCAPTCHA, sending, external completion or tracking.
+Provider sharing/retention and durable acceptance remain unresolved. See
+[requirements and limits](docs/MUNICIPAL-FORMS.md).
