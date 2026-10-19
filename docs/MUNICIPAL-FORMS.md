@@ -1220,3 +1220,21 @@ reject redirects; starts share at least10seconds (40seconds cold) across clients
 one request context.403/429, drift and malformed sources permanently stop that context,
 including cached peer requirements. No native client/protection execution, nonce/state
 fetch or reuse, payload, POST, upload, sending, external completion or tracking.
+
+### SWL Staufen source qualification (not registered)
+
+`src/swl-form.ts` currently provides an internal, fail-closed source inspector only.
+Two independent public HTML captures differed solely in one shaped 96-character
+read-time `_csrf` value. The inspector discards that value and hashes every other
+byte, including all form fields, protection markup and script references. Tests
+reject field/destination/protection/client drift, malformed or duplicate state and
+oversized input. It does not retain state, construct payloads or execute a client.
+
+This is not a registered municipality adapter or a released capability. Staufen's
+explicit lamp navigation and electricity page establish the referral to SWL, but
+the next work must add exact BFS4210/maintained-asset binding, bounded paced GETs,
+shared context stops, private telephone-only requirements and immutable-preview
+contract tests before a versioned Civic integration. Do not extend this scope to
+Lenzburg or other SWL supply areas. The form uses hCaptcha while the linked privacy
+notice describes reCAPTCHA; actual protection data flow and acceptance remain
+unverified. No sending, upload, external completion or tracking is implemented.
