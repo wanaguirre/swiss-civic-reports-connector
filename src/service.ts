@@ -134,6 +134,8 @@ export class ReportService {
       if (value.trim() && field.format) {
         const formats = {
           postcode_4_5_digits: /^[0-9]{4,5}$/,
+          postcode_1000_99999: /^[1-9][0-9]{3,4}$/,
+          local_time: /^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
           digit_identifier: /^[0-9]+$/,
           numeric_date: /^[0-9.,]+$/,
           past_iso_date: /^(?!0000)[0-9]{4}-[0-9]{2}-[0-9]{2}$/,

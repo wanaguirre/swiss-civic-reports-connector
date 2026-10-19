@@ -1022,3 +1022,49 @@ email delivery. Sending, external completion and tracking are unavailable even u
 global/experimental switches. Uncertain outcomes never permit retry, recreation or
 another channel. The consuming Civic flag remains false. The separate cantonal
 infrastructure Meldeservice referral does not share this preparation contract.
+
+### TBS Suhr: nonurgent public-lighting preparation (19 October 2026)
+
+`tbs-suhr` binds exact BFS4012 before GETs. Suhr's current energy page explicitly
+links TBS Strom; its public fault service/form includes `Strassenbeleuchtung`.
+The profile covers only actual TBS-maintained public lamps, with resident-confirmed
+point/ownership. The form is not an asset inventory. Other municipalities, private
+fixtures, water/TV/heating faults, supply outages and urgent hazards are excluded.
+
+Reporter first/surname, street/postcode/locality, email and phone are required;
+reporter house number optional. Contact method is a required local single choice
+of the source's `viaE-Mail` / `viaTelefon`. These fields remain private and outside
+AI. Separate fault street/postcode/locality, real date and actual `HH:mm` time are
+required; nearby house number optional. The native choice-group configurations
+declare required listeners, without required attributes on individual controls;
+actual runtime/server enforcement was not exercised. Local preparation requires
+one streetlight class and one nonurgent priority (`Niedrig`/`Mittel`), useful fault
+text and maintained-asset confirmation. Never guess the date/time or use a contact
+address as the fault point. Clock time stays as observed; no UTC conversion.
+
+New bounded formats `local_time` and `postcode_1000_99999` reject invalid hours,
+minutes and out-of-range postcodes. Native postcode validation is numeric1000–99999;
+local representation also excludes leading zeros. Native text fields have no
+maxlength. Local caps are names/localities/house numbers100, streets250, phone50,
+description5000. `past_iso_date` conservatively excludes future dates in Europe/Zurich;
+the native form declares a required date without a future-date limit. Photos excluded.
+
+The complete selected builder and all29script semantics are pinned, plus exact
+published form-client/interaction-script/privacy bytes. Only shaped CSRF/submission
+values and four identified interaction-field names/timestamp are discarded. Empty
+interaction fields/trap and all other source semantics remain checked. No counters,
+mouse/key events, provider client, trap or payload is executed/simulated. Both actual
+captures have equal normalized fingerprints. Source drift, media/size/redirect failure
+or unavailable resources invalidate cached preparation with cooldown/Retry-After.
+Fixtures contain independently authored structure, not provider source/prose.
+
+The dated2July2026 privacy notice describes contact-form delivery by email and
+storage for inquiries/follow-up. Its contact section says no onward sharing without
+consent; general policy lists service-provider/partner/authority recipients and
+possible cross-border processing. No fixed report retention or public-posting promise
+was established, and no native consent checkbox invented. Preparation stays in Civic.
+Native client uses urlencoded POST `/route/form-submit` and JSON `success` to replace
+content or navigate to a returned URL. No server acceptance, durable caseID, email
+receipt or reconciliation verified. Sending/external completion/tracking remain
+unavailable under global/experimental flags. Never retry/recreate/switch channels
+after an uncertain outcome. The consuming Civic flag remains false.

@@ -132,6 +132,8 @@ export type Requirements = {
       | 'postcode_4_5_digits'
       | 'numeric_date'
       | 'past_iso_date'
+      | 'local_time'
+      | 'postcode_1000_99999'
       | 'ckw_lamp_number'
       | 'digit_identifier';
     // Public report text that clients translate alongside the description.

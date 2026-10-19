@@ -184,3 +184,13 @@ optional and photos excluded. Complete form/scripts and the CMS client are check
 by GET only. No native client, reCAPTCHA, sending, external completion or tracking.
 Provider sharing/retention and durable acceptance remain unresolved. See
 [requirements and limits](docs/MUNICIPAL-FORMS.md).
+
+## TBS Suhr lighting preparation (core 0.4.0-rc.62)
+
+`tbs-suhr` prepares nonurgent faults of actual TBS-maintained public lamps in exact
+Suhr BFS4012. Private names/address/email/phone/contact method stay separate from
+the actual lamp address and real fault date/time. Native public-lighting scope,
+nonurgent priority and ownership confirmation are explicit; photos excluded.
+Full builder/scripts and form/interaction/privacy sources are read and pinned with
+GET only. No interaction simulation, provider execution, POST, sending or tracking.
+See [requirements and limits](docs/MUNICIPAL-FORMS.md).
