@@ -3,13 +3,14 @@ import { createHash } from 'node:crypto';
 export type PublicSourcePin = Readonly<{
   url: string;
   sha256: string;
-  type: 'html' | 'javascript' | 'json';
+  type: 'html' | 'javascript' | 'json' | 'pdf';
   maxBytes: number;
 }>;
 const types = {
   html: /^text\/html(?:;|$)/i,
   javascript: /^(?:application|text)\/javascript(?:;|$)/i,
   json: /^application\/json(?:;|$)/i,
+  pdf: /^application\/pdf(?:;|$)/i,
 };
 /** Read a caller-trusted, fixed manifest only. Never execute downloaded code,
  * follow redirects, send cookies or derive further requests from remote bodies. */
@@ -41,11 +42,13 @@ export async function verifyPublicSourceManifest(
       signal: AbortSignal.timeout(20_000),
       headers: {
         Accept:
-          pin.type === 'json'
-            ? 'application/json'
-            : pin.type === 'html'
-              ? 'text/html'
-              : 'text/javascript,application/javascript',
+          pin.type === 'pdf'
+            ? 'application/pdf'
+            : pin.type === 'json'
+              ? 'application/json'
+              : pin.type === 'html'
+                ? 'text/html'
+                : 'text/javascript,application/javascript',
         'User-Agent': 'Civic source verification (read-only; no client execution)',
       },
     });

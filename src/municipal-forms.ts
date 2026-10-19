@@ -1,4 +1,15 @@
 import {
+  egsFormUrl,
+  egsPrivacyUrl,
+  egsMunicipalities,
+  egsCategories,
+  isEgsMunicipality,
+  egsScope,
+  egsRequirements,
+  loadEgsCategories,
+  assertEgsSourcesAvailable,
+} from './egs-form.js';
+import {
   ewnFormUrl,
   ewnPrivacyUrl,
   ewnReferralUrl,
@@ -253,6 +264,18 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'egs-obersiggenthal': Object.freeze({
+    ...egsMunicipalities['egs-obersiggenthal'],
+    language: 'de' as const,
+    formUrl: egsFormUrl,
+    reportingUrl: egsFormUrl,
+  }),
+  'egs-untersiggenthal': Object.freeze({
+    ...egsMunicipalities['egs-untersiggenthal'],
+    language: 'de' as const,
+    formUrl: egsFormUrl,
+    reportingUrl: egsFormUrl,
+  }),
   'ewn-neuenhof': Object.freeze({
     bfsId: 4034,
     municipality: 'Neuenhof',
@@ -710,6 +733,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (isEgsMunicipality(name)) throw new Error('Use the complete pinned EGS source manifest.');
   if (name === 'ewn-neuenhof') throw new Error('Use the complete pinned EWN source manifest.');
   if (name === 'rwb-ennetbaden') throw new Error('Use the complete pinned RWB source manifest.');
   if (name === 'hornet-aarau') throw new Error('Use the complete pinned hornet source manifest.');
@@ -1442,6 +1466,24 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (isEgsMunicipality(name)) {
+      this.reportingService = `Elektrizitäts-Genossenschaft Siggenthal – ${this.municipality} Strassenbeleuchtung`;
+      this.privacy =
+        'Local preparation keeps required private salutation, names, phone/email and optional company outside AI; no photos or postal contacts. Provider/partner/authority sharing and foreign-processing conditions apply, with no fixed lamp-report retention established. Native reCAPTCHA, phone geoIP, UUID/consent behavior, phone normalization and actual acceptance remain unverified. Civic performs no native initialization, code execution, payload or sending.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: egsScope(name),
+        sources: [
+          { title: 'Municipal EGS referral', url: egsMunicipalities[name].referral },
+          { title: 'Dedicated EGS two-municipality lamp form', url: egsFormUrl },
+          {
+            title: 'Official provider privacy PDF; native delivery details unresolved',
+            url: egsPrivacyUrl,
+          },
+        ],
+      };
+    }
   }
   mapUrl(point: Point) {
     coordinates.parse(point);
@@ -1465,9 +1507,12 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    // Published metadata only; EGS source reads require the exact point gate.
+    if (isEgsMunicipality(this.name)) return Promise.resolve(egsCategories.map((c) => ({ ...c })));
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (isEgsMunicipality(this.name)) assertEgsSourcesAvailable(this.request, this.now);
     if (this.retryAt > this.now()) throw changed();
     if (!fresh && this.cached && this.cached.expires > this.now())
       return structuredClone(this.cached.value);
@@ -1475,6 +1520,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            isEgsMunicipality(this.name) ||
             this.name === 'ewn-neuenhof' ||
             this.name === 'rwb-ennetbaden' ||
             this.name === 'hornet-aarau' ||
@@ -1482,15 +1528,17 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'ewn-neuenhof'
-                ? loadEwnCategories
-                : this.name === 'rwb-ennetbaden'
-                  ? loadRwbCategories
-                  : this.name === 'hornet-aarau'
-                    ? loadHornetCategories
-                    : this.name === 'tbs-suhr'
-                      ? loadTbsCategories
-                      : loadTbgraenichenCategories
+              isEgsMunicipality(this.name)
+                ? loadEgsCategories
+                : this.name === 'ewn-neuenhof'
+                  ? loadEwnCategories
+                  : this.name === 'rwb-ennetbaden'
+                    ? loadRwbCategories
+                    : this.name === 'hornet-aarau'
+                      ? loadHornetCategories
+                      : this.name === 'tbs-suhr'
+                        ? loadTbsCategories
+                        : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1592,6 +1640,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (isEgsMunicipality(this.name)) return egsRequirements(this.name);
     if (this.name === 'ewn-neuenhof') return ewnRequirements();
     if (this.name === 'rwb-ennetbaden') return rwbRequirements();
     if (this.name === 'tbs-suhr') return tbsRequirements();
