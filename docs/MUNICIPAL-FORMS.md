@@ -1309,3 +1309,6 @@ lamp-retention period is established; account/newsletter terms are not applied
 to lamp reports. Local policy acknowledgement is not a native consent checkbox.
 No native payload, POST/upload, sending, external completion, tracking or verified
 acceptance. Never retry or switch channels after an uncertain outcome.
+
+
+Zofingen (`zofingen-infrastructure`, BFS4289) adds default-off local preparation for six native municipal-infrastructure categories. Private combined name, daytime phone and email remain outside AI; observed date, asset street/number and description are required, building optional. Native photos are optional; this local subset accepts none. Exact municipality/point precedes five paced source reads. Full builder/all-script fingerprints retain stable state and discard only checked read-time shapes. Works, privacy and inert form clients are pinned; drift and failures stop cached peers. No client/state/trap/challenge execution, native payload, POST, upload, sending, external completion or tracking. Municipal acceptance remains unverified; uncertain outcomes must not trigger retries or channel switching. Privacy-read and asset confirmations, ISO nonfuture date and text caps are local requirements, not native consent.

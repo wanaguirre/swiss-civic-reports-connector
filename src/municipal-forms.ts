@@ -1,4 +1,14 @@
 import {
+  zofingenFormUrl,
+  zofingenPrivacyUrl,
+  zofingenReferralUrl,
+  zofingenScope,
+  zofingenCategories,
+  zofingenRequirements,
+  loadZofingenCategories,
+  assertZofingenSourcesAvailable,
+} from './zofingen-form.js';
+import {
   obermumpfFormUrl,
   obermumpfPrivacyUrl,
   obermumpfReferralUrl,
@@ -343,6 +353,13 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'zofingen-infrastructure': Object.freeze({
+    bfsId: 4289,
+    municipality: 'Zofingen',
+    language: 'de' as const,
+    formUrl: zofingenFormUrl,
+    reportingUrl: zofingenFormUrl,
+  }),
   'obermumpf-lighting': Object.freeze({
     bfsId: 4256,
     municipality: 'Obermumpf',
@@ -868,6 +885,8 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'zofingen-infrastructure')
+    throw new Error('Use the complete pinned Zofingen source contract.');
   if (name === 'swl-staufen') throw new Error('Use the complete pinned SWL source contract.');
   if (name === 'obermumpf-lighting')
     throw new Error('Use the complete pinned Obermumpf source contract.');
@@ -1712,6 +1731,22 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'zofingen-infrastructure') {
+      this.reportingService = 'Stadt Zofingen – Gemeindeinfrastruktur';
+      this.termsUrl = zofingenPrivacyUrl;
+      this.privacy =
+        'Private full name, daytime phone and email remain outside AI. Native photo optional; local preparation accepts no attachments. Policy stores enquiries/contact details for processing and follow-up, says no sharing without consent, and disclaims complete transmission security. No fixed incident retention; general account/newsletter/payment terms not incident terms. Local read acknowledgement is not a native consent checkbox. No client/state/protection execution or sending; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: zofingenScope,
+        sources: [
+          { title: 'Dedicated municipal infrastructure-damage form', url: zofingenFormUrl },
+          { title: 'Official municipal maintenance duties', url: zofingenReferralUrl },
+          { title: 'Municipal privacy policy', url: zofingenPrivacyUrl },
+        ],
+      };
+    }
     if (name === 'obermumpf-lighting') {
       this.reportingService = 'Gemeinde Obermumpf – Strassenbeleuchtung';
       this.privacy =
@@ -1783,6 +1818,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (this.name === 'zofingen-infrastructure')
+      return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
     if (this.name === 'obermumpf-lighting')
       return Promise.resolve(obermumpfCategories.map((c) => ({ ...c })));
     if (this.name === 'elektra-auw') return Promise.resolve(auwCategories.map((c) => ({ ...c })));
@@ -1798,6 +1835,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
     if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
     if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
     if (this.name === 'swl-staufen') assertSwlSourcesAvailable(this.request);
@@ -1814,6 +1852,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            this.name === 'zofingen-infrastructure' ||
             this.name === 'obermumpf-lighting' ||
             this.name === 'swl-staufen' ||
             this.name === 'elektra-auw' ||
@@ -1830,33 +1869,35 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'obermumpf-lighting'
-                ? loadObermumpfCategories
-                : this.name === 'elektra-auw'
-                  ? loadAuwCategories
-                  : this.name === 'swl-staufen'
-                    ? loadSwlCategories
-                    : this.name === 'tbseon-egliswil'
-                      ? loadTbseonCategories
-                      : this.name === 'egm-muelligen'
-                        ? loadEgmCategories
-                        : this.name === 'ibw-wohlen-ag'
-                          ? loadIbwCategories
-                          : this.name === 'eww-wettingen'
-                            ? loadEwwCategories
-                            : isEgsMunicipality(this.name)
-                              ? loadEgsCategories
-                              : this.name === 'ewn-neuenhof'
-                                ? loadEwnCategories
-                                : this.name === 'rwb-windisch'
-                                  ? loadRwbWindischCategories
-                                  : this.name === 'rwb-ennetbaden'
-                                    ? loadRwbCategories
-                                    : this.name === 'hornet-aarau'
-                                      ? loadHornetCategories
-                                      : this.name === 'tbs-suhr'
-                                        ? loadTbsCategories
-                                        : loadTbgraenichenCategories
+              this.name === 'zofingen-infrastructure'
+                ? loadZofingenCategories
+                : this.name === 'obermumpf-lighting'
+                  ? loadObermumpfCategories
+                  : this.name === 'elektra-auw'
+                    ? loadAuwCategories
+                    : this.name === 'swl-staufen'
+                      ? loadSwlCategories
+                      : this.name === 'tbseon-egliswil'
+                        ? loadTbseonCategories
+                        : this.name === 'egm-muelligen'
+                          ? loadEgmCategories
+                          : this.name === 'ibw-wohlen-ag'
+                            ? loadIbwCategories
+                            : this.name === 'eww-wettingen'
+                              ? loadEwwCategories
+                              : isEgsMunicipality(this.name)
+                                ? loadEgsCategories
+                                : this.name === 'ewn-neuenhof'
+                                  ? loadEwnCategories
+                                  : this.name === 'rwb-windisch'
+                                    ? loadRwbWindischCategories
+                                    : this.name === 'rwb-ennetbaden'
+                                      ? loadRwbCategories
+                                      : this.name === 'hornet-aarau'
+                                        ? loadHornetCategories
+                                        : this.name === 'tbs-suhr'
+                                          ? loadTbsCategories
+                                          : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1959,6 +2000,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
     if (this.name === 'swl-staufen') return swlRequirements();
+    if (this.name === 'zofingen-infrastructure') return zofingenRequirements();
     if (this.name === 'obermumpf-lighting') return obermumpfRequirements();
     if (this.name === 'elektra-auw') return auwRequirements();
     if (this.name === 'tbseon-egliswil') return tbseonRequirements();
