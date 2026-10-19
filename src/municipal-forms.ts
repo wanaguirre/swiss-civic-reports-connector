@@ -1,4 +1,12 @@
 import {
+  ewnFormUrl,
+  ewnPrivacyUrl,
+  ewnReferralUrl,
+  ewnScope,
+  ewnRequirements,
+  loadEwnCategories,
+} from './ewn-form.js';
+import {
   rwbFormUrl,
   rwbPrivacyUrl,
   rwbInvitationUrl,
@@ -245,6 +253,13 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'ewn-neuenhof': Object.freeze({
+    bfsId: 4034,
+    municipality: 'Neuenhof',
+    language: 'de' as const,
+    formUrl: ewnFormUrl,
+    reportingUrl: ewnFormUrl,
+  }),
   'rwb-ennetbaden': Object.freeze({
     bfsId: 4026,
     municipality: 'Ennetbaden',
@@ -695,6 +710,7 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'ewn-neuenhof') throw new Error('Use the complete pinned EWN source manifest.');
   if (name === 'rwb-ennetbaden') throw new Error('Use the complete pinned RWB source manifest.');
   if (name === 'hornet-aarau') throw new Error('Use the complete pinned hornet source manifest.');
   if (name === 'tbs-suhr') return inspectTbsForm(html);
@@ -1408,6 +1424,24 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'ewn-neuenhof') {
+      this.reportingService = 'Elektrizität Wasser Neuenhof (ewn) – Strassenbeleuchtung';
+      this.privacy =
+        'Local preparation keeps private salutation, names, phone/email and optional company/postal address outside AI and separate from the lamp. The provider describes purpose-limited retention up to ten years, service-provider/legal sharing and foreign-processing conditions. Its selected hCaptcha differs from the Google-reCaptcha policy entry; delivery privacy remains unresolved. Civic sends nothing and never executes the challenge or native client; no native consent checkbox is invented.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: ewnScope,
+        sources: [
+          { title: 'Municipal explicit utility referral', url: ewnReferralUrl },
+          { title: 'Dedicated native lamp form', url: ewnFormUrl },
+          {
+            title: 'Provider privacy notice; challenge-vendor mismatch unresolved',
+            url: ewnPrivacyUrl,
+          },
+        ],
+      };
+    }
   }
   mapUrl(point: Point) {
     coordinates.parse(point);
@@ -1441,19 +1475,22 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            this.name === 'ewn-neuenhof' ||
             this.name === 'rwb-ennetbaden' ||
             this.name === 'hornet-aarau' ||
             this.name === 'tbgraenichen' ||
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'rwb-ennetbaden'
-                ? loadRwbCategories
-                : this.name === 'hornet-aarau'
-                  ? loadHornetCategories
-                  : this.name === 'tbs-suhr'
-                    ? loadTbsCategories
-                    : loadTbgraenichenCategories
+              this.name === 'ewn-neuenhof'
+                ? loadEwnCategories
+                : this.name === 'rwb-ennetbaden'
+                  ? loadRwbCategories
+                  : this.name === 'hornet-aarau'
+                    ? loadHornetCategories
+                    : this.name === 'tbs-suhr'
+                      ? loadTbsCategories
+                      : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1555,6 +1592,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'ewn-neuenhof') return ewnRequirements();
     if (this.name === 'rwb-ennetbaden') return rwbRequirements();
     if (this.name === 'tbs-suhr') return tbsRequirements();
     if (this.name === 'tbgraenichen') return tbgraenichenRequirements();
