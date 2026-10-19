@@ -74,12 +74,11 @@ export function egmRequirements(): Record<string, Requirements> {
         },
       ],
       notes: [
-        'Nur tatsächliche, nicht dringende Schäden an öffentlichen Lampen im Unterhalt der EGM innerhalb Mülligen AG. Genauen Lampenpunkt und Zuständigkeit bestätigen; Gemeindegrenzen allein belegen den Unterhalt nicht.',
-        'Private Vor-/Nachnamen und E-Mail erforderlich, Firma freiwillig. Keine private Postadresse, Anrede oder Telefonnummer hinzufügen. Ort der defekten Lampe mit tatsächlicher Strasse, PLZ und Ort ist vom Wohnort getrennt. Keine Werte erfinden.',
-        'Native E-Mail-Bestätigung ist vor späterem Versand noch abzugleichen. Eine nützliche Beschreibung und Textgrenzen sind lokale Regeln; das native Beschreibungsfeld hat kein angezeigtes Pflichtzeichen.',
-        'Datenschutzerklärung lesen und Einverständnis bestätigen. Die allgemeine Formularpassage nennt private Post-/Telefondaten, die das konkrete Lampenformular nicht abfragt. Kontakt-/Formularzwecke, breitere Marketing-/Statistikzwecke mit Widerspruch, Dienstleister/Partner/Behörden und Auslandbedingungen; keine feste lampenspezifische Löschfrist oder Veröffentlichungszusage.',
-        'Textvorbereitung ohne Anhänge. Native Seite nennt jpg/png/pdf bis 16 MB je Datei; Zählgrenze und native Annahme sind ungeprüft. Quellfotos ausdrücklich ausschliessen. Keine Uploads, CAPTCHA-/Clientausführung, Antwortberechnung oder Wiederverwendung nativen Zustands.',
-        'Alles bleibt in Civic. Geänderte offizielle Quellen stoppen die Vorbereitung. Kein Senden, externe Erledigung oder Statusabruf. Bei unklarem Ausgang niemals automatisch erneut melden, neu erstellen oder den Sendekanal wechseln.',
+        'Nur nicht dringende Schäden an öffentlichen Lampen im Unterhalt der EGM in Mülligen AG. Genauen Lampenpunkt und Zuständigkeit bestätigen; Gemeindegrenzen allein belegen den Unterhalt nicht.',
+        'Vorname, Nachname und E-Mail sind erforderlich, Firma freiwillig. Keine private Postadresse oder Telefonnummer hinzufügen. Strasse, PLZ und Ort beziehen sich auf die defekte Lampe.',
+        'Offizielle Datenschutzerklärung lesen und Einverständnis bestätigen. Sie beschreibt Kontakt-/Formularzwecke, breitere Marketing-/Statistikzwecke mit Widerspruch, Weitergabe an Dienstleister/Partner/Behörden und Auslandbedingungen. Keine feste lampenspezifische Löschfrist oder Veröffentlichungszusage festgestellt.',
+        'Fotos dürfen beim Formulieren helfen, werden hier aber nicht angehängt. Quellfotos ausdrücklich ausschliessen.',
+        'Nur lokale Vorbereitung: Nichts wird gesendet. Externe Erledigung und Statusabfrage sind nicht verfügbar. Bei unklarem Ausgang niemals automatisch erneut melden, neu erstellen oder den Sendekanal wechseln.',
       ],
     },
   };
