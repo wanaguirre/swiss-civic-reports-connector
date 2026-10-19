@@ -1077,3 +1077,39 @@ Neuenhof EWN preparation (`ewn-neuenhof`, BFS4034) is GET-only; sending, externa
 
 
 EGS public-lamp preparation (`egs-obersiggenthal`, BFS4038; `egs-untersiggenthal`, BFS4044) has separate frozen destinations and exact BFS gates before source GETs. Categories alone return published metadata without network. Both municipalities explicitly refer to EGS; its dedicated form names maintenance for both. Actual maintained public-lamp confirmation and precise fault location required, real street/lamp number optional; private native salutation/names/phone/email required, company optional, no postal/consent fields invented, photos0. Preserve second native fault typo `Lampe brennt unreglemässig`. Local bounded phone text does not claim native country normalization. Nine fixed full byte pins cover the first full form/page, linked binary privacy PDF and seven selected form/phone/validation/integration utilities. The observed second page omits clients/config and is rejected, never normalized as state rotation. Every native-state or unrelated-content byte change pauses for review/new version. Other first-party UI sources were reviewed as static evidence; their exact URLs/configuration remain included in the whole-page pin, their bodies are not independently reread. No native code/challenge/geoIP/UUID/token execution or payload/POST. Provider ten-second request starts are shared across both destinations: cold checks take at least80seconds, five-minute rule cache. Shared errors/cooldown invalidate cached use;403 stops that request transport for the process,429 honors Retry-After without retry. Provider/partner/legal sharing and foreign conditions preserved, no fixed lamp retention; native challenge/geoIP/UUID consent details and acceptance unresolved. Sending, external completion and tracking unavailable.
+
+
+Energie Wettingen public-lamp preparation (`eww-wettingen`, BFS4045) is GET-only,
+with published categories needing no network and exact BFS before source reads.
+Only actual nonurgent maintained public lamps at the confirmed precise point;
+vegetation means obstruction of that lamp. Actual lamp street/address required,
+real number optional with leading zeros preserved. Private Herr/Frau, split names
+and email required; phone/postal contacts optional outside AI. Numeric postcode
+is conservatively restricted to at most20 ASCII digits; native number field has
+no published bounds. Native email-pattern parity is unverified; local address
+validation does not establish sending support. No company or consent field invented.
+Photos0: native optional one-file6MiB selection starts a separate multipart PUT
+upload with an identifier; MIME/server acceptance unverified. Form submission is
+a separate URL-encoded POST through the selected FormManager/FormBuilder handler,
+not the HTML enctype. These are static findings only; no endpoint was invoked.
+
+The complete original UTF-8 page is fingerprinted after replacing only checked
+rotating attribute value spans: server-state shapes, four text-block IDs with
+paired class tokens, two gender IDs/parent classes/label-for/id pairs, and the
+submit name/id/input class/wrapper id/class. Seven rotating identifiers must be
+distinct. Empty protection/fingerprint controls and all other bytes remain pinned,
+including controls, script inventory, tracking references and inline configuration.
+No serialization, whitespace normalization, native state return/reuse, protection
+calculation or script execution. Both captured pages pass one fingerprint; broken
+ID bindings and every other source change pause preparation. Eight additional
+full-byte pins cover the official mandate, January2026 privacy and six complete
+first-party clients. Fixed9GETs,2second starts (16seconds minimum cold),5minute
+cache;403 stops the transport,429 honors Retry-After without retry, shared failures
+invalidate cached use. No cookies, native initialization, dynamic bootstrap,
+validation POST, upload, report payload, external completion, sending or tracking.
+Protection/fingerprint/tracking consent/privacy timing, native email validation,
+upload acceptance and durable receipt/reconciliation remain unresolved for sending.
+General inquiry/follow-up, possible existing customer-data/quality review and
+provider/partner/authority/foreign sharing conditions apply; no fixed lamp/photo
+retention or publication promise. Uncertainty never permits retry/recreation or
+channel switching. This profile does not change any consuming app’s enablement.
