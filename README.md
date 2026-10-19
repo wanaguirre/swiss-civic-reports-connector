@@ -194,3 +194,9 @@ nonurgent priority and ownership confirmation are explicit; photos excluded.
 Full builder/scripts and form/interaction/privacy sources are read and pinned with
 GET only. No interaction simulation, provider execution, POST, sending or tracking.
 See [requirements and limits](docs/MUNICIPAL-FORMS.md).
+
+Windisch public streetlamp preparation is available as `rwb-windisch` (BFS4123).
+Only actual EW Windisch public lamps under RWB operation qualify; exact location
+and maintained ownership are required. Text only, private full contacts/address
+and privacy acknowledgement; no sending, external completion or tracking.
+See [municipal form constraints](docs/MUNICIPAL-FORMS.md).

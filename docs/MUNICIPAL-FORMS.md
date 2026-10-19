@@ -1177,3 +1177,19 @@ a duplicate or switch sending channel after uncertainty.
 Test fixtures are inert gzip captures with only the exact masked state/nonce
 values replaced by shaped offline values. They are parsed as text, never opened
 or executed, and are excluded from release packages.
+
+Windisch RWB preparation (`rwb-windisch`, BFS4123) separately binds actual EW
+Windisch public streetlights under RWB operation. The municipal department links
+the utility; its own identity states 52km lighting cable and roughly900lighting
+points. This is explicit lighting evidence, not electricity-supply inference.
+Actual maintained ownership and point still require confirmation. Strom remains
+broader than local lighting scope; downstream routing is unverified. Required
+private salutation, split names, full reporter address including house, phone,
+email and explicit native privacy acknowledgement match the unchanged RWB form.
+Actual lamp street/point separate, optional real lamp number, photos0. All four
+existing complete-byte RWB pins are unchanged; a fifth complete identity pin
+binds Windisch. Fixed GETs are paced2seconds, cookie-free/no redirects/code
+execution; 403/429 permanently stop this request context across new clients and
+before cached requirements. No native state extraction/reuse, reCAPTCHA, upload,
+payload, sending, external completion or tracking. Full source changes fail closed.
+Ennetbaden's existing profile, pins and behavior remain unchanged.

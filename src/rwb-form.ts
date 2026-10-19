@@ -46,10 +46,15 @@ export async function loadRwbCategories(
   await verifyPublicSourceManifest(request, rwbSources, retry, now);
   return rwbCategories.map((c) => ({ ...c }));
 }
-export function rwbRequirements(): Record<string, Requirements> {
+export function rwbRequirements(
+  municipality: 'Ennetbaden' | 'Windisch' = 'Ennetbaden',
+): Record<string, Requirements> {
+  const scope = rwbScope
+    .replaceAll('Ennetbaden', municipality)
+    .replace('BFS4026', municipality === 'Windisch' ? 'BFS4123' : 'BFS4026');
   return {
     [rwbCategory]: {
-      scope: rwbScope,
+      scope,
       photo_required: false,
       max_photos: 0,
       email_required: true,
@@ -58,7 +63,7 @@ export function rwbRequirements(): Record<string, Requirements> {
       contact_fields: ['phone'],
       description_max_length: 4000,
       location_label_max_length: 250,
-      bodies: ['Regionalwerke AG Baden – Öffentliche Beleuchtung Ennetbaden'],
+      bodies: [`Regionalwerke AG Baden – Öffentliche Beleuchtung ${municipality}`],
       extra_fields: [
         ...[
           ['first_name', 'First name', 100],
@@ -107,10 +112,10 @@ export function rwbRequirements(): Record<string, Requirements> {
         },
         {
           code: 'public_lamp_confirmed',
-          description: 'Confirm the actual RWB-maintained public lamp in Ennetbaden',
+          description: `Confirm the actual RWB-maintained public lamp in ${municipality}`,
           required: true,
           datatype: 'string',
-          values: ['Public lamp in Ennetbaden maintained by RWB confirmed'],
+          values: [`Public lamp in ${municipality} maintained by RWB confirmed`],
         },
         {
           code: 'data_policy_consent',
@@ -121,7 +126,7 @@ export function rwbRequirements(): Record<string, Requirements> {
         },
       ],
       notes: [
-        'Nur tatsächliche öffentliche Strassenlampen im Unterhalt der RWB in Ennetbaden. Keine privaten Leuchten, Versorgungsunterbrüche, andere Anlagen oder dringenden Gefahren. Gemeindegrenzen beweisen nicht den Unterhalt.',
+        `Nur tatsächliche öffentliche Strassenlampen im Unterhalt der RWB in ${municipality}. Keine privaten Leuchten, Versorgungsunterbrüche, andere Anlagen oder dringenden Gefahren. Gemeindegrenzen beweisen nicht den Unterhalt.`,
         'Strom ist die allgemeinere native Themenwahl. Diese lokale Vorbereitung ist auf öffentliche Lampen begrenzt; die interne Weiterleitung ist nicht verifiziert.',
         'Private Anrede, Vor-/Nachname, Strasse, Hausnummer, PLZ, Ort, E-Mail und Telefon sind erforderlich und bleiben ausserhalb der KI. Melderadresse ist nicht der Störungsort. Tatsächliche Lampenstrasse und genauer Punkt erforderlich; echte Lampennummer freiwillig, führende Nullen erhalten.',
         'Nützliche Beschreibung und lokale Textgrenzen sind konservative Ergänzungen. Das HTML verlangt die Mitteilung nicht, die Datenschutzerklärung nennt sie erforderlich. Die lokale PLZ-Darstellung ist strenger als das native Zahlenfeld ohne Bereichsgrenze. Keine Fotos.',

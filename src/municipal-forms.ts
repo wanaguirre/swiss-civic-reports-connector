@@ -1,4 +1,11 @@
 import {
+  rwbWindischIdentityUrl,
+  rwbWindischReferralUrl,
+  assertRwbWindischSourcesAvailable,
+  loadRwbWindischCategories,
+  rwbWindischRequirements,
+} from './rwb-windisch-form.js';
+import {
   egmFormUrl,
   egmIdentityUrl,
   egmPrivacyUrl,
@@ -54,6 +61,7 @@ import {
   rwbReferralUrl,
   rwbScope,
   rwbRequirements,
+  rwbCategories,
   loadRwbCategories,
 } from './rwb-form.js';
 import {
@@ -333,6 +341,13 @@ export const municipalForms = Object.freeze({
     language: 'de' as const,
     formUrl: ewnFormUrl,
     reportingUrl: ewnFormUrl,
+  }),
+  'rwb-windisch': Object.freeze({
+    bfsId: 4123,
+    municipality: 'Windisch',
+    language: 'de' as const,
+    formUrl: rwbFormUrl,
+    reportingUrl: rwbFormUrl,
   }),
   'rwb-ennetbaden': Object.freeze({
     bfsId: 4026,
@@ -790,7 +805,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Use the complete checked Wettingen source manifest.');
   if (isEgsMunicipality(name)) throw new Error('Use the complete pinned EGS source manifest.');
   if (name === 'ewn-neuenhof') throw new Error('Use the complete pinned EWN source manifest.');
-  if (name === 'rwb-ennetbaden') throw new Error('Use the complete pinned RWB source manifest.');
+  if (name === 'rwb-ennetbaden' || name === 'rwb-windisch')
+    throw new Error('Use the complete pinned RWB source manifest.');
   if (name === 'hornet-aarau') throw new Error('Use the complete pinned hornet source manifest.');
   if (name === 'tbs-suhr') return inspectTbsForm(html);
   if (name === 'tbgraenichen') return inspectTbgraenichenForm(html);
@@ -1486,17 +1502,28 @@ export class MunicipalFormClient implements ReportingAdapter {
           ? 'Experimental source-reviewed transport. A real municipal pilot remains pending. Only a verified ticket receipt means sent; uncertain responses must not be retried.'
           : 'Preparation only. Municipal delivery has not been pilot-verified; do not claim the report has been sent.',
     };
-    if (name === 'rwb-ennetbaden') {
-      this.reportingService = 'Regionalwerke AG Baden – Öffentliche Beleuchtung Ennetbaden';
+    if (name === 'rwb-ennetbaden' || name === 'rwb-windisch') {
+      this.reportingService = `Regionalwerke AG Baden – Öffentliche Beleuchtung ${this.municipality}`;
       this.termsUrl = rwbPrivacyUrl;
       this.privacy =
         'Local preparation keeps private salutation, names and full reporter address/email/phone outside AI and separate from the lamp point. Native privacy consent is required. The provider policy describes generally Swiss storage, broad service-provider/partner/authority sharing, cross-border conditions and purpose/legal retention; no fixed lamp-report retention or publication established. Civic sends nothing and never executes reCAPTCHA or the native client.';
       this.guidance = {
         ...this.guidance,
         verified_on: '2026-10-19',
-        scope: rwbScope,
+        scope: name === 'rwb-windisch' ? rwbWindischRequirements()['Strom'].scope! : rwbScope,
         sources: [
-          { title: 'Municipal public-lighting responsibility', url: rwbReferralUrl },
+          {
+            title: 'Municipal utility referral',
+            url: name === 'rwb-windisch' ? rwbWindischReferralUrl : rwbReferralUrl,
+          },
+          ...(name === 'rwb-windisch'
+            ? [
+                {
+                  title: 'EW Windisch public-lighting mandate and RWB operation',
+                  url: rwbWindischIdentityUrl,
+                },
+              ]
+            : []),
           { title: 'Explicit provider lamp-fault referral', url: rwbInvitationUrl },
           { title: 'Native public contact form', url: rwbFormUrl },
           { title: 'Provider privacy notice', url: rwbPrivacyUrl },
@@ -1614,6 +1641,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   categories() {
     // Published metadata only; EGS source reads require the exact point gate.
+    if (this.name === 'rwb-windisch') return Promise.resolve(rwbCategories.map((c) => ({ ...c })));
     if (this.name === 'egm-muelligen') return Promise.resolve(egmCategories.map((c) => ({ ...c })));
     if (this.name === 'ibw-wohlen-ag') return Promise.resolve(ibwCategories.map((c) => ({ ...c })));
     if (this.name === 'eww-wettingen') return Promise.resolve(ewwCategories.map((c) => ({ ...c })));
@@ -1621,6 +1649,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'rwb-windisch') assertRwbWindischSourcesAvailable(this.request);
     if (this.name === 'egm-muelligen') assertEgmSourcesAvailable(this.request);
     if (this.name === 'ibw-wohlen-ag') assertIbwSourcesAvailable(this.request, this.now);
     if (this.name === 'eww-wettingen') assertEwwSourcesAvailable(this.request, this.now);
@@ -1638,6 +1667,7 @@ export class MunicipalFormClient implements ReportingAdapter {
             isEgsMunicipality(this.name) ||
             this.name === 'ewn-neuenhof' ||
             this.name === 'rwb-ennetbaden' ||
+            this.name === 'rwb-windisch' ||
             this.name === 'hornet-aarau' ||
             this.name === 'tbgraenichen' ||
             this.name === 'tbs-suhr'
@@ -1653,13 +1683,15 @@ export class MunicipalFormClient implements ReportingAdapter {
                       ? loadEgsCategories
                       : this.name === 'ewn-neuenhof'
                         ? loadEwnCategories
-                        : this.name === 'rwb-ennetbaden'
-                          ? loadRwbCategories
-                          : this.name === 'hornet-aarau'
-                            ? loadHornetCategories
-                            : this.name === 'tbs-suhr'
-                              ? loadTbsCategories
-                              : loadTbgraenichenCategories
+                        : this.name === 'rwb-windisch'
+                          ? loadRwbWindischCategories
+                          : this.name === 'rwb-ennetbaden'
+                            ? loadRwbCategories
+                            : this.name === 'hornet-aarau'
+                              ? loadHornetCategories
+                              : this.name === 'tbs-suhr'
+                                ? loadTbsCategories
+                                : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1766,6 +1798,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'eww-wettingen') return ewwRequirements();
     if (isEgsMunicipality(this.name)) return egsRequirements(this.name);
     if (this.name === 'ewn-neuenhof') return ewnRequirements();
+    if (this.name === 'rwb-windisch') return rwbWindischRequirements();
     if (this.name === 'rwb-ennetbaden') return rwbRequirements();
     if (this.name === 'tbs-suhr') return tbsRequirements();
     if (this.name === 'tbgraenichen') return tbgraenichenRequirements();
