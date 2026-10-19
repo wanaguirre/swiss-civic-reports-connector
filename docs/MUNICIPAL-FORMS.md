@@ -1143,3 +1143,37 @@ to its action plus skipfurl=1. Returned HTML without top-level .error is display
 not verified durable receipt/caseID/reconciliation. No selected upload input/path.
 Protection, private validation, selected privacy timing and genuine acceptance
 remain unverified. Uncertainty never permits retry, recreation or channel switch.
+
+
+Mülligen EGM local lamp preparation (`egm-muelligen`, BFS4107), reviewed19October2026,
+accepts only nonurgent faults of actual EGM-maintained public lamps. The operator's
+own mandate names Mülligen and public lighting; its dedicated lamp form and full
+privacy policy are pinned. No municipality-host fetch is made: the research
+municipal counter returned429 and remains stopped. Exact municipal point and
+resident maintenance confirmation are both required; neither proves ownership.
+
+Private split names/email/privacy agreement are required, company optional; the
+actual lamp street/postcode/locality are separate from reporter contact. The native
+form repeats email for confirmation; native matching/server validation remain
+unverified. No phone, salutation or private postal address is invented from the
+general privacy policy. Description/text limits are local conservative rules.
+
+Text-only preparation excludes source photos. Native form advertises jpg/png/pdf
+with16777216-byte per-file configuration, but count/MIME/acceptance and uploads
+remain unverified. No upload URL, AJAX, reCAPTCHA, trap or native state is executed,
+simulated, calculated, returned for payload use or sent. Complete UTF8 fingerprints
+mask only precisely located shaped state/nonce and bounded trap-label text; all
+remaining bytes, scripts, form fields, policy and mandate remain significant.
+Three fixed operator GETs share two-second starts, omit cookies and reject
+redirect/MIME/size/UTF8 drift.403/429 stop that request context permanently.
+
+General policy covers form/contact purposes, broader marketing/statistics with
+objection, partner/provider/authority sharing and foreign conditions; no fixed
+lamp/photo retention or publication promise is established. Receipt, delivery,
+external completion and reconciliation remain unverified. Sending and tracking
+are unavailable even with global send/experimental settings. Never retry, create
+a duplicate or switch sending channel after uncertainty.
+
+Test fixtures are inert gzip captures with only the exact masked state/nonce
+values replaced by shaped offline values. They are parsed as text, never opened
+or executed, and are excluded from release packages.
