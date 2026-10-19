@@ -1193,3 +1193,30 @@ execution; 403/429 permanently stop this request context across new clients and
 before cached requirements. No native state extraction/reuse, reCAPTCHA, upload,
 payload, sending, external completion or tracking. Full source changes fail closed.
 Ennetbaden's existing profile, pins and behavior remain unchanged.
+
+## Egliswil TB Seon telephone-only lamp preparation (19 October 2026)
+
+`tbseon-egliswil` binds only actual TB Seon-maintained public lamps within BFS4195.
+The municipal product96 explicitly refers lamp faults to the shared native customer
+form. Supply coverage and partner municipalities do not extend this profile.
+Confirm the precise lamp point, actual EWG plate and its second/third lines. Keep
+leading zeros. Their required status and useful text/length limits are local rules:
+native plate labels are starred but controls have no required attributes.
+
+Only the native **Telefon** contact branch is supported locally. Private split
+names, postal street/postcode/locality and phone are required outside AI; salutation
+optional. Exclude account email, company/customer number, moving/meter branches and
+photos. E-Mail/gar nicht branches remain unsupported because their mixed client
+conditions need further parity review. A local read/understood privacy acknowledgement
+is not a native consent checkbox. Explain form confidentiality alongside the actual
+policy's contracted-provider/legal sharing and required business-record exceptions;
+no fixed lamp retention/publication promise. Native reCAPTCHA v3 processing and
+actual delivery/receipt/reconciliation remain unverified.
+
+Five complete raw byte pins cover form, explicit municipal referral, provider privacy,
+identity and exact inert client bundle. Two independent successful form captures were
+byte-identical; no dynamic-state exclusions or normalization. Fixed cookie-free GETs
+reject redirects; starts share at least10seconds (40seconds cold) across clients of
+one request context.403/429, drift and malformed sources permanently stop that context,
+including cached peer requirements. No native client/protection execution, nonce/state
+fetch or reuse, payload, POST, upload, sending, external completion or tracking.

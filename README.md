@@ -200,3 +200,10 @@ Only actual EW Windisch public lamps under RWB operation qualify; exact location
 and maintained ownership are required. Text only, private full contacts/address
 and privacy acknowledgement; no sending, external completion or tracking.
 See [municipal form constraints](docs/MUNICIPAL-FORMS.md).
+
+Egliswil TB Seon lamp preparation is available as `tbseon-egliswil` (BFS4195).
+It supports only the native telephone-contact subset for actual maintained public
+lamps and genuine EWG plate lines. Private names/address/phone stay outside AI;
+email and photo attachments are excluded. Five complete source pins and ten-second
+shared pacing fail closed. Native reCAPTCHA/client/state execution and all sending
+remain unavailable. See `docs/MUNICIPAL-FORMS.md` for scope and privacy limits.

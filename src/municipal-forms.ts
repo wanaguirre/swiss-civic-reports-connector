@@ -1,4 +1,14 @@
 import {
+  tbseonFormUrl,
+  tbseonPrivacyUrl,
+  tbseonReferralUrl,
+  tbseonScope,
+  tbseonCategories,
+  tbseonRequirements,
+  loadTbseonCategories,
+  assertTbseonSourcesAvailable,
+} from './tbseon-form.js';
+import {
   rwbWindischIdentityUrl,
   rwbWindischReferralUrl,
   assertRwbWindischSourcesAvailable,
@@ -308,6 +318,13 @@ export const municipalForms = Object.freeze({
     language: 'de' as const,
     formUrl: egmFormUrl,
     reportingUrl: egmFormUrl,
+  }),
+  'tbseon-egliswil': Object.freeze({
+    bfsId: 4195,
+    municipality: 'Egliswil',
+    language: 'de' as const,
+    formUrl: tbseonFormUrl,
+    reportingUrl: tbseonFormUrl,
   }),
   'ibw-wohlen-ag': Object.freeze({
     bfsId: 4082,
@@ -799,6 +816,8 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'tbseon-egliswil')
+    throw new Error('Use the complete pinned TB Seon source manifest.');
   if (name === 'egm-muelligen') throw new Error('Use the complete checked EGM source manifest.');
   if (name === 'ibw-wohlen-ag') throw new Error('Use the complete checked ibw source manifest.');
   if (name === 'eww-wettingen')
@@ -1617,6 +1636,21 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'tbseon-egliswil') {
+      this.reportingService = 'Technische Betriebe Seon AG – Egliswil Strassenbeleuchtung';
+      this.privacy =
+        'Telephone-only local preparation keeps private names, address, postcode/locality and phone outside AI. No email or photos. Provider confidentiality is qualified by service-provider/legal sharing and required business-record retention; no fixed lamp retention or publication promise. Local privacy acknowledgement is not a native checkbox. Civic sends nothing during local preparation; actual delivery and acceptance remain unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: tbseonScope,
+        sources: [
+          { title: 'Explicit municipal streetlight fault referral', url: tbseonReferralUrl },
+          { title: 'Native shared customer form, lamp branch', url: tbseonFormUrl },
+          { title: 'Provider privacy policy', url: tbseonPrivacyUrl },
+        ],
+      };
+    }
   }
   mapUrl(point: Point) {
     coordinates.parse(point);
@@ -1640,6 +1674,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (this.name === 'tbseon-egliswil')
+      return Promise.resolve(tbseonCategories.map((c) => ({ ...c })));
     // Published metadata only; EGS source reads require the exact point gate.
     if (this.name === 'rwb-windisch') return Promise.resolve(rwbCategories.map((c) => ({ ...c })));
     if (this.name === 'egm-muelligen') return Promise.resolve(egmCategories.map((c) => ({ ...c })));
@@ -1649,6 +1685,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'tbseon-egliswil') assertTbseonSourcesAvailable(this.request);
     if (this.name === 'rwb-windisch') assertRwbWindischSourcesAvailable(this.request);
     if (this.name === 'egm-muelligen') assertEgmSourcesAvailable(this.request);
     if (this.name === 'ibw-wohlen-ag') assertIbwSourcesAvailable(this.request, this.now);
@@ -1661,6 +1698,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            this.name === 'tbseon-egliswil' ||
             this.name === 'egm-muelligen' ||
             this.name === 'ibw-wohlen-ag' ||
             this.name === 'eww-wettingen' ||
@@ -1673,25 +1711,27 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'egm-muelligen'
-                ? loadEgmCategories
-                : this.name === 'ibw-wohlen-ag'
-                  ? loadIbwCategories
-                  : this.name === 'eww-wettingen'
-                    ? loadEwwCategories
-                    : isEgsMunicipality(this.name)
-                      ? loadEgsCategories
-                      : this.name === 'ewn-neuenhof'
-                        ? loadEwnCategories
-                        : this.name === 'rwb-windisch'
-                          ? loadRwbWindischCategories
-                          : this.name === 'rwb-ennetbaden'
-                            ? loadRwbCategories
-                            : this.name === 'hornet-aarau'
-                              ? loadHornetCategories
-                              : this.name === 'tbs-suhr'
-                                ? loadTbsCategories
-                                : loadTbgraenichenCategories
+              this.name === 'tbseon-egliswil'
+                ? loadTbseonCategories
+                : this.name === 'egm-muelligen'
+                  ? loadEgmCategories
+                  : this.name === 'ibw-wohlen-ag'
+                    ? loadIbwCategories
+                    : this.name === 'eww-wettingen'
+                      ? loadEwwCategories
+                      : isEgsMunicipality(this.name)
+                        ? loadEgsCategories
+                        : this.name === 'ewn-neuenhof'
+                          ? loadEwnCategories
+                          : this.name === 'rwb-windisch'
+                            ? loadRwbWindischCategories
+                            : this.name === 'rwb-ennetbaden'
+                              ? loadRwbCategories
+                              : this.name === 'hornet-aarau'
+                                ? loadHornetCategories
+                                : this.name === 'tbs-suhr'
+                                  ? loadTbsCategories
+                                  : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -1793,6 +1833,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'tbseon-egliswil') return tbseonRequirements();
     if (this.name === 'egm-muelligen') return egmRequirements();
     if (this.name === 'ibw-wohlen-ag') return ibwRequirements();
     if (this.name === 'eww-wettingen') return ewwRequirements();
