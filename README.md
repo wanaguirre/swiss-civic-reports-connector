@@ -207,3 +207,9 @@ lamps and genuine EWG plate lines. Private names/address/phone stay outside AI;
 email and photo attachments are excluded. Five complete source pins and ten-second
 shared pacing fail closed. Native reCAPTCHA/client/state execution and all sending
 remain unavailable. See `docs/MUNICIPAL-FORMS.md` for scope and privacy limits.
+
+SWL Staufen (`swl-staufen`, BFS4210) supports telephone-only local preparation for
+confirmed maintained public lamps. Five fixed source checks fail closed; private
+contacts remain outside AI. No postal address/email/photos, native client/state/
+hCaptcha execution or sending. The hCaptcha/reCAPTCHA privacy discrepancy and real
+acceptance remain unresolved. See [municipal forms](docs/MUNICIPAL-FORMS.md).

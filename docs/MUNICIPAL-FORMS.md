@@ -1221,20 +1221,33 @@ one request context.403/429, drift and malformed sources permanently stop that c
 including cached peer requirements. No native client/protection execution, nonce/state
 fetch or reuse, payload, POST, upload, sending, external completion or tracking.
 
-### SWL Staufen source qualification (not registered)
+### SWL Staufen local preparation
 
-`src/swl-form.ts` currently provides an internal, fail-closed source inspector only.
-Two independent public HTML captures differed solely in one shaped 96-character
-read-time `_csrf` value. The inspector discards that value and hashes every other
-byte, including all form fields, protection markup and script references. Tests
-reject field/destination/protection/client drift, malformed or duplicate state and
-oversized input. It does not retain state, construct payloads or execute a client.
+`swl-staufen` binds nonurgent faults to an actual SWL-maintained public lamp in
+Staufen (BFS4210). The exact municipality gate precedes reads; supply and boundaries
+alone do not establish ownership. Other SWL municipalities and native form topics
+are excluded. The full page fingerprint discards only one independently varying,
+shaped read-time CSRF value, retaining every other byte including protection and
+scripts. Four raw pins bind the explicit municipal lamp navigation, current SWL
+referral, provider privacy and inert client. Five fixed cookie-free GETs reject
+redirects, enforce body limits and share two-second starts (eight seconds cold).
+Any source failure stops the request context before cached peer requirements.
 
-This is not a registered municipality adapter or a released capability. Staufen's
-explicit lamp navigation and electricity page establish the referral to SWL, but
-the next work must add exact BFS4210/maintained-asset binding, bounded paced GETs,
-shared context stops, private telephone-only requirements and immutable-preview
-contract tests before a versioned Civic integration. Do not extend this scope to
-Lenzburg or other SWL supply areas. The form uses hCaptcha while the linked privacy
-notice describes reCAPTCHA; actual protection data flow and acceptance remain
-unverified. No sending, upload, external completion or tracking is implemented.
+The telephone-only subset requires private first/surname, salutation and phone.
+No reporter postal address is collected: the inspected client does not require it
+and the policy treats extra data as voluntary. Email, company and other contact
+branches are excluded. Genuine lamp street, nearest building number, lamp number(s)
+and maintained-asset confirmation are local preparation rules; preserve leading
+zeros. Text caps, useful description and the private policy acknowledgement are
+local rules, not invented native constraints or a native consent checkbox. Photos
+are excluded because the native form has no upload control.
+
+SWL inquiry processing has contracted-provider/legal disclosure exceptions and
+purpose/legal retention, with no fixed lamp retention or unconditional privacy
+promise. The form uses hCaptcha while its policy describes reCAPTCHA. The private
+read acknowledgement explicitly retains this discrepancy; actual protection data
+flow and municipal acceptance remain unverified. No native client, challenge or
+state is executed/reused; no payload, sending, external completion or tracking is
+available under any flag. An uncertain outcome never permits replay or switching
+channels. Real verification requires an approved genuine report or authorized test
+environment.
