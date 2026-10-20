@@ -60,6 +60,60 @@ export const tbwSources: readonly PublicSourcePin[] = Object.freeze(
       type: 'javascript',
       maxBytes: 1000000,
     },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/component-service/lib/component-service.js?v=a0831c7c',
+      sha256: '9ba4ec00fa05c64635885b2b7839f895b8ac682ae6da10594408f4f8db417852',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/event-throttle/lib/event-throttle.js?v=6d53ac4e',
+      sha256: 'd8f1a8ea4476e2eca809b88eb7c44113b1b136a9389b791ef8eab981b302076f',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/customProperties/customProperties.js?v=3fd15df0',
+      sha256: '55d1346b1cef795c51b04899c0ca90525ea4ffcd0e74f891c0343e8c7b731aec',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/scrollDirection/scrollDirection.js?v=ffd65244',
+      sha256: '6a4afe21adf88508a04afa61b3923f8ced1d17386c4920e5e29d3c43716c073e',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/hero/hero.js?v=66080488',
+      sha256: '2d238f1906f3b79103866c975b4b99ef784247a52283f9fc8e9d1a1496afd164',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/in-view/lib/in-view.js?v=81d2f1eb',
+      sha256: 'a31fbcbf1d24bb950b941ffba1e8827de2655c400c43439606f6a5ab69eb03c4',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/panel/panel.js?v=cc5b72b3',
+      sha256: '072637238e1afe700e92b658f773ddb39f07b0a5aadc37c66d1063152859f24c',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/navigation/navigation.js?v=73cbec49',
+      sha256: '270e1ca3623663546e534da1adb0c3753ae69388482bba4e7409d57d3159e2ba',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
+    {
+      url: 'https://www.tbw.ch/_assets/9936fbff2fa9683e2f00411c767453f4/Javascript/components/toggler/lib/toggler.js?v=4d6ddf3f',
+      sha256: 'c07933c3bda9f24e8129dc948bb6b29c90e8357abd3b5703699161782bf02c70',
+      type: 'javascript',
+      maxBytes: 1000000,
+    },
   ].map((p) => Object.freeze(p)) as PublicSourcePin[],
 );
 type Node = DefaultTreeAdapterMap['node'];
@@ -149,7 +203,18 @@ export function fingerprintTbwForm(html: string) {
         ];
       });
     const hash = (v: unknown) => createHash('sha256').update(JSON.stringify(v)).digest('hex');
-    return { form: hash(semantic), scripts: hash(scripts) };
+    const components = nodes
+      .filter(
+        (n): n is Element =>
+          'tagName' in n &&
+          (attr(n, 'data-modules') !== undefined ||
+            (attr(n, 'class') ?? '').includes('js-koch-component')),
+      )
+      .map((n) => [
+        n.tagName,
+        n.attrs.map((a) => [a.name, a.value]).sort(([a], [b]) => a.localeCompare(b)),
+      ]);
+    return { form: hash(semantic), scripts: hash(scripts), components: hash(components) };
   } catch {
     throw changed();
   }
@@ -158,7 +223,8 @@ export function inspectTbwForm(html: string) {
   const pin = fingerprintTbwForm(html);
   if (
     pin.form !== 'eba0e656ba929b9ae04e980c3d4ea705795d9a76c7315fed7eb4e95842cd2fd8' ||
-    pin.scripts !== 'dc0896a23044289fd2101770dae397aad8a13c4e0dfe3a4f1e0ad26bee402b20'
+    pin.scripts !== 'dc0896a23044289fd2101770dae397aad8a13c4e0dfe3a4f1e0ad26bee402b20' ||
+    pin.components !== 'd4b7521267de7ffb21c08ffb3583fd627a6af25defc96ab75c5407e57f2245c8'
   )
     throw changed();
   return tbwCategories.map((c) => ({ ...c }));
@@ -206,7 +272,9 @@ export async function readTbwCategories(
     await reader.cancel().catch(() => {});
   }
   const categories = inspectTbwForm(Buffer.concat(chunks).toString('utf8'));
-  await verifyPublicSourceManifest(request, tbwSources, retry, now);
+  // The shared paced request serializes all batches and permanently stops after any failure.
+  for (let offset = 0; offset < tbwSources.length; offset += 10)
+    await verifyPublicSourceManifest(request, tbwSources.slice(offset, offset + 10), retry, now);
   return categories;
 }
 type Context = { tail: Promise<void>; next: number; stopped: boolean };

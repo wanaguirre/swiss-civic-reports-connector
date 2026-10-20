@@ -31,6 +31,16 @@ import {
   assertZofingenSourcesAvailable,
 } from './zofingen-form.js';
 import {
+  tbwFormUrl,
+  tbwPrivacyUrl,
+  tbwReferralUrl,
+  tbwScope,
+  tbwCategories,
+  tbwRequirements,
+  loadTbwCategories,
+  assertTbwSourcesAvailable,
+} from './tbw-form.js';
+import {
   diessenhofenFormUrl,
   diessenhofenPrivacyUrl,
   diessenhofenReferralUrl,
@@ -421,6 +431,13 @@ export const municipalForms = Object.freeze({
     language: 'de' as const,
     formUrl: zofingenFormUrl,
     reportingUrl: zofingenFormUrl,
+  }),
+  'tbw-weinfelden': Object.freeze({
+    bfsId: 4946,
+    municipality: 'Weinfelden',
+    language: 'de' as const,
+    formUrl: tbwFormUrl,
+    reportingUrl: tbwFormUrl,
   }),
   'diessenhofen-stadtmelder': Object.freeze({
     bfsId: 4545,
@@ -957,6 +974,7 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'zofingen-infrastructure')
     throw new Error('Use the complete pinned Zofingen source contract.');
   if (name === 'swl-staufen') throw new Error('Use the complete pinned SWL source contract.');
+  if (name === 'tbw-weinfelden') throw new Error('Use the complete pinned TBW source contract.');
   if (name === 'diessenhofen-stadtmelder')
     throw new Error('Use the complete pinned Diessenhofen source contract.');
   if (name === 'obermumpf-lighting')
@@ -1855,6 +1873,29 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'tbw-weinfelden') {
+      this.reportingService = 'TBW – Weinfelden public streetlighting';
+      this.termsUrl = tbwPrivacyUrl;
+      this.privacy =
+        'Private salutation, names, street/house number, postcode/locality, mobile, email, optional phone and postbox remain outside AI. Native privacy acknowledgement required. No photos. Policy effective 22 September 2026 describes form handling/answers and hosting, with broader service/contract/legal sharing. Swiss website hosting is not an all-incident residency guarantee; possible EEA/worldwide processing. No fixed incident retention. Portal reCAPTCHA policy does not establish public contact-form behavior. No native state, trap/client execution, payload, sending or external completion; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: tbwScope,
+        sources: [
+          { title: 'Public TBW contact form', url: tbwFormUrl },
+          {
+            title: 'Explicit city lighting mandate and unlit-lamp reporting invitation',
+            url: tbwReferralUrl,
+          },
+          { title: 'TBW privacy policy', url: tbwPrivacyUrl },
+          {
+            title: 'City normal lighting shutdown hours',
+            url: 'https://www.weinfelden.ch/stadt/news/aktuell.html/310/news/9529/newsarchive/1',
+          },
+        ],
+      };
+    }
     if (name === 'diessenhofen-stadtmelder') {
       this.reportingService = 'Stadtgemeinde Diessenhofen – Stadtmelder';
       this.privacy =
@@ -1948,6 +1989,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (this.name === 'zofingen-infrastructure')
       return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
+    if (this.name === 'tbw-weinfelden')
+      return Promise.resolve(tbwCategories.map((c) => ({ ...c })));
     if (this.name === 'diessenhofen-stadtmelder')
       return Promise.resolve(diessenhofenCategories.map((c) => ({ ...c })));
     if (this.name === 'obermumpf-lighting')
@@ -1968,6 +2011,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
     if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
     if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
+    if (this.name === 'tbw-weinfelden') assertTbwSourcesAvailable(this.request);
     if (this.name === 'diessenhofen-stadtmelder') assertDiessenhofenSourcesAvailable(this.request);
     if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
     if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
@@ -1988,6 +2032,7 @@ export class MunicipalFormClient implements ReportingAdapter {
             isEwrMunicipality(this.name) ||
             isReaMunicipality(this.name) ||
             this.name === 'zofingen-infrastructure' ||
+            this.name === 'tbw-weinfelden' ||
             this.name === 'diessenhofen-stadtmelder' ||
             this.name === 'obermumpf-lighting' ||
             this.name === 'swl-staufen' ||
@@ -2011,35 +2056,37 @@ export class MunicipalFormClient implements ReportingAdapter {
                   ? loadReaCategories
                   : this.name === 'zofingen-infrastructure'
                     ? loadZofingenCategories
-                    : this.name === 'diessenhofen-stadtmelder'
-                      ? loadDiessenhofenCategories
-                      : this.name === 'obermumpf-lighting'
-                        ? loadObermumpfCategories
-                        : this.name === 'elektra-auw'
-                          ? loadAuwCategories
-                          : this.name === 'swl-staufen'
-                            ? loadSwlCategories
-                            : this.name === 'tbseon-egliswil'
-                              ? loadTbseonCategories
-                              : this.name === 'egm-muelligen'
-                                ? loadEgmCategories
-                                : this.name === 'ibw-wohlen-ag'
-                                  ? loadIbwCategories
-                                  : this.name === 'eww-wettingen'
-                                    ? loadEwwCategories
-                                    : isEgsMunicipality(this.name)
-                                      ? loadEgsCategories
-                                      : this.name === 'ewn-neuenhof'
-                                        ? loadEwnCategories
-                                        : this.name === 'rwb-windisch'
-                                          ? loadRwbWindischCategories
-                                          : this.name === 'rwb-ennetbaden'
-                                            ? loadRwbCategories
-                                            : this.name === 'hornet-aarau'
-                                              ? loadHornetCategories
-                                              : this.name === 'tbs-suhr'
-                                                ? loadTbsCategories
-                                                : loadTbgraenichenCategories
+                    : this.name === 'tbw-weinfelden'
+                      ? loadTbwCategories
+                      : this.name === 'diessenhofen-stadtmelder'
+                        ? loadDiessenhofenCategories
+                        : this.name === 'obermumpf-lighting'
+                          ? loadObermumpfCategories
+                          : this.name === 'elektra-auw'
+                            ? loadAuwCategories
+                            : this.name === 'swl-staufen'
+                              ? loadSwlCategories
+                              : this.name === 'tbseon-egliswil'
+                                ? loadTbseonCategories
+                                : this.name === 'egm-muelligen'
+                                  ? loadEgmCategories
+                                  : this.name === 'ibw-wohlen-ag'
+                                    ? loadIbwCategories
+                                    : this.name === 'eww-wettingen'
+                                      ? loadEwwCategories
+                                      : isEgsMunicipality(this.name)
+                                        ? loadEgsCategories
+                                        : this.name === 'ewn-neuenhof'
+                                          ? loadEwnCategories
+                                          : this.name === 'rwb-windisch'
+                                            ? loadRwbWindischCategories
+                                            : this.name === 'rwb-ennetbaden'
+                                              ? loadRwbCategories
+                                              : this.name === 'hornet-aarau'
+                                                ? loadHornetCategories
+                                                : this.name === 'tbs-suhr'
+                                                  ? loadTbsCategories
+                                                  : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -2145,6 +2192,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return ewrRequirements(this.name);
     if (isReaMunicipality(this.name)) return reaRequirements(this.name);
     if (this.name === 'zofingen-infrastructure') return zofingenRequirements();
+    if (this.name === 'tbw-weinfelden') return tbwRequirements();
     if (this.name === 'diessenhofen-stadtmelder') return diessenhofenRequirements();
     if (this.name === 'obermumpf-lighting') return obermumpfRequirements();
     if (this.name === 'elektra-auw') return auwRequirements();
