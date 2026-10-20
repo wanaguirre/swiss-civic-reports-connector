@@ -384,3 +384,21 @@ authority/legal pins share the strict ten-second verifier/permanent cached-peer
 stop, own fixtures only. Copyright conditions preserved, no source copies.
 Dedicated privacy URL referenced but unread. Never automatically retry/recreate/
 change channel after uncertainty.
+
+## Dompierre VD communal road telephone note
+
+`MunicipalFormClient('dompierre-roads')` prepares local French initial optional
+call notes for nonurgent physical maintenance faults of actual communal road
+surfaces at exact BFS5671 points. The municipal voirie page explicitly invites
+road reports to GuillaumeDiserens0788739737; actual2026–2031 authority confirms
+responsibility. Boundary/resident confirmation alone does not prove ownership.
+No danger/active traffic risks/obstructions/accidents/enforcement/cantonal/private
+roads/assets/lighting/water/drainage/gas/waste/trees/billing. No reporter contacts/
+photos/native fields/consent/client/state/payload, calls/email/sending/completion/
+tracking. Phone requiredness/anonymous acceptance/incident privacy/retention/
+country/receipt unknown, no invented privacy URL. Four factual robots/home/
+services/authority pins share strict ten-second verification/permanent cached-peer
+stops; own fixtures only, no municipal page copies. Planned lighting23–05off and
+EauSud/AIR-PRO links do not establish road or lamp-fault coverage. Finance phone
+display/href discrepancy remains separate. Never automatically retry/recreate/
+change channel after uncertainty.

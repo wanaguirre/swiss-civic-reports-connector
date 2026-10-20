@@ -1,4 +1,14 @@
 import {
+  dompierreHomeUrl,
+  dompierreServicesUrl,
+  dompierreAuthorityUrl,
+  dompierreScope,
+  dompierreCategories,
+  dompierreRequirements,
+  assertDompierreSourcesAvailable,
+  loadDompierreCategories,
+} from './dompierre-form.js';
+import {
   chavannesMoudonRoadsUrl,
   chavannesMoudonAuthorityUrl,
   chavannesMoudonLegalUrl,
@@ -1041,6 +1051,13 @@ export const municipalForms = Object.freeze({
     formUrl: chavannesMoudonRoadsUrl,
     reportingUrl: chavannesMoudonRoadsUrl,
   }),
+  'dompierre-roads': Object.freeze({
+    bfsId: 5671,
+    municipality: 'Dompierre (VD)',
+    language: 'fr' as const,
+    formUrl: dompierreServicesUrl,
+    reportingUrl: dompierreServicesUrl,
+  }),
   'saint-sulpice-lighting': Object.freeze({
     bfsId: 5648,
     municipality: 'Saint-Sulpice (VD)',
@@ -1239,6 +1256,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('AVM requires its complete pinned public source manifest.');
   if (name === 'chavannes-moudon-maintenance')
     throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
+  if (name === 'dompierre-roads')
+    throw new Error('Dompierre requires its complete pinned public source manifest.');
   if (name === 'saint-sulpice-lighting')
     throw new Error('SaintSulpice requires its complete pinned public source manifest.');
   if (name === 'bussigny-lighting')
@@ -2035,6 +2054,31 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'dompierre-roads') {
+      this.reportingService = 'Commune de Dompierre VD – routes';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Telephone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt are unknown. No dedicated linked incident policy qualified; no invented privacy URL or Swiss-only/anonymity guarantee. No native fields/consent/client/state/payload/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: dompierreScope,
+        responsibility:
+          'Confirm the exact BFS5671 point and an actual communal road surface with a nonurgent physical maintenance defect. Boundary and resident confirmation alone do not prove ownership. Actual2026–2031 road portfolio and explicit road-report invitation agree. No cantonal/private road or wider lighting/water/waste responsibility inferred.',
+        routing_note:
+          'Guillaume Diserens0788739737 on explicit communal-road report page. Initial optional call note only, no contacts/photos/calls/email/native payload/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit communal road report invitation and published telephone',
+            url: dompierreServicesUrl,
+          },
+          {
+            title: 'Current2026–2031 authority confirms road responsibility',
+            url: dompierreAuthorityUrl,
+          },
+          { title: 'Official Dompierre VD identity and administration', url: dompierreHomeUrl },
+        ],
+      };
+    }
     if (name === 'saint-sulpice-lighting') {
       this.reportingService = 'Commune de Saint-Sulpice – éclairage public';
       this.privacy =
@@ -2453,6 +2497,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
     if (this.name === 'chavannes-moudon-maintenance')
       return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'dompierre-roads')
+      return Promise.resolve(dompierreCategories.map((c) => ({ ...c })));
     if (this.name === 'saint-sulpice-lighting')
       return Promise.resolve(saintSulpiceCategories.map((c) => ({ ...c })));
     if (this.name === 'bussigny-lighting')
@@ -2489,6 +2535,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
     if (this.name === 'chavannes-moudon-maintenance')
       assertChavannesMoudonSourcesAvailable(this.request);
+    if (this.name === 'dompierre-roads') assertDompierreSourcesAvailable(this.request);
     if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
     if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
     if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
@@ -2617,6 +2664,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'chavannes-moudon-maintenance') {
             const value = await loadChavannesMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'dompierre-roads') {
+            const value = await loadDompierreCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2855,6 +2916,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
+    if (this.name === 'dompierre-roads') return dompierreRequirements();
     if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
     if (this.name === 'bussigny-lighting') return bussignyRequirements();
     if (this.name === 'lavigny-molok') return lavignyRequirements();
