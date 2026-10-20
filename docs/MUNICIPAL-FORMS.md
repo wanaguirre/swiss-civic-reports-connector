@@ -1778,3 +1778,34 @@ acceptance/receipt requirements remain unknown; physical access cards are
 not report login. Not a complete official form. Never automatically retry,
 recreate or change channel after uncertainty; no office/member/substitute/
 phone/provider fallback. AIEHJ water-network responsibilities are separate.
+
+## L’Abbaye local lighting facts
+
+`labbaye-lighting-note` (BFS5871) prepares incomplete local French facts for
+a nonurgent nonworking or intermittent fault of an actual communal streetlight.
+The official lighting page states municipal network ownership and asks residents
+to contact the communal office at 021 564 20 33 or info@labbaye.ch for failures,
+giving the village, street and candelabrum number if possible. The three source-
+listed villages are L’Abbaye, Le Pont and Les Bioux. No LED technology is assumed.
+
+An exact municipality point and separate confirmation of the actual communal
+asset, real village and nonurgent failure are required. Boundary/village choice
+alone do not prove ownership or lamp location. Village/street facts come from
+the invitation; fault choices and limits are local worksheet rules, not native
+validation. Actual lamp number only if known; unknown stays absent, never
+invented or zero. Brightness/policy adjustments, planned extinction, private
+assets, other services and immediate hazards are excluded.
+
+Five fixed raw URL/digest pins cover robots, home, lighting, administration and
+presentation. Ten-second shared pacing and permanent source-failure stops
+invalidate cached peers. Contact form, native clients, state, schema, validation
+and external providers remain unused. The published 2021–2026 executive roster
+and October 2026 election notices do not establish a verified current term or
+personal recipient. Only factual paraphrases, URL/digests and independent
+fixtures are distributed.
+
+No reporter contacts/photos/native consent/payload/mail preparation/calls/email
+sending/external completion/tracking. Identity/photo/privacy/retention/country/
+guest acceptance/receipt remain unknown; email exposes sender metadata. This
+is not a complete official form. Never automatically retry, recreate or change
+channel after uncertainty; no office/member/substitute/phone/provider fallback.

@@ -1,4 +1,15 @@
 import {
+  labbayeLightingUrl,
+  labbayeAdministrationUrl,
+  labbayePresentationUrl,
+  labbayeHomeUrl,
+  labbayeScope,
+  labbayeCategories,
+  labbayeRequirements,
+  assertLabbayeSourcesAvailable,
+  loadLabbayeCategories,
+} from './labbaye-form.js';
+import {
   joratMenthueWasteUrl,
   joratMenthueAuthorityUrl,
   joratMenthueAdministrationUrl,
@@ -1188,6 +1199,13 @@ export const municipalForms = Object.freeze({
     formUrl: joratMenthueWasteUrl,
     reportingUrl: joratMenthueWasteUrl,
   }),
+  'labbaye-lighting-note': Object.freeze({
+    bfsId: 5871,
+    municipality: "L'Abbaye",
+    language: 'fr' as const,
+    formUrl: labbayeLightingUrl,
+    reportingUrl: labbayeLightingUrl,
+  }),
   'romainmotier-lighting-note': Object.freeze({
     bfsId: 5761,
     municipality: 'Romainmôtier-Envy',
@@ -1438,6 +1456,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Coppet requires its complete pinned public source manifest.');
   if (name === 'jorat-menthue-molok-note')
     throw new Error('JoratMenthue requires its complete pinned public source manifest.');
+  if (name === 'labbaye-lighting-note')
+    throw new Error('Labbaye requires its complete pinned public source manifest.');
   if (name === 'romainmotier-lighting-note')
     throw new Error('Romainmotier requires its complete pinned public source manifest.');
   if (name === 'founex-lighting-note')
@@ -2410,6 +2430,33 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'labbaye-lighting-note') {
+      this.reportingService = 'Commune de L’Abbaye – éclairage public';
+      this.privacy =
+        'Local facts only, no reporter contacts/photos/native consent or transfer. Email exposes sender metadata; official identity/photo/privacy/retention/country/guest acceptance/receipt remain unknown. No native form/client/state/payload/mail preparation/calls/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: labbayeScope,
+        responsibility:
+          'Exact BFS5871 point and separately confirmed actual communal public streetlight, real village L’Abbaye/Le Pont/Les Bioux and nonurgent failure. Municipal lighting page explicitly states communal network ownership; boundary/village alone do not prove actual lamp ownership/location. No technology assumption. Published 2021–2026 executive roster/election chronology not a current personal recipient mandate.',
+        routing_note:
+          'Lighting page explicitly asks lamp failures to the communal office at 021 564 20 33 or info@labbaye.ch with actual village, street and candelabrum number if possible. This profile prepares only local nonworking/intermittent facts, not a complete official form or native validation. No email preparation, calls, contacts/photos/consent/native client/state/payload/sending/completion/tracking. Actual identifiers only if known, never invent or zero. Privacy/identity/retention/country/guest/receipt unknown. Contact form remains unread; no alternative-channel fallback. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title:
+              'Explicit communal ownership, lamp-failure invitation and requested location facts',
+            url: labbayeLightingUrl,
+          },
+          {
+            title: 'Published communal office and administrative contacts',
+            url: labbayeAdministrationUrl,
+          },
+          { title: 'Three actual villages and municipality context', url: labbayePresentationUrl },
+          { title: 'Municipal identity, office and recent election notices', url: labbayeHomeUrl },
+        ],
+      };
+    }
     if (name === 'romainmotier-lighting-note') {
       this.reportingService = 'Commune de Romainmôtier-Envy – éclairage public';
       this.privacy =
@@ -2977,6 +3024,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
     if (this.name === 'jorat-menthue-molok-note')
       return Promise.resolve(joratMenthueCategories.map((c) => ({ ...c })));
+    if (this.name === 'labbaye-lighting-note')
+      return Promise.resolve(labbayeCategories.map((c) => ({ ...c })));
     if (this.name === 'romainmotier-lighting-note')
       return Promise.resolve(romainmotierCategories.map((c) => ({ ...c })));
     if (this.name === 'founex-lighting-note')
@@ -3030,6 +3079,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
     if (this.name === 'jorat-menthue-molok-note') assertJoratMenthueSourcesAvailable(this.request);
+    if (this.name === 'labbaye-lighting-note') assertLabbayeSourcesAvailable(this.request);
     if (this.name === 'romainmotier-lighting-note')
       assertRomainmotierSourcesAvailable(this.request);
     if (this.name === 'founex-lighting-note') assertFounexSourcesAvailable(this.request);
@@ -3235,6 +3285,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'jorat-menthue-molok-note') {
             const value = await loadJoratMenthueCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'labbaye-lighting-note') {
+            const value = await loadLabbayeCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3562,6 +3626,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'coppet-lighting-note') return coppetRequirements();
     if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
+    if (this.name === 'labbaye-lighting-note') return labbayeRequirements();
     if (this.name === 'romainmotier-lighting-note') return romainmotierRequirements();
     if (this.name === 'founex-lighting-note') return founexRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
