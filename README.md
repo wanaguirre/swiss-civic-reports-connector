@@ -308,3 +308,23 @@ providers, legal disclosure and possible foreign transfers; malformed policy
 URLs/emails are never destinations. Incident retention/country/receipt unknown.
 Newsletter antispam is retained in source bytes but never executed. No automatic
 retry, recreation or channel change after uncertainty.
+
+## Bussigny provider lighting telephone note
+
+`MunicipalFormClient('bussigny-lighting')` prepares local French text for a
+nonurgent fault of an actual Romande Energie public streetlight at its exact
+Bussigny VD5624 point. The municipality transferred lighting in2020. Municipal
+preferred email instructions (real mast number/address; recipient stays cloaked)
+and the independently published provider lighting-only phone0800260000 remain
+distinct. This is an initial optional phone note, never an automatic channel
+change after a prior report. A visible mast reference is useful local context,
+not a verified phone requirement. No urgent danger/wires/sparks, network/domestic
+outages, private lamps, connections, billing, roads, water, drainage or pollution.
+No contacts/photos/native client/state/payload, sending, completion or tracking.
+Phone requirements/anonymous acceptance and incident privacy/retention/country/
+receipt remain unknown. General policy allows group/provider/authority sharing
+and possible international processing. Eight immutable robots/ownership/authority/
+legal/provider/privacy URL/digest pins share ten-second starts and permanent
+failure stops before cached peers. No copied municipal/provider text or bundles
+in code/fixtures; independently authored verifier tests and private actual-capture
+verification are separate from real municipal acceptance. No automatic retry.

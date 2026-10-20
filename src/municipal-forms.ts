@@ -1,4 +1,16 @@
 import {
+  bussignyLightingUrl,
+  bussignyMunicipalityUrl,
+  bussignyPrivacyUrl,
+  bussignyProviderUrl,
+  bussignyLegalUrl,
+  bussignyScope,
+  bussignyCategories,
+  bussignyRequirements,
+  assertBussignySourcesAvailable,
+  loadBussignyCategories,
+} from './bussigny-form.js';
+import {
   lavignyWasteUrl,
   lavignyMunicipalityUrl,
   lavignyPrivacyUrl,
@@ -954,6 +966,13 @@ export const municipalForms = Object.freeze({
     formUrl: sieReportUrl,
     reportingUrl: sieReportUrl,
   }),
+  'bussigny-lighting': Object.freeze({
+    bfsId: 5624,
+    municipality: 'Bussigny',
+    language: 'fr' as const,
+    formUrl: bussignyLightingUrl,
+    reportingUrl: bussignyLightingUrl,
+  }),
   'lavigny-molok': Object.freeze({
     bfsId: 5637,
     municipality: 'Lavigny',
@@ -1134,6 +1153,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (isSieMunicipality(name))
     throw new Error('SIE requires its complete pinned public source manifest.');
+  if (name === 'bussigny-lighting')
+    throw new Error('Bussigny requires its complete pinned public source manifest.');
   if (name === 'lavigny-molok')
     throw new Error('Lavigny requires its complete pinned public source manifest.');
   if (name === 'rivaz-water')
@@ -1873,6 +1894,36 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'bussigny-lighting') {
+      this.reportingService = 'Romande Energie – éclairage public (Bussigny)';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident retention/country/receipt remain unknown. Provider policy allows group/provider/authority sharing and possible international processing. No native client/state/payload, sending, external completion or tracking. Municipal preferred email and independent provider phone are distinct; never switch channels automatically after uncertainty.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: bussignyScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual Romande Energie public streetlight at its precise Bussigny point. Boundary and resident confirmation alone do not prove ownership. Municipal network sold to the provider in2020; no water, drainage, roads or neighbouring supplier scope.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title: 'Municipal lighting ownership and preferred email instructions',
+            url: bussignyLightingUrl,
+          },
+          { title: 'Independent provider lighting-only phone route', url: bussignyProviderUrl },
+          { title: 'Current municipal authority', url: bussignyMunicipalityUrl },
+          {
+            title: 'Provider general privacy; incident-specific limits unknown',
+            url: bussignyPrivacyUrl,
+          },
+          {
+            title: 'Municipal source-use conditions; no copied snapshots published',
+            url: bussignyLegalUrl,
+          },
+        ],
+      };
+    }
     if (name === 'lavigny-molok') {
       this.reportingService = 'Commune de Lavigny – Administration / déchets';
       this.privacy =
@@ -2230,6 +2281,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (this.name === 'bussigny-lighting')
+      return Promise.resolve(bussignyCategories.map((c) => ({ ...c })));
     if (this.name === 'lavigny-molok')
       return Promise.resolve(lavignyCategories.map((c) => ({ ...c })));
     if (this.name === 'rivaz-water') return Promise.resolve(rivazCategories.map((c) => ({ ...c })));
@@ -2259,6 +2312,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
     if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
+    if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
     if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
     if (this.name === 'rivaz-water') assertRivazSourcesAvailable(this.request);
     if (this.name === 'grandson-voirie') assertGrandsonSourcesAvailable(this.request);
@@ -2357,6 +2411,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (isSieMunicipality(this.name)) {
             const value = await loadSieCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'bussigny-lighting') {
+            const value = await loadBussignyCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2565,6 +2633,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
+    if (this.name === 'bussigny-lighting') return bussignyRequirements();
     if (this.name === 'lavigny-molok') return lavignyRequirements();
     if (this.name === 'rivaz-water') return rivazRequirements();
     if (this.name === 'grandson-voirie') return grandsonRequirements();

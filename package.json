@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.85",
+  "version": "0.4.0-rc.86",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -396,6 +396,10 @@
     "./lavigny-form": {
       "types": "./dist/lavigny-form.d.ts",
       "import": "./dist/lavigny-form.js"
+    },
+    "./bussigny-form": {
+      "types": "./dist/bussigny-form.d.ts",
+      "import": "./dist/bussigny-form.js"
     }
   }
 }
