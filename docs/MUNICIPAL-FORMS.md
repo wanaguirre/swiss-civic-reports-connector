@@ -1425,3 +1425,24 @@ PDF version25August2024 is a separate manual route to netz@ewr.ch with place/dat
 Diessenhofen (BFS4545), `diessenhofen-stadtmelder`, supports local text-only preparation for nonurgent observations about confirmed municipal roads/public space at the exact point. Stadtmelder is general feedback, with no native damage taxonomy. Native required private first/last names, street, postcode/locality and email remain outside AI; house number and phone are optional. No photos. Useful description, precise location, responsibility confirmation, policy acknowledgement and text caps are local rules. The public privacy policy describes storage for processing/follow-up but no fixed incident retention. Source verification reads the full form builder/all scripts, official works duties, privacy and two inert clients with pacing and permanent shared failure stops. It never executes or synthesizes interaction counters, fills traps, constructs native payloads or sends. `/route/` is robots-excluded; native server support, acceptance and reconciliation remain unverified. Sending needs supported transport and a genuine approved report or authorized test environment. Never retry or switch channels after an uncertain outcome.
 
 TBW Weinfelden (BFS4946), `tbw-weinfelden`, supports local text-only preparation for a confirmed TBW-maintained city streetlight observed unlit outside normal 00:15–05:15 shutdown. The official lighting article explicitly links the general contact form for this class; category, precise point, useful description and asset/time confirmations are local requirements. Required private salutation, names, full street address, postcode/locality, mobile and email remain outside AI; private phone and postbox optional. Native privacy acknowledgement is required. No photos. The 22 September 2026 policy describes form handling/answers and hosting, with broader service/legal sharing and possible worldwide processing; no fixed incident retention. Eighteen paced GETs verify the complete form, all scripts, dynamic component markers, mandate, privacy, shutdown hours and inert public clients, with permanent shared failure stops before cached peers. Opaque TYPO3 state, dynamic trap names and CSP nonces are discarded, never executed or reused. No native payload, sending, external completion or tracking. The selected contact HTML has no observed active CAPTCHA, but behavioral acceptance is unverified; the portal's reCAPTCHA policy concerns another service. Supported transport and a genuine approved report or authorized test environment remain necessary for sending. Never retry or change channels after an uncertain outcome.
+
+## Crissier SIE lighting note
+
+`MunicipalFormClient('sie-crissier')` prepares a local French telephone note for
+a nonurgent fault of a confirmed SIE-maintained municipal luminaire at an exact
+BFS5583 point. Provider instructions explicitly name Crissier, Chavannes, Écublens
+and Renens; this profile only covers Crissier. One-to-six-digit real lamp number
+is optional; retain the actual location when unknown, never invent a number.
+
+No reporter contacts/photos are collected. SIE asks callers to leave contacts;
+the resident adds them in a separately chosen call. No anonymous acceptance claim.
+Dedicated instructions/municipality phone0216315111 conflicts with FAQ0216315000,
+preserved without resolution. Provider privacy claims Swiss storage/no foreign
+transmission while listing processors and foreign-authority exceptions; no fixed
+incident retention or absolute foreign-processing assurance. Fifteen-day repair
+text is not a durable receipt. Five public policy/report/FAQ/mandate/privacy pins
+share ten-second starts, strict MIME/UTF8/size/no-redirect/no-credential guards and
+a permanent context stop on drift/failure before cached peers. No requests to the
+stopped Crissier host or native/security clients. No calls, email, native payload,
+sending, external completion or tracking; all send flags remain ineffective.
+Never automatically retry, recreate or switch channels after uncertainty.

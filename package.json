@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.81",
+  "version": "0.4.0-rc.82",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -384,6 +384,10 @@
     "./grandson-form": {
       "types": "./dist/grandson-form.d.ts",
       "import": "./dist/grandson-form.js"
+    },
+    "./sie-form": {
+      "types": "./dist/sie-form.d.ts",
+      "import": "./dist/sie-form.js"
     }
   }
 }

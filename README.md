@@ -238,3 +238,24 @@ through `MunicipalFormClient('grandson-voirie')`: exact municipal asset and poin
 no reporter contacts or photos, no native payload, sending or tracking. The
 published works fault invitation supports preparation only; native requirements,
 incident privacy and acceptance remain unverified. See [contract details](docs/MUNICIPAL-FORMS.md).
+
+## Crissier SIE lighting note
+
+`MunicipalFormClient('sie-crissier')` prepares a local French telephone note for
+a nonurgent fault of a confirmed SIE-maintained municipal luminaire at an exact
+BFS5583 point. Provider instructions explicitly name Crissier, Chavannes, Écublens
+and Renens; this profile only covers Crissier. One-to-six-digit real lamp number
+is optional; retain the actual location when unknown, never invent a number.
+
+No reporter contacts/photos are collected. SIE asks callers to leave contacts;
+the resident adds them in a separately chosen call. No anonymous acceptance claim.
+Dedicated instructions/municipality phone0216315111 conflicts with FAQ0216315000,
+preserved without resolution. Provider privacy claims Swiss storage/no foreign
+transmission while listing processors and foreign-authority exceptions; no fixed
+incident retention or absolute foreign-processing assurance. Fifteen-day repair
+text is not a durable receipt. Five public policy/report/FAQ/mandate/privacy pins
+share ten-second starts, strict MIME/UTF8/size/no-redirect/no-credential guards and
+a permanent context stop on drift/failure before cached peers. No requests to the
+stopped Crissier host or native/security clients. No calls, email, native payload,
+sending, external completion or tracking; all send flags remain ineffective.
+Never automatically retry, recreate or switch channels after uncertainty.
