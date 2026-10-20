@@ -1717,3 +1717,33 @@ route. Email exposes sender metadata; contact/photo/privacy/retention/country/
 acceptance/receipt unknown. No contacts/photos/consent/native payload/calls/
 email sending/completion/tracking. Never automatically retry/recreate/change
 channel after uncertainty; no staff/office/web/provider fallback.
+
+## Romainmôtier-Envy local LED-lighting facts
+
+`romainmotier-lighting-note` (BFS5761) prepares incomplete local French facts
+for nonurgent nonworking/intermittent faults of actual communal public LED
+streetlights. The municipal notice dated 2 September 2026 explicitly invites
+LED problems and adjustment requests to cedric.rey@romainmotier-envy.ch with
+location, observed problem and reasons for an adjustment. This first profile
+excludes adjustment requests. No email preparation, transport or calls.
+
+Exact municipality point and separate communal-LED/nonurgent confirmation are
+required. Street and fault kind are local rules; real street/lamp identifiers
+remain optional and absent when unknown, never invented or replaced by zero.
+The notice names Cédric Rey; the directory lists Michel Chabloz for lighting
+and Rey as substitute. Do not silently replace the explicit recipient or infer
+a current executive term. Boundary confirmation alone does not prove ownership.
+
+Five fixed raw URL/digest pins cover robots, the dated invitation on the home
+page, authority, privacy and legal notice. Ten-second shared pacing and permanent
+source-failure stops invalidate cached peers. Only factual paraphrases/digests
+and own offline fixtures are distributed; no municipal pages, newsletter keys
+or clients. Contact/newsletter/cookie/administrative clients and native state
+are not executed or used as report requirements.
+
+No contacts/photos/native consent/payload, sending, external completion or
+tracking. Email sender metadata, identity/photo/privacy/retention/country,
+anonymous acceptance and receipt remain unresolved. General site analytics
+may process outside Switzerland; administrative-ID deletion rules do not apply
+to email incidents. Never automatically retry, recreate or change channel after
+uncertainty; no office, substitute, website, phone or provider fallback.

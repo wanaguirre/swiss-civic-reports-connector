@@ -1,4 +1,15 @@
 import {
+  romainmotierLightingUrl,
+  romainmotierAuthorityUrl,
+  romainmotierPrivacyUrl,
+  romainmotierLegalUrl,
+  romainmotierScope,
+  romainmotierCategories,
+  romainmotierRequirements,
+  assertRomainmotierSourcesAvailable,
+  loadRomainmotierCategories,
+} from './romainmotier-form.js';
+import {
   founexLightingUrl,
   founexAuthorityUrl,
   founexServicesUrl,
@@ -1159,6 +1170,13 @@ export const municipalForms = Object.freeze({
     formUrl: coppetLightingUrl,
     reportingUrl: coppetLightingUrl,
   }),
+  'romainmotier-lighting-note': Object.freeze({
+    bfsId: 5761,
+    municipality: 'Romainmôtier-Envy',
+    language: 'fr' as const,
+    formUrl: romainmotierLightingUrl,
+    reportingUrl: romainmotierLightingUrl,
+  }),
   'founex-lighting-note': Object.freeze({
     bfsId: 5717,
     municipality: 'Founex',
@@ -1400,6 +1418,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Begnins requires its complete pinned public source manifest.');
   if (name === 'coppet-lighting-note')
     throw new Error('Coppet requires its complete pinned public source manifest.');
+  if (name === 'romainmotier-lighting-note')
+    throw new Error('Romainmotier requires its complete pinned public source manifest.');
   if (name === 'founex-lighting-note')
     throw new Error('Founex requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
@@ -2341,6 +2361,32 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'romainmotier-lighting-note') {
+      this.reportingService = 'Commune de Romainmôtier-Envy – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: romainmotierScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public LED streetlight at its exact BFS5761 point. Boundary and resident confirmation alone do not prove ownership. The 2 September 2026 notice explicitly names Cédric Rey for LED reports; directory lighting portfolio is Michel Chabloz, Cédric Rey substitute. No silent recipient replacement or current executive-term claim. No private asset, emergency, brightness-adjustment or wider service coverage inferred.',
+        routing_note:
+          'Dated municipal notice invites LED problems by email to cedric.rey@romainmotier-envy.ch or telephone with location and observed problem; reasons needed for adjustment requests, which this first worksheet excludes. Local nonworking/intermittent facts only, not a complete official form. No email preparation/transport or calls. Sender metadata and email identity/photo/privacy/retention/country/acceptance/receipt unresolved. Website, administrative and newsletter fields not inherited. Actual street/lamp numbers only if known. No contacts/photos/native consent/client/state/payload/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty; no office/substitute/website/phone/provider fallback.',
+        sources: [
+          { title: 'Dated municipal LED lighting invitation', url: romainmotierLightingUrl },
+          {
+            title: 'Published authority and lighting substitute roles; term not explicit',
+            url: romainmotierAuthorityUrl,
+          },
+          {
+            title: 'General site privacy; email incident limits unresolved',
+            url: romainmotierPrivacyUrl,
+          },
+          { title: 'Municipal legal and source-use notice', url: romainmotierLegalUrl },
+        ],
+      };
+    }
     if (name === 'founex-lighting-note') {
       this.reportingService = 'Commune de Founex – éclairage public';
       this.privacy =
@@ -2880,6 +2926,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
     if (this.name === 'coppet-lighting-note')
       return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
+    if (this.name === 'romainmotier-lighting-note')
+      return Promise.resolve(romainmotierCategories.map((c) => ({ ...c })));
     if (this.name === 'founex-lighting-note')
       return Promise.resolve(founexCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
@@ -2930,6 +2978,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-prangins-lighting-note') assertPranginsSourcesAvailable(this.request);
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
+    if (this.name === 'romainmotier-lighting-note')
+      assertRomainmotierSourcesAvailable(this.request);
     if (this.name === 'founex-lighting-note') assertFounexSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
     if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
@@ -3119,6 +3169,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'coppet-lighting-note') {
             const value = await loadCoppetCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'romainmotier-lighting-note') {
+            const value = await loadRomainmotierCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3431,6 +3495,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-prangins-lighting-note') return pranginsRequirements();
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'coppet-lighting-note') return coppetRequirements();
+    if (this.name === 'romainmotier-lighting-note') return romainmotierRequirements();
     if (this.name === 'founex-lighting-note') return founexRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
     if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
