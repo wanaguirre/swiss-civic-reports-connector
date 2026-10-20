@@ -31,6 +31,16 @@ import {
   assertZofingenSourcesAvailable,
 } from './zofingen-form.js';
 import {
+  diessenhofenFormUrl,
+  diessenhofenPrivacyUrl,
+  diessenhofenReferralUrl,
+  diessenhofenScope,
+  diessenhofenCategories,
+  diessenhofenRequirements,
+  loadDiessenhofenCategories,
+  assertDiessenhofenSourcesAvailable,
+} from './diessenhofen-form.js';
+import {
   obermumpfFormUrl,
   obermumpfPrivacyUrl,
   obermumpfReferralUrl,
@@ -411,6 +421,13 @@ export const municipalForms = Object.freeze({
     language: 'de' as const,
     formUrl: zofingenFormUrl,
     reportingUrl: zofingenFormUrl,
+  }),
+  'diessenhofen-stadtmelder': Object.freeze({
+    bfsId: 4545,
+    municipality: 'Diessenhofen',
+    language: 'de' as const,
+    formUrl: diessenhofenFormUrl,
+    reportingUrl: diessenhofenFormUrl,
   }),
   'obermumpf-lighting': Object.freeze({
     bfsId: 4256,
@@ -940,6 +957,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'zofingen-infrastructure')
     throw new Error('Use the complete pinned Zofingen source contract.');
   if (name === 'swl-staufen') throw new Error('Use the complete pinned SWL source contract.');
+  if (name === 'diessenhofen-stadtmelder')
+    throw new Error('Use the complete pinned Diessenhofen source contract.');
   if (name === 'obermumpf-lighting')
     throw new Error('Use the complete pinned Obermumpf source contract.');
   if (name === 'elektra-auw')
@@ -1836,6 +1855,24 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'diessenhofen-stadtmelder') {
+      this.reportingService = 'Stadtgemeinde Diessenhofen – Stadtmelder';
+      this.privacy =
+        'Private names, street, optional house number, postcode/locality, email and optional phone remain outside AI. No photos. Policy stores contact-form enquiries for processing and follow-up; no fixed incident retention. Local policy-read acknowledgement is not native consent. No client/protection execution, payload, external completion or sending; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: diessenhofenScope,
+        sources: [
+          { title: 'Municipal general feedback form', url: diessenhofenFormUrl },
+          {
+            title: 'Official municipal public-space maintenance duties',
+            url: diessenhofenReferralUrl,
+          },
+          { title: 'Municipal privacy policy', url: diessenhofenPrivacyUrl },
+        ],
+      };
+    }
     if (name === 'obermumpf-lighting') {
       this.reportingService = 'Gemeinde Obermumpf – Strassenbeleuchtung';
       this.privacy =
@@ -1911,6 +1948,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (this.name === 'zofingen-infrastructure')
       return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
+    if (this.name === 'diessenhofen-stadtmelder')
+      return Promise.resolve(diessenhofenCategories.map((c) => ({ ...c })));
     if (this.name === 'obermumpf-lighting')
       return Promise.resolve(obermumpfCategories.map((c) => ({ ...c })));
     if (this.name === 'elektra-auw') return Promise.resolve(auwCategories.map((c) => ({ ...c })));
@@ -1929,6 +1968,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
     if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
     if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
+    if (this.name === 'diessenhofen-stadtmelder') assertDiessenhofenSourcesAvailable(this.request);
     if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
     if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
     if (this.name === 'swl-staufen') assertSwlSourcesAvailable(this.request);
@@ -1948,6 +1988,7 @@ export class MunicipalFormClient implements ReportingAdapter {
             isEwrMunicipality(this.name) ||
             isReaMunicipality(this.name) ||
             this.name === 'zofingen-infrastructure' ||
+            this.name === 'diessenhofen-stadtmelder' ||
             this.name === 'obermumpf-lighting' ||
             this.name === 'swl-staufen' ||
             this.name === 'elektra-auw' ||
@@ -1970,33 +2011,35 @@ export class MunicipalFormClient implements ReportingAdapter {
                   ? loadReaCategories
                   : this.name === 'zofingen-infrastructure'
                     ? loadZofingenCategories
-                    : this.name === 'obermumpf-lighting'
-                      ? loadObermumpfCategories
-                      : this.name === 'elektra-auw'
-                        ? loadAuwCategories
-                        : this.name === 'swl-staufen'
-                          ? loadSwlCategories
-                          : this.name === 'tbseon-egliswil'
-                            ? loadTbseonCategories
-                            : this.name === 'egm-muelligen'
-                              ? loadEgmCategories
-                              : this.name === 'ibw-wohlen-ag'
-                                ? loadIbwCategories
-                                : this.name === 'eww-wettingen'
-                                  ? loadEwwCategories
-                                  : isEgsMunicipality(this.name)
-                                    ? loadEgsCategories
-                                    : this.name === 'ewn-neuenhof'
-                                      ? loadEwnCategories
-                                      : this.name === 'rwb-windisch'
-                                        ? loadRwbWindischCategories
-                                        : this.name === 'rwb-ennetbaden'
-                                          ? loadRwbCategories
-                                          : this.name === 'hornet-aarau'
-                                            ? loadHornetCategories
-                                            : this.name === 'tbs-suhr'
-                                              ? loadTbsCategories
-                                              : loadTbgraenichenCategories
+                    : this.name === 'diessenhofen-stadtmelder'
+                      ? loadDiessenhofenCategories
+                      : this.name === 'obermumpf-lighting'
+                        ? loadObermumpfCategories
+                        : this.name === 'elektra-auw'
+                          ? loadAuwCategories
+                          : this.name === 'swl-staufen'
+                            ? loadSwlCategories
+                            : this.name === 'tbseon-egliswil'
+                              ? loadTbseonCategories
+                              : this.name === 'egm-muelligen'
+                                ? loadEgmCategories
+                                : this.name === 'ibw-wohlen-ag'
+                                  ? loadIbwCategories
+                                  : this.name === 'eww-wettingen'
+                                    ? loadEwwCategories
+                                    : isEgsMunicipality(this.name)
+                                      ? loadEgsCategories
+                                      : this.name === 'ewn-neuenhof'
+                                        ? loadEwnCategories
+                                        : this.name === 'rwb-windisch'
+                                          ? loadRwbWindischCategories
+                                          : this.name === 'rwb-ennetbaden'
+                                            ? loadRwbCategories
+                                            : this.name === 'hornet-aarau'
+                                              ? loadHornetCategories
+                                              : this.name === 'tbs-suhr'
+                                                ? loadTbsCategories
+                                                : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -2102,6 +2145,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return ewrRequirements(this.name);
     if (isReaMunicipality(this.name)) return reaRequirements(this.name);
     if (this.name === 'zofingen-infrastructure') return zofingenRequirements();
+    if (this.name === 'diessenhofen-stadtmelder') return diessenhofenRequirements();
     if (this.name === 'obermumpf-lighting') return obermumpfRequirements();
     if (this.name === 'elektra-auw') return auwRequirements();
     if (this.name === 'tbseon-egliswil') return tbseonRequirements();
