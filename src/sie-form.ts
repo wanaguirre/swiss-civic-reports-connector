@@ -12,11 +12,32 @@ export const sieCategories = Object.freeze([
     service_name: 'Éclairage communal SIE – note téléphonique',
   }),
 ]);
-export const sieScope =
-  'Local French telephone-note preparation for a nonurgent fault of an actual SIE-maintained municipal luminaire at its confirmed point in Crissier VD (BFS5583). SIE explicitly identifies its four municipal lighting networks and invites telephone fault observations; this profile is limited to Crissier. Provide a real lamp number of one to six digits when known, otherwise its actual location; never invent an identifier. The provider asks callers to leave contact details, but no exact native contact fields or working guest online form are qualified. This local note collects no reporter contacts or photos; add callback details yourself during a separately chosen call. This is not anonymous municipal acceptance. Boundary and resident confirmation do not independently prove ownership. Excludes private lamps, neighbouring municipalities, electricity outages, emergencies and immediate danger. No calls, email, native payload, sending, external completion or tracking.';
+export const sieMunicipalities = Object.freeze({
+  'sie-crissier': Object.freeze({ bfsId: 5583, municipality: 'Crissier' }),
+  'sie-renens': Object.freeze({ bfsId: 5591, municipality: 'Renens (VD)' }),
+  'sie-chavannes': Object.freeze({ bfsId: 5627, municipality: 'Chavannes-près-Renens' }),
+  'sie-ecublens': Object.freeze({ bfsId: 5635, municipality: 'Ecublens (VD)' }),
+});
+export type SieMunicipality = keyof typeof sieMunicipalities;
+export function isSieMunicipality(name: string): name is SieMunicipality {
+  return Object.hasOwn(sieMunicipalities, name);
+}
+function sieIdentity(name: SieMunicipality) {
+  if (!isSieMunicipality(name)) throw new Error('Unsupported SIE municipality.');
+  return sieMunicipalities[name];
+}
+export function sieConfirmation(name: SieMunicipality = 'sie-crissier'): string {
+  return `Nonurgent fault of actual SIE-maintained municipal luminaire in ${sieIdentity(name).municipality} confirmed`;
+}
+export function sieScopeFor(name: SieMunicipality = 'sie-crissier'): string {
+  const profile = sieIdentity(name);
+  return `Local French telephone-note preparation for a nonurgent fault of an actual SIE-maintained municipal luminaire at its confirmed point in ${profile.municipality} (BFS${profile.bfsId}). SIE explicitly identifies its four municipal lighting networks and invites telephone fault observations; this profile is limited to ${profile.municipality}. Provide a real lamp number of one to six digits when known, otherwise its actual location; never invent an identifier. The provider asks callers to leave contact details, but no exact native contact fields or working guest online form are qualified. This local note collects no reporter contacts or photos; add callback details yourself during a separately chosen call. This is not anonymous municipal acceptance. Boundary and resident confirmation do not independently prove ownership. Excludes private lamps, neighbouring municipalities, electricity outages, emergencies and immediate danger. No calls, email, native payload, sending, external completion or tracking.`;
+}
+/** Backwards-compatible default remains the original Crissier profile. */
+export const sieScope = sieScopeFor();
 const changed = () =>
   new Error(
-    'The SIE Crissier lighting sources have changed or are unavailable. Preparation is paused.',
+    'The shared SIE lighting sources have changed or are unavailable. Preparation is paused.',
   );
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 export const sieSourcePins = Object.freeze([
@@ -46,7 +67,7 @@ export const sieSourcePins = Object.freeze([
     plain: false,
   }),
 ]);
-/** Full public bytes are significant, including contradictory phone/privacy statements. No native form/state/security clients or stopped Crissier host are requested. */
+/** Full public bytes are significant, including contradictory phone/privacy statements. No native form/state/security clients or stopped municipal hosts are requested. */
 export function inspectSieSource(url: string, body: string): void {
   const pin = sieSourcePins.find((p) => p.url === url);
   if (!pin || Buffer.byteLength(body) > 1_000_000 || hash(body) !== pin.sha256) throw changed();
@@ -138,10 +159,13 @@ export async function verifySieSources(
   }
 }
 export const loadSieCategories = verifySieSources;
-export function sieRequirements(): Record<string, Requirements> {
+export function sieRequirements(
+  name: SieMunicipality = 'sie-crissier',
+): Record<string, Requirements> {
+  const profile = sieIdentity(name);
   return {
     [sieCategory]: {
-      scope: sieScope,
+      scope: sieScopeFor(name),
       photo_required: false,
       max_photos: 0,
       email_required: false,
@@ -151,17 +175,14 @@ export function sieRequirements(): Record<string, Requirements> {
       contact_fields: [],
       description_max_length: 4000,
       location_label_max_length: 250,
-      bodies: ['SIE SA – Éclairage communal de Crissier'],
+      bodies: [`SIE SA – Éclairage communal de ${profile.municipality}`],
       extra_fields: [
         {
           code: 'public_asset_confirmed',
-          description:
-            'Confirm a nonurgent fault of an actual SIE-maintained municipal luminaire in Crissier',
+          description: `Confirm a nonurgent fault of an actual SIE-maintained municipal luminaire in ${profile.municipality}`,
           required: true,
           datatype: 'string',
-          values: [
-            'Nonurgent fault of actual SIE-maintained municipal luminaire in Crissier confirmed',
-          ],
+          values: [sieConfirmation(name)],
         },
         {
           code: 'lamp_number',
@@ -173,8 +194,11 @@ export function sieRequirements(): Record<string, Requirements> {
         },
       ],
       notes: [
-        'Note téléphonique locale pour une panne non urgente d’un luminaire communal effectivement entretenu par SIE, au point précis à Crissier. Indiquer le numéro réel du luminaire (1 à 6 chiffres) s’il est connu, sinon son emplacement exact. Ni lampes privées, communes voisines, coupures de réseau, urgences ou danger immédiat. La limite communale et votre confirmation ne prouvent pas indépendamment la propriété.',
-        'La page dédiée SIE et la commune indiquent le 021 631 51 11; la FAQ indique plutôt le 021 631 50 00. Cette différence reste non résolue. SIE demande de laisser vos coordonnées; cette note ne les recueille pas. Vous devrez les donner vous-même lors d’un éventuel appel choisi séparément. Aucun envoi ni acceptation anonyme vérifiée. La commune mentionne ep@sie.ch, sans contrat d’envoi ou d’accusé vérifié.',
+        `Note téléphonique locale pour une panne non urgente d’un luminaire communal effectivement entretenu par SIE, au point précis à ${profile.municipality}. Indiquer le numéro réel du luminaire (1 à 6 chiffres) s’il est connu, sinon son emplacement exact. Ni lampes privées, communes voisines, coupures de réseau, urgences ou danger immédiat. La limite communale et votre confirmation ne prouvent pas indépendamment la propriété.`,
+        'La page dédiée SIE indique le 021 631 51 11; la FAQ indique plutôt le 021 631 50 00. Cette différence reste non résolue. SIE demande de laisser vos coordonnées; cette note ne les recueille pas. Vous devrez les donner vous-même lors d’un éventuel appel choisi séparément. Aucun envoi ni acceptation anonyme vérifiée.' +
+          (name === 'sie-crissier'
+            ? ' La commune de Crissier mentionne ep@sie.ch, sans contrat d’envoi ou d’accusé vérifié.'
+            : ''),
         'La charte annonce un stockage suisse et aucune transmission à l’étranger, tout en citant des prestataires et une exception pour les autorités étrangères. Aucun délai fixe propre aux signalements, aucune photo ni réception vérifiée. Le délai de réparation annoncé de 15 jours ne constitue pas un accusé de réception. Aucun appel, e-mail, formulaire natif, envoi, finalisation externe ou suivi. Après un résultat incertain, ne jamais réessayer, recréer ou changer de canal automatiquement.',
       ],
     },

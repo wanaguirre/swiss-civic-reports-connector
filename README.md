@@ -259,3 +259,19 @@ a permanent context stop on drift/failure before cached peers. No requests to th
 stopped Crissier host or native/security clients. No calls, email, native payload,
 sending, external completion or tracking; all send flags remain ineffective.
 Never automatically retry, recreate or switch channels after uncertainty.
+
+### SIE partner profiles
+
+The same guarded provider contract now has distinct preparation profiles
+`sie-renens` (Renens VD5591), `sie-chavannes` (Chavannes-près-Renens5627) and
+`sie-ecublens` (Ecublens VD5635), alongside `sie-crissier` (5583). Each profile
+binds its own exact BFS/service identity, scope, body and asset confirmation.
+`sieMunicipalities`, `isSieMunicipality`, `sieScopeFor` and `sieConfirmation`
+are exported; `sieRequirements(profile)` defaults to Crissier for compatibility.
+All profiles share the same five provider-only source pins, ten-second pacing
+and permanent failure context, including cached peers. No municipal host or
+protected contact form is requested: Renens explicitly forbids ChatGPT-User,
+and municipal contact CAPTCHAs remain untouched. The independent provider
+mandate explicitly names all four lighting networks. No anonymous acceptance
+claim, reporter contacts/photos, native payload, calls, email, sending, external
+completion or tracking. Keep each consumer flag off by default.

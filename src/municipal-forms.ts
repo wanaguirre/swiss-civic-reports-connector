@@ -3,7 +3,9 @@ import {
   sieFaqUrl,
   sieMandateUrl,
   siePrivacyUrl,
-  sieScope,
+  sieScopeFor,
+  sieMunicipalities,
+  isSieMunicipality,
   sieCategories,
   sieRequirements,
   assertSieSourcesAvailable,
@@ -909,8 +911,25 @@ export const municipalForms = Object.freeze({
     reportingUrl: 'https://eg-m.ch/online-schalter/',
   }),
   'sie-crissier': Object.freeze({
-    bfsId: 5583,
-    municipality: 'Crissier',
+    ...sieMunicipalities['sie-crissier'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'sie-renens': Object.freeze({
+    ...sieMunicipalities['sie-renens'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'sie-chavannes': Object.freeze({
+    ...sieMunicipalities['sie-chavannes'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'sie-ecublens': Object.freeze({
+    ...sieMunicipalities['sie-ecublens'],
     language: 'fr' as const,
     formUrl: sieReportUrl,
     reportingUrl: sieReportUrl,
@@ -1079,8 +1098,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'staefa') throw new Error('Stäfa requires its public JSON schema and translations.');
   if (name === 'erlenbach' || name === 'zollikon') return inspectWazForm(html);
   if (name === 'marthalen') return inspectMarthalenForm(html);
-  if (name === 'sie-crissier')
-    throw new Error('SIE Crissier requires its complete pinned public source manifest.');
+  if (isSieMunicipality(name))
+    throw new Error('SIE requires its complete pinned public source manifest.');
   if (name === 'grandson-voirie')
     throw new Error('Grandson requires its complete pinned public source manifest.');
   if (name === 'essertines-voirie')
@@ -1791,18 +1810,17 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
-    if (name === 'sie-crissier') {
-      this.reportingService = 'SIE SA – Éclairage communal de Crissier';
+    if (isSieMunicipality(name)) {
+      this.reportingService = `SIE SA – Éclairage communal de ${sieMunicipalities[name].municipality}`;
       this.privacy =
         'Local preparation collects no reporter contacts or photos and transfers nothing. SIE asks callers to leave callback details, to add themselves in a separately chosen call. Native online requiredness/guest access and actual acceptance remain unverified. The provider asserts Swiss storage/no foreign transmission while listing processors and foreign-authority exceptions; no fixed incident retention or absolute foreign-processing guarantee. No calls, email, native payload, sending, external completion or tracking.';
       this.guidance = {
         ...this.guidance,
         verified_on: '2026-10-20',
-        scope: sieScope,
-        responsibility:
-          'Confirm the exact Crissier point and actual SIE-maintained municipal lamp. Boundary and resident confirmation do not independently prove ownership. No other SIE municipality is enabled by this profile.',
+        scope: sieScopeFor(name),
+        responsibility: `Confirm the exact ${sieMunicipalities[name].municipality} point and actual SIE-maintained municipal lamp. Boundary and resident confirmation do not independently prove ownership. No other SIE municipality is enabled by this profile.`,
         routing_note:
-          'Dedicated SIE/municipal instructions publish0216315111; FAQ instead0216315000. Discrepancy unresolved. Local note only; provider asks callback details during a separately chosen call. No contact/photo collection, calls, emails, sending or tracking. Never automatically retry, recreate or switch channels after uncertainty.',
+          'Dedicated SIE instructions publish 021 631 51 11; FAQ instead 021 631 50 00. Discrepancy unresolved. Local note only; provider asks callback details during a separately chosen call. No contact/photo collection, calls, emails, sending or tracking. Never automatically retry, recreate or switch channels after uncertainty.',
         sources: [
           {
             title: 'Dedicated SIE lamp-fault instructions and explicit four-commune scope',
@@ -2115,7 +2133,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   categories() {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
-    if (this.name === 'sie-crissier') return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
     if (this.name === 'grandson-voirie')
       return Promise.resolve(grandsonCategories.map((c) => ({ ...c })));
     if (this.name === 'essertines-voirie')
@@ -2141,7 +2159,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
-    if (this.name === 'sie-crissier') assertSieSourcesAvailable(this.request);
+    if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
     if (this.name === 'grandson-voirie') assertGrandsonSourcesAvailable(this.request);
     if (this.name === 'essertines-voirie') assertEssertinesSourcesAvailable(this.request);
     if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
@@ -2236,7 +2254,7 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.cached = { value, expires: this.now() + 300_000 };
             return value;
           }
-          if (this.name === 'sie-crissier') {
+          if (isSieMunicipality(this.name)) {
             const value = await loadSieCategories(
               this.request,
               (delay) => {
@@ -2417,7 +2435,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'erlenbach' || this.name === 'zollikon')
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
-    if (this.name === 'sie-crissier') return sieRequirements();
+    if (isSieMunicipality(this.name)) return sieRequirements(this.name);
     if (this.name === 'grandson-voirie') return grandsonRequirements();
     if (this.name === 'essertines-voirie') return essertinesRequirements();
     if (this.name === 'boenigen') return boenigenRequirements();

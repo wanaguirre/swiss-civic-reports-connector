@@ -265,3 +265,192 @@ test('Sie local note rejects reporter contacts, photos, foreign categories and n
   assert.equal(p.report.description, input.description);
   assert.equal(q.submission_enabled, false);
 });
+
+const { sieMunicipalities, sieScopeFor, sieConfirmation, isSieMunicipality } =
+  await import('../dist/sie-form.js');
+const partnerPoints = {
+  'sie-crissier': { latitude: 46.5518, longitude: 6.5757 },
+  'sie-renens': { latitude: 46.538, longitude: 6.588 },
+  'sie-chavannes': { latitude: 46.529, longitude: 6.573 },
+  'sie-ecublens': { latitude: 46.528, longitude: 6.563 },
+};
+
+test('SIE family rejects every neighbouring profile before source reads and preserves typed destination guidance', async () => {
+  for (const [name, identity] of Object.entries(sieMunicipalities)) {
+    assert.equal(isSieMunicipality(name), true);
+    for (const wrong of [
+      ...Object.values(sieMunicipalities)
+        .filter((p) => p.bfsId !== identity.bfsId)
+        .map((p) => p.bfsId),
+      5636,
+    ]) {
+      let reads = 0;
+      const city = new MunicipalFormClient(
+        name,
+        async () => {
+          reads++;
+          assert.fail('wrong municipality must not read');
+        },
+        { places: { municipality: async () => ({ bfs_id: wrong }) } },
+      );
+      await assert.rejects(city.requirements(partnerPoints[name]), /municipality|boundary/i);
+      assert.equal(reads, 0);
+      await assert.rejects(city.submit({}), /verification/);
+    }
+    const city = new MunicipalFormClient(name, async () => assert.fail('cached profile only'), {
+      places: { municipality: async () => ({ bfs_id: identity.bfsId }) },
+    });
+    city.cached = { value: sieCategories, expires: Date.now() + 300000 };
+    const requirements = await city.requirements(partnerPoints[name]);
+    assert.equal(city.bfsId, identity.bfsId);
+    assert.equal(city.serviceId, name + '-defect-form');
+    assert.equal(city.submissionMode, 'unverified');
+    assert.equal(
+      requirements['Luminaire communal SIE'].extra_fields[0].values[0],
+      sieConfirmation(name),
+    );
+    assert.match(requirements['Luminaire communal SIE'].scope, new RegExp('BFS' + identity.bfsId));
+    assert.ok(city.guidance.scope.includes(identity.municipality));
+    assert.ok(city.reportingService.includes(identity.municipality));
+    assert.ok(sieScopeFor(name).includes('this profile is limited to ' + identity.municipality));
+    assert.throws(
+      () => inspectMunicipalForm(name, bodies.get(sieSourcePins[1].url)),
+      /complete pinned/,
+    );
+    for (const other of Object.values(sieMunicipalities).filter(
+      (p) => p.bfsId !== identity.bfsId,
+    )) {
+      assert.ok(!requirements['Luminaire communal SIE'].scope.includes('BFS' + other.bfsId));
+      assert.ok(!requirements['Luminaire communal SIE'].bodies[0].includes(other.municipality));
+    }
+    if (name !== 'sie-crissier')
+      assert.doesNotMatch(JSON.stringify(requirements), /ep@sie.ch|Crissier/);
+  }
+  for (const name of ['sie-prilly', 'constructor', '__proto__']) {
+    assert.equal(isSieMunicipality(name), false);
+    assert.throws(() => sieRequirements(name), /Unsupported/);
+  }
+  assert.deepEqual(sieRequirements(), sieRequirements('sie-crissier'));
+});
+
+test('one SIE partner source failure permanently stops all four cached peers without municipal-host access', async () => {
+  let clock = 1000,
+    fail = false;
+  const calls = [];
+  const request = async (url, init) => {
+    calls.push(url);
+    assert.equal(new URL(url).hostname, 'www.sie.ch');
+    assert.equal(init.method, 'GET');
+    return response(
+      bodies.get(url) + (fail && url === sieSourcePins[2].url ? 'drift' : ''),
+      url.endsWith('/robots.txt'),
+    );
+  };
+  const sleep = async (ms) => {
+    clock += ms;
+  };
+  await verifySieSources(
+    request,
+    () => {},
+    () => clock,
+    sleep,
+  );
+  assert.equal(calls.length, 5);
+  const peers = Object.entries(sieMunicipalities).map(([name, identity]) => {
+    const city = new MunicipalFormClient(name, request, {
+      places: { municipality: async () => ({ bfs_id: identity.bfsId }) },
+    });
+    city.cached = { value: sieCategories, expires: Date.now() + 300000 };
+    return { name, city };
+  });
+  fail = true;
+  await assert.rejects(
+    verifySieSources(
+      request,
+      () => {},
+      () => clock,
+      sleep,
+    ),
+    /paused/,
+  );
+  assert.equal(calls.length, 8);
+  await Promise.all(
+    peers.map(({ name, city }) => assert.rejects(city.requirements(partnerPoints[name]), /paused/)),
+  );
+  assert.equal(calls.length, 8);
+});
+
+for (const [name, identity] of Object.entries(sieMunicipalities))
+  test(`${identity.municipality} SIE note freezes its destination and rejects foreign confirmations, contacts, photos and sends`, async (t) => {
+    const dir = await mkdtemp(join(tmpdir(), 'sie-family-offline-'));
+    t.after(() => rm(dir, { recursive: true, force: true }));
+    const store = new Store(dir);
+    await store.initialize();
+    const city = new MunicipalFormClient(
+      name,
+      async () => assert.fail('no live source or native access'),
+      { places: { municipality: async () => ({ bfs_id: identity.bfsId }) } },
+    );
+    city.requirements = async () => sieRequirements(name);
+    const service = new ReportService(city, store, { submissionEnabled: true, allowPaths: false });
+    const input = {
+      ...partnerPoints[name],
+      location_confirmed: true,
+      location_label: 'Offline exact municipal lamp location',
+      category: 'Luminaire communal SIE',
+      description: 'Le luminaire communal fictif est éteint au point confirmé.',
+      email: '',
+      photo_ids: [],
+      extra_fields: { public_asset_confirmed: sieConfirmation(name) },
+    };
+    for (const other of Object.keys(sieMunicipalities).filter((k) => k !== name))
+      await assert.rejects(
+        service.prepare({
+          ...input,
+          extra_fields: { public_asset_confirmed: sieConfirmation(other) },
+        }),
+      );
+    for (const change of [
+      { name: 'PrivateName' },
+      { email: 'private@example.invalid' },
+      { phone: '0210000000' },
+      { extra_fields: {} },
+      { extra_fields: { ...input.extra_fields, native_state: 'forbidden' } },
+      { extra_fields: { ...input.extra_fields, lamp_number: '1234567' } },
+      { extra_fields: { ...input.extra_fields, lamp_number: '1\n' } },
+      { extra_fields: { ...input.extra_fields, lamp_number: 'abc' } },
+    ])
+      await assert.rejects(service.prepare({ ...input, ...change }));
+    const image = await service.inspectPhoto({
+      base64: (
+        await sharp({ create: { width: 2, height: 2, channels: 3, background: '#123456' } })
+          .jpeg()
+          .toBuffer()
+      ).toString('base64'),
+    });
+    await assert.rejects(service.prepare({ ...input, photo_ids: [image.photo_id] }), /photo/);
+    const p = await service.prepare({
+      ...input,
+      extra_fields: { ...input.extra_fields, lamp_number: '000123' },
+    });
+    assert.equal(p.municipality.bfs_id, identity.bfsId);
+    assert.equal(p.report.extra_fields.lamp_number, '000123');
+    assert.equal(p.attachments.length, 0);
+    assert.equal(p.submission_enabled, false);
+    const stored = await store.confirmed(p.preview_id, p.confirmation_token);
+    assert.deepEqual(stored.destination, {
+      bfs_id: identity.bfsId,
+      service_id: name + '-defect-form',
+    });
+    await assert.rejects(
+      service.submit(p.preview_id, p.confirmation_token, true),
+      /verification|unverified|disabled/i,
+    );
+    const q = await service.prepare({
+      ...input,
+      description: 'Le second luminaire communal fictif est éteint.',
+    });
+    assert.notEqual(q.preview_id, p.preview_id);
+    assert.equal(p.report.description, input.description);
+    assert.equal(q.submission_enabled, false);
+  });
