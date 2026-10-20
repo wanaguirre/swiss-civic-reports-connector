@@ -1,4 +1,15 @@
 import {
+  reaFormUrl,
+  reaPrivacyUrl,
+  reaMunicipalities,
+  isReaMunicipality,
+  reaScope,
+  reaCategories,
+  reaRequirements,
+  assertReaSourcesAvailable,
+  loadReaCategories,
+} from './rea-form.js';
+import {
   zofingenFormUrl,
   zofingenPrivacyUrl,
   zofingenReferralUrl,
@@ -353,6 +364,18 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'rea-hefenhofen': Object.freeze({
+    ...reaMunicipalities['rea-hefenhofen'],
+    language: 'de' as const,
+    formUrl: reaFormUrl,
+    reportingUrl: reaFormUrl,
+  }),
+  'rea-amriswil': Object.freeze({
+    ...reaMunicipalities['rea-amriswil'],
+    language: 'de' as const,
+    formUrl: reaFormUrl,
+    reportingUrl: reaFormUrl,
+  }),
   'zofingen-infrastructure': Object.freeze({
     bfsId: 4289,
     municipality: 'Zofingen',
@@ -898,6 +921,7 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'ibw-wohlen-ag') throw new Error('Use the complete checked ibw source manifest.');
   if (name === 'eww-wettingen')
     throw new Error('Use the complete checked Wettingen source manifest.');
+  if (isReaMunicipality(name)) throw new Error('Use the complete pinned REA source manifest.');
   if (isEgsMunicipality(name)) throw new Error('Use the complete pinned EGS source manifest.');
   if (name === 'ewn-neuenhof') throw new Error('Use the complete pinned EWN source manifest.');
   if (name === 'rwb-ennetbaden' || name === 'rwb-windisch')
@@ -1643,6 +1667,22 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (isReaMunicipality(name)) {
+      this.reportingService = `Regio Energie Amriswil – ${this.municipality} Strassenbeleuchtung`;
+      this.termsUrl = reaPrivacyUrl;
+      this.privacy =
+        'Optional reporter name, postcode, phone and email remain outside AI; no photos. Local preparation separates lamp number and reporter name despite their duplicate native binding. Policy processes enquiries and allows service-provider/partner/authority sharing and conditional foreign processing, with purpose/legal retention and no fixed lamp period or absolute transmission-security promise. No native client/anti-spam/state execution, payload, sending, status request or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: reaScope(name),
+        sources: [
+          { title: 'Official municipal utility referral', url: reaMunicipalities[name].referral },
+          { title: 'Dedicated REA lighting fault form', url: reaFormUrl },
+          { title: 'REA privacy policy 1 June 2026', url: reaPrivacyUrl },
+        ],
+      };
+    }
     if (isEgsMunicipality(name)) {
       this.reportingService = `Elektrizitäts-Genossenschaft Siggenthal – ${this.municipality} Strassenbeleuchtung`;
       this.privacy =
@@ -1818,6 +1858,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (this.name === 'zofingen-infrastructure')
       return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
     if (this.name === 'obermumpf-lighting')
@@ -1835,6 +1876,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
     if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
     if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
     if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
@@ -1852,6 +1894,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            isReaMunicipality(this.name) ||
             this.name === 'zofingen-infrastructure' ||
             this.name === 'obermumpf-lighting' ||
             this.name === 'swl-staufen' ||
@@ -1869,35 +1912,37 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              this.name === 'zofingen-infrastructure'
-                ? loadZofingenCategories
-                : this.name === 'obermumpf-lighting'
-                  ? loadObermumpfCategories
-                  : this.name === 'elektra-auw'
-                    ? loadAuwCategories
-                    : this.name === 'swl-staufen'
-                      ? loadSwlCategories
-                      : this.name === 'tbseon-egliswil'
-                        ? loadTbseonCategories
-                        : this.name === 'egm-muelligen'
-                          ? loadEgmCategories
-                          : this.name === 'ibw-wohlen-ag'
-                            ? loadIbwCategories
-                            : this.name === 'eww-wettingen'
-                              ? loadEwwCategories
-                              : isEgsMunicipality(this.name)
-                                ? loadEgsCategories
-                                : this.name === 'ewn-neuenhof'
-                                  ? loadEwnCategories
-                                  : this.name === 'rwb-windisch'
-                                    ? loadRwbWindischCategories
-                                    : this.name === 'rwb-ennetbaden'
-                                      ? loadRwbCategories
-                                      : this.name === 'hornet-aarau'
-                                        ? loadHornetCategories
-                                        : this.name === 'tbs-suhr'
-                                          ? loadTbsCategories
-                                          : loadTbgraenichenCategories
+              isReaMunicipality(this.name)
+                ? loadReaCategories
+                : this.name === 'zofingen-infrastructure'
+                  ? loadZofingenCategories
+                  : this.name === 'obermumpf-lighting'
+                    ? loadObermumpfCategories
+                    : this.name === 'elektra-auw'
+                      ? loadAuwCategories
+                      : this.name === 'swl-staufen'
+                        ? loadSwlCategories
+                        : this.name === 'tbseon-egliswil'
+                          ? loadTbseonCategories
+                          : this.name === 'egm-muelligen'
+                            ? loadEgmCategories
+                            : this.name === 'ibw-wohlen-ag'
+                              ? loadIbwCategories
+                              : this.name === 'eww-wettingen'
+                                ? loadEwwCategories
+                                : isEgsMunicipality(this.name)
+                                  ? loadEgsCategories
+                                  : this.name === 'ewn-neuenhof'
+                                    ? loadEwnCategories
+                                    : this.name === 'rwb-windisch'
+                                      ? loadRwbWindischCategories
+                                      : this.name === 'rwb-ennetbaden'
+                                        ? loadRwbCategories
+                                        : this.name === 'hornet-aarau'
+                                          ? loadHornetCategories
+                                          : this.name === 'tbs-suhr'
+                                            ? loadTbsCategories
+                                            : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -2000,6 +2045,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
     if (this.name === 'swl-staufen') return swlRequirements();
+    if (isReaMunicipality(this.name)) return reaRequirements(this.name);
     if (this.name === 'zofingen-infrastructure') return zofingenRequirements();
     if (this.name === 'obermumpf-lighting') return obermumpfRequirements();
     if (this.name === 'elektra-auw') return auwRequirements();

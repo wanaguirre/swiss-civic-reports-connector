@@ -1312,3 +1312,41 @@ acceptance. Never retry or switch channels after an uncertain outcome.
 
 
 Zofingen (`zofingen-infrastructure`, BFS4289) adds default-off local preparation for six native municipal-infrastructure categories. Private combined name, daytime phone and email remain outside AI; observed date, asset street/number and description are required, building optional. Native photos are optional; this local subset accepts none. Exact municipality/point precedes five paced source reads. Full builder/all-script fingerprints retain stable state and discard only checked read-time shapes. Works, privacy and inert form clients are pinned; drift and failures stop cached peers. No client/state/trap/challenge execution, native payload, POST, upload, sending, external completion or tracking. Municipal acceptance remains unverified; uncertain outcomes must not trigger retries or channel switching. Privacy-read and asset confirmations, ISO nonfuture date and text caps are local requirements, not native consent.
+
+
+### REA public-lamp preparation: Hefenhofen and Amriswil
+
+`rea-hefenhofen` (BFS4416, native locality Hefenhofen) and `rea-amriswil`
+(BFS4461, native locality Amriswil) support default-off local preparation for one
+confirmed REA-maintained public lamp at its actual precise point. Other native
+localities and unconfirmed assigned areas are outside this subset. A municipal
+boundary or electricity supply does not establish lamp responsibility. Five
+native fault choices are preserved, including the native spelling Masstürchen fehlt.
+
+The nearest actual lamp address is required. Its real pole number is optional and
+retains leading zeros. Reporter name, postcode, phone and email are optional and
+remain outside AI. Native lamp-number and reporter-name inputs reuse the same
+name and DOM ID; local fields are distinct and no native payload is built. Quantity
+and status-request controls are not implemented; the local subset is one lamp.
+Photos are unsupported. Local text caps, asset confirmation and privacy-read
+acknowledgement are not native consent or server validation rules.
+
+Two byte-identical complete form captures, municipal referrals, provider lighting
+mandate and the 1 June 2026 privacy policy were reviewed. Thirty first-party client
+files were read inertly; no native code, WP Armour fields, traps, nonces, statistics,
+CAPTCHA, cookies or submission state was executed or reused. Eleven fixed full
+source pins include the selected form and six clients relevant to form behavior.
+Cookie-free, no-redirect GETs share ten-second pacing (cold check at least100sec).
+Any failure, drift or malformed response permanently stops that request context
+before another destination's cached requirements can be used. Metadata is read-free
+and exact municipality resolution precedes all source GETs.
+
+The provider processes enquiries and permits service-provider/partner/authority
+sharing and conditional foreign processing. Purpose and statutory retention apply;
+no fixed lamp-report retention or absolute transmission security is promised.
+Generic customer/smart-meter retention does not become lamp retention. Native
+submission, duplicate-key reconciliation, durable case receipt, status delivery and
+tracking remain unverified. No send or external completion under any enable flag;
+never automatically resend, recreate or switch channels after an uncertain outcome.
+An approved genuine report or authorized test environment is required for real
+sending verification, after supported transport and identity binding are resolved.
