@@ -1,4 +1,14 @@
 import {
+  founexLightingUrl,
+  founexAuthorityUrl,
+  founexServicesUrl,
+  founexScope,
+  founexCategories,
+  founexRequirements,
+  assertFounexSourcesAvailable,
+  loadFounexCategories,
+} from './founex-form.js';
+import {
   coppetLightingUrl,
   coppetPrivacyUrl,
   coppetServicesUrl,
@@ -1149,6 +1159,13 @@ export const municipalForms = Object.freeze({
     formUrl: coppetLightingUrl,
     reportingUrl: coppetLightingUrl,
   }),
+  'founex-lighting-note': Object.freeze({
+    bfsId: 5717,
+    municipality: 'Founex',
+    language: 'fr' as const,
+    formUrl: founexLightingUrl,
+    reportingUrl: founexLightingUrl,
+  }),
   'moudon-lighting-note': Object.freeze({
     bfsId: 5678,
     municipality: 'Moudon',
@@ -1383,6 +1400,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Begnins requires its complete pinned public source manifest.');
   if (name === 'coppet-lighting-note')
     throw new Error('Coppet requires its complete pinned public source manifest.');
+  if (name === 'founex-lighting-note')
+    throw new Error('Founex requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
     throw new Error('Moudon requires its complete pinned public source manifest.');
   if (name === 'bassins-water-enquiry')
@@ -2322,6 +2341,25 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'founex-lighting-note') {
+      this.reportingService = 'Commune de Founex – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: founexScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5717 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Current2026–2031 composition and maintenance service context agree with the explicit FAQ lighting email invitation. No operator/asset ownership inferred.',
+        routing_note:
+          'FAQ explicitly invites lighting faults by email to travaux@founex.ch with location. Local worksheet has no email transport; protected maintenance web form/client/challenge/state excluded, web identity rules not inherited into email. Sender metadata exposure and email privacy/acceptance/receipt unresolved. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Explicit municipal FAQ lighting email invitation', url: founexLightingUrl },
+          { title: 'Municipal composition and2026–2031vice schedule', url: founexAuthorityUrl },
+          { title: 'Municipal service directory', url: founexServicesUrl },
+        ],
+      };
+    }
     if (name === 'moudon-lighting-note') {
       this.reportingService = 'Commune de Moudon – éclairage public';
       this.privacy =
@@ -2842,6 +2880,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
     if (this.name === 'coppet-lighting-note')
       return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
+    if (this.name === 'founex-lighting-note')
+      return Promise.resolve(founexCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
       return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
     if (this.name === 'bassins-water-enquiry')
@@ -2890,6 +2930,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-prangins-lighting-note') assertPranginsSourcesAvailable(this.request);
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
+    if (this.name === 'founex-lighting-note') assertFounexSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
     if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
     if (this.name === 'vucherens-water') assertVucherensSourcesAvailable(this.request);
@@ -3078,6 +3119,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'coppet-lighting-note') {
             const value = await loadCoppetCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'founex-lighting-note') {
+            const value = await loadFounexCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3376,6 +3431,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-prangins-lighting-note') return pranginsRequirements();
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'coppet-lighting-note') return coppetRequirements();
+    if (this.name === 'founex-lighting-note') return founexRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
     if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
     if (this.name === 'vucherens-water') return vucherensRequirements();

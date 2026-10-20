@@ -1699,3 +1699,21 @@ country/guest acceptance/receipt unknown; site statistics hosting does not
 establish incident storage. No contacts/photos/consent/native payload/calls/
 email/sending/completion/tracking. Never automatically retry, recreate or change
 channel after uncertainty. No general office/provider/emergency fallback.
+
+## Founex local lighting facts
+
+`founex-lighting-note` (BFS5717) is an incomplete local French facts worksheet
+for nonurgent nonworking/intermittent actual communal public streetlights.
+The municipal FAQ explicitly invites lighting faults by email to travaux@founex.ch
+with location. No automated mail transport is implemented. Exact BFS point and
+distinct communal-asset/nonurgent confirmation, local street/fault-kind rules,
+actual street/lamp identifiers only if known. No danger/wires/sparks/outage/
+active traffic risk/private assets/accusations/other classes. Four fixed safe
+robots/FAQ/composition/service-directory byte pins use bounded verification,
+shared ten-second starts and permanent failed-context/cached-peer stops.
+Protected maintenance reCAPTCHA form/client/challenge/state excluded; its
+required surname/first name/email are not inherited into the explicit email
+route. Email exposes sender metadata; contact/photo/privacy/retention/country/
+acceptance/receipt unknown. No contacts/photos/consent/native payload/calls/
+email sending/completion/tracking. Never automatically retry/recreate/change
+channel after uncertainty; no staff/office/web/provider fallback.
