@@ -1462,3 +1462,18 @@ and municipal contact CAPTCHAs remain untouched. The independent provider
 mandate explicitly names all four lighting networks. No anonymous acceptance
 claim, reporter contacts/photos, native payload, calls, email, sending, external
 completion or tracking. Keep each consumer flag off by default.
+
+## Rivaz communal drinking-water telephone note
+
+`MunicipalFormClient('rivaz-water')` prepares only local text for a confirmed
+nonurgent maintenance fault of an actual communal drinking-water asset at its
+exact point in Rivaz VD5609. The water page invites calls about problems or
+emergencies; this preparation explicitly excludes urgent situations, suspected
+contamination/health concerns, outages, active leaks/flooding, immediate danger,
+private plumbing, new connections and hydrant requests. No reporter contacts or
+photos, native fields/payload/client, sending, external completion or tracking.
+Phone reporter requirements/anonymous acceptance and incident retention/country/
+receipt remain unknown. Four full-byte source pins cover robots, water, current
+authority and privacy; the protected generic contact form is never requested.
+Shared ten-second starts and context failure stops precede cached peer reuse.
+Public-source drift pauses preparation; no automatic retry or channel change.

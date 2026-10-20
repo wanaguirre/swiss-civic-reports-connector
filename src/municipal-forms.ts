@@ -1,4 +1,14 @@
 import {
+  rivazWaterUrl,
+  rivazMunicipalityUrl,
+  rivazPrivacyUrl,
+  rivazScope,
+  rivazCategories,
+  rivazRequirements,
+  assertRivazSourcesAvailable,
+  loadRivazCategories,
+} from './rivaz-form.js';
+import {
   sieReportUrl,
   sieFaqUrl,
   sieMandateUrl,
@@ -934,6 +944,13 @@ export const municipalForms = Object.freeze({
     formUrl: sieReportUrl,
     reportingUrl: sieReportUrl,
   }),
+  'rivaz-water': Object.freeze({
+    bfsId: 5609,
+    municipality: 'Rivaz',
+    language: 'fr' as const,
+    formUrl: rivazWaterUrl,
+    reportingUrl: rivazWaterUrl,
+  }),
   'grandson-voirie': Object.freeze({
     bfsId: 5561,
     municipality: 'Grandson',
@@ -1100,6 +1117,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (isSieMunicipality(name))
     throw new Error('SIE requires its complete pinned public source manifest.');
+  if (name === 'rivaz-water')
+    throw new Error('Rivaz requires its complete pinned public source manifest.');
   if (name === 'grandson-voirie')
     throw new Error('Grandson requires its complete pinned public source manifest.');
   if (name === 'essertines-voirie')
@@ -1835,6 +1854,35 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'rivaz-water') {
+      this.reportingService = 'Commune de Rivaz – Municipal en charge des eaux';
+      this.privacy =
+        'Local telephone-note preparation collects no reporter contacts or photos and makes no municipal transfer. Telephone reporter requirements and anonymous acceptance remain unverified. The water problem/emergency invitation is by telephone, but this local note excludes urgent situations, contamination, supply interruption, active leaks and flooding. The policy permits request processing and legal/service-provider sharing; retention, processing country and receipt remain unverified. No payload, sending, external completion, tracking or native/security client execution.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: rivazScope,
+        responsibility:
+          'Confirm a nonurgent maintenance fault of an actual communal drinking-water asset at its exact Rivaz point. Boundary and resident confirmation do not independently prove ownership; Chexbres/Puidoux sources do not expand scope.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title:
+              'Explicit water problem/emergency telephone referral; local urgent cases excluded',
+            url: rivazWaterUrl,
+          },
+          {
+            title: 'Current municipal industrial/water responsibility',
+            url: rivazMunicipalityUrl,
+          },
+          {
+            title: 'General privacy policy; incident retention/country/receipt unknown',
+            url: rivazPrivacyUrl,
+          },
+        ],
+      };
+    }
     if (name === 'grandson-voirie') {
       this.reportingService = 'Commune de Grandson – Service Travaux et environnement';
       this.privacy =
@@ -2134,6 +2182,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (this.name === 'rivaz-water') return Promise.resolve(rivazCategories.map((c) => ({ ...c })));
     if (this.name === 'grandson-voirie')
       return Promise.resolve(grandsonCategories.map((c) => ({ ...c })));
     if (this.name === 'essertines-voirie')
@@ -2160,6 +2209,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
     if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
+    if (this.name === 'rivaz-water') assertRivazSourcesAvailable(this.request);
     if (this.name === 'grandson-voirie') assertGrandsonSourcesAvailable(this.request);
     if (this.name === 'essertines-voirie') assertEssertinesSourcesAvailable(this.request);
     if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
@@ -2256,6 +2306,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (isSieMunicipality(this.name)) {
             const value = await loadSieCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'rivaz-water') {
+            const value = await loadRivazCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2436,6 +2500,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
+    if (this.name === 'rivaz-water') return rivazRequirements();
     if (this.name === 'grandson-voirie') return grandsonRequirements();
     if (this.name === 'essertines-voirie') return essertinesRequirements();
     if (this.name === 'boenigen') return boenigenRequirements();
