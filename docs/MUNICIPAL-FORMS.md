@@ -1641,3 +1641,23 @@ and permanent cached-peer stops; own fixtures, no copied pages or client bundles
 Term not explicit; CGU placeholder not actual terms. No emergency/health/outage/
 leak/flooding/private plumbing/new connection/hydrant-use/other-service/billing
 scope. Never automatically retry/recreate/change channel after uncertainty.
+
+## Begnins SEIC local lighting facts worksheet
+
+`MunicipalFormClient('seic-begnins-lighting-note')` prepares local French facts
+for nonurgent nonworking/intermittent faults of actual communal public streetlights
+at exact BFS5704 points, with extra actual-asset confirmation. Municipal SEIC
+referral and lighting portfolio support this destination only. Provider form
+choices Duillier/Prangins do not enable those municipalities. Repair requires a
+municipal mandate. The protected reCAPTCHA provider form/client/state are excluded
+from every source read and preparation; four fixed main-municipal-host factual
+pins use the strict ten-second verifier/permanent failed-context cached-peer stop.
+Local street-name/fault-kind rules are not native validation. Actual street and
+mast numbers only if known; never invent identifiers or zero. The official form
+also requires a street number, title, surname, first name and email: this worksheet
+is incomplete and collects no reporter contacts/photos/consent. Native photo,
+privacy, retention, country, guest acceptance and receipt remain unknown. No native
+payload, calls/email/sending/external completion/tracking or ordinary emergency
+phone fallback. No danger/wires/sparks/general outage/traffic risk/private assets/
+other services. Never automatically retry/recreate/change channel after uncertainty.
+Own logic/fixtures/factual digests, no copied municipal pages/client bundles.

@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.93",
+  "version": "0.4.0-rc.94",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -428,6 +428,10 @@
     "./bassins-enquiry-form": {
       "types": "./dist/bassins-enquiry-form.d.ts",
       "import": "./dist/bassins-enquiry-form.js"
+    },
+    "./seic-lighting-form": {
+      "types": "./dist/seic-lighting-form.d.ts",
+      "import": "./dist/seic-lighting-form.js"
     }
   }
 }

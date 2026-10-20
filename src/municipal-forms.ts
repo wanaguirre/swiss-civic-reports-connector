@@ -1,4 +1,14 @@
 import {
+  begninsLightingUrl,
+  begninsAuthorityUrl,
+  begninsServicesUrl,
+  begninsScope,
+  begninsCategories,
+  begninsRequirements,
+  assertBegninsSourcesAvailable,
+  loadBegninsCategories,
+} from './seic-lighting-form.js';
+import {
   bassinsWaterUrl,
   bassinsAuthorityUrl,
   bassinsPrivacyUrl,
@@ -1081,6 +1091,13 @@ export const municipalForms = Object.freeze({
     formUrl: chavannesMoudonRoadsUrl,
     reportingUrl: chavannesMoudonRoadsUrl,
   }),
+  'seic-begnins-lighting-note': Object.freeze({
+    bfsId: 5704,
+    municipality: 'Begnins',
+    language: 'fr' as const,
+    formUrl: begninsLightingUrl,
+    reportingUrl: begninsLightingUrl,
+  }),
   'moudon-lighting-note': Object.freeze({
     bfsId: 5678,
     municipality: 'Moudon',
@@ -1307,6 +1324,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('AVM requires its complete pinned public source manifest.');
   if (name === 'chavannes-moudon-maintenance')
     throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
+  if (name === 'seic-begnins-lighting-note')
+    throw new Error('Begnins requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
     throw new Error('Moudon requires its complete pinned public source manifest.');
   if (name === 'bassins-water-enquiry')
@@ -2111,6 +2130,75 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'seic-begnins-lighting-note') {
+      this.reportingService = 'Commune de Begnins – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Provider form requires title, surname, first name, email and street-number; this worksheet collects none of those contacts, and unknown street/mast identifiers remain empty. Native photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: begninsScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5704 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Actual municipal SEIC referral and public-lighting portfolio support this destination only. Provider form choices Begnins/Duillier/Prangins do not enable other destinations. Repair requires a municipal mandate, not guaranteed acceptance.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Official municipal referral to SEIC lighting form', url: begninsLightingUrl },
+          { title: 'Actual municipal authority and first start dates', url: begninsAuthorityUrl },
+          { title: 'Municipal water and public-lighting portfolio', url: begninsServicesUrl },
+        ],
+      };
+    }
+    if (name === 'bassins-water-enquiry') {
+      this.reportingService = 'Commune de Bassins – question d’entretien de l’eau';
+      this.privacy =
+        'Local enquiry draft collects no reporter contacts/photos/native consent and makes no transfer. Email contact requirements/anonymous acceptance/incident privacy/retention/country/forwarding/receipt unknown. Actual website account/message periods and EU hosting are not guarantees for email incidents; no anonymous/no-sharing/Swiss-only claim. No client/state/payload/emails/calls/sending/mail-client launch/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: bassinsScope,
+        responsibility:
+          'Exact BFS5703 point plus actual communal drinking-water asset/nonurgent enquiry confirmation beyond boundary/resident confirmation. Public municipal water operation/invitation and Denis Currat water portfolio agree; current term not explicit. No regional/private plumbing/other-service coverage inferred.',
+        routing_note:
+          'Local French maintenance-enquiry facts draft only. Public primary municipal water-question email commune@bassins.ch may redirect to Renevier SA; no verified fault acceptance. No contact/photo collection, sending, mail-client launch, native consent/state/payload or tracking. Emergency contractor phones not routine fallback. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit municipal water-question email invitation, emergencies separate',
+            url: bassinsWaterUrl,
+          },
+          {
+            title: 'Actual municipal water responsibility; term not explicit',
+            url: bassinsAuthorityUrl,
+          },
+          {
+            title: 'Website policy; email applicability remains unqualified',
+            url: bassinsPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'vucherens-water') {
+      this.reportingService = 'Commune de Vucherens – eau potable';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos or native consent and makes no transfer. Telephone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt unknown. No dedicated incident policy qualified, no invented privacy URL/Swiss-only/anonymity guarantee. Native protected generic contact not inherited or requested; no calls/email/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: vucherensScope,
+        responsibility:
+          'Exact BFS5692 point and actual communal drinking-water asset/nonurgent confirmation required; boundary/resident confirmation alone does not prove ownership. Water page explicit network-problem contact, communal employee role and authority body since1July2026 agree despite older authority URL. No private/regional/all-service coverage inferred.',
+        routing_note:
+          'Public water-problem invitation to communal employee0794464074. Local initial optional telephone note only; no contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. No emergency, health concern, outage, leak, flooding, private plumbing or new connection/hydrant-use request. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          { title: 'Explicit water-network problem telephone invitation', url: vucherensWaterUrl },
+          {
+            title: 'Communal employee maintenance role and separate paid private services',
+            url: vucherensVoirieUrl,
+          },
+          { title: 'Actual authority since1July2026 despite old URL', url: vucherensAuthorityUrl },
+        ],
+      };
+    }
     if (name === 'moudon-lighting-note') {
       this.reportingService = 'Commune de Moudon – éclairage public';
       this.privacy =
@@ -2623,6 +2711,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
     if (this.name === 'chavannes-moudon-maintenance')
       return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'seic-begnins-lighting-note')
+      return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
       return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
     if (this.name === 'bassins-water-enquiry')
@@ -2667,6 +2757,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
     if (this.name === 'chavannes-moudon-maintenance')
       assertChavannesMoudonSourcesAvailable(this.request);
+    if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
     if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
     if (this.name === 'vucherens-water') assertVucherensSourcesAvailable(this.request);
@@ -2799,6 +2890,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'chavannes-moudon-maintenance') {
             const value = await loadChavannesMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'seic-begnins-lighting-note') {
+            const value = await loadBegninsCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3093,6 +3198,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
+    if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
     if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
     if (this.name === 'vucherens-water') return vucherensRequirements();
