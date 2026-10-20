@@ -1,4 +1,14 @@
 import {
+  coppetLightingUrl,
+  coppetPrivacyUrl,
+  coppetServicesUrl,
+  coppetScope,
+  coppetCategories,
+  coppetRequirements,
+  assertCoppetSourcesAvailable,
+  loadCoppetCategories,
+} from './coppet-form.js';
+import {
   pranginsLightingUrl,
   pranginsAuthorityUrl,
   pranginsServicesUrl,
@@ -1132,6 +1142,13 @@ export const municipalForms = Object.freeze({
     formUrl: begninsLightingUrl,
     reportingUrl: begninsLightingUrl,
   }),
+  'coppet-lighting-note': Object.freeze({
+    bfsId: 5712,
+    municipality: 'Coppet',
+    language: 'fr' as const,
+    formUrl: coppetLightingUrl,
+    reportingUrl: coppetLightingUrl,
+  }),
   'moudon-lighting-note': Object.freeze({
     bfsId: 5678,
     municipality: 'Moudon',
@@ -1364,6 +1381,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Prangins requires its complete pinned public source manifest.');
   if (name === 'seic-begnins-lighting-note')
     throw new Error('Begnins requires its complete pinned public source manifest.');
+  if (name === 'coppet-lighting-note')
+    throw new Error('Coppet requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
     throw new Error('Moudon requires its complete pinned public source manifest.');
   if (name === 'bassins-water-enquiry')
@@ -2281,6 +2300,28 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'coppet-lighting-note') {
+      this.reportingService = 'Commune de Coppet – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: coppetScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5712 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Municipal lighting responsibility and heritage/road-maintenance service linkage are explicit; the maintenance contractor is unnamed. Executive term is not explicit.',
+        routing_note:
+          'Municipality explicitly invites lighting defects through its protected online form and may request further details. FriendlyCaptcha/native client/schema/puzzle/state are excluded. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Public directory links explicit lighting-fault form', url: coppetLightingUrl },
+          {
+            title: 'Published site privacy; incident retention/country unresolved',
+            url: coppetPrivacyUrl,
+          },
+          { title: 'Heritage and road-maintenance service responsibility', url: coppetServicesUrl },
+        ],
+      };
+    }
     if (name === 'moudon-lighting-note') {
       this.reportingService = 'Commune de Moudon – éclairage public';
       this.privacy =
@@ -2799,6 +2840,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(pranginsCategories.map((c) => ({ ...c })));
     if (this.name === 'seic-begnins-lighting-note')
       return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
+    if (this.name === 'coppet-lighting-note')
+      return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
       return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
     if (this.name === 'bassins-water-enquiry')
@@ -2846,6 +2889,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-duillier-lighting-note') assertDuillierSourcesAvailable(this.request);
     if (this.name === 'seic-prangins-lighting-note') assertPranginsSourcesAvailable(this.request);
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
+    if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
     if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
     if (this.name === 'vucherens-water') assertVucherensSourcesAvailable(this.request);
@@ -3020,6 +3064,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'seic-begnins-lighting-note') {
             const value = await loadBegninsCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'coppet-lighting-note') {
+            const value = await loadCoppetCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3317,6 +3375,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-duillier-lighting-note') return duillierRequirements();
     if (this.name === 'seic-prangins-lighting-note') return pranginsRequirements();
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
+    if (this.name === 'coppet-lighting-note') return coppetRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
     if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
     if (this.name === 'vucherens-water') return vucherensRequirements();

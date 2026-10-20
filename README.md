@@ -493,3 +493,22 @@ guest acceptance/receipt unknown. Repair requires municipal mandate, not guarant
 acceptance. No calls/email/sending/completion/tracking or ordinary fallback.
 Six electricity shareholder communes do not imply six lighting destinations.
 Never automatically retry/recreate/change channel after uncertainty.
+
+## Coppet local lighting facts
+
+`coppet-lighting-note` (BFS5712) prepares an incomplete local French facts
+worksheet for nonurgent defects of actual communal public streetlights. The
+municipality explicitly invites lighting defects and assigns this service to
+heritage and road maintenance; its contracted specialist is unnamed. Exact BFS
+point and distinct communal-asset confirmation are required, street and observed
+fault kind are local requirements, known street/lamp numbers stay absent when
+unknown. Visible damage is material observation only, no accusations. Excludes
+danger/wires/sparks/outages/active traffic risks/private assets/other services.
+Four factual robots/directory/service/privacy pins use bounded full-byte source
+verification, shared ten-second starts and permanent cached-peer failure stops.
+Selected FriendlyCaptcha incident detail, client/schema/puzzle/state are excluded
+from every runtime read. Native fields were not loaded: contact/photo/retention/
+country/guest acceptance/receipt unknown; site statistics hosting does not
+establish incident storage. No contacts/photos/consent/native payload/calls/
+email/sending/completion/tracking. Never automatically retry, recreate or change
+channel after uncertainty. No general office/provider/emergency fallback.
