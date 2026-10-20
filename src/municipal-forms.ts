@@ -1,4 +1,14 @@
 import {
+  saintSulpiceLightingUrl,
+  saintSulpiceMunicipalityUrl,
+  saintSulpiceVoirieUrl,
+  saintSulpiceScope,
+  saintSulpiceCategories,
+  saintSulpiceRequirements,
+  assertSaintSulpiceSourcesAvailable,
+  loadSaintSulpiceCategories,
+} from './saint-sulpice-form.js';
+import {
   bussignyLightingUrl,
   bussignyMunicipalityUrl,
   bussignyPrivacyUrl,
@@ -966,6 +976,13 @@ export const municipalForms = Object.freeze({
     formUrl: sieReportUrl,
     reportingUrl: sieReportUrl,
   }),
+  'saint-sulpice-lighting': Object.freeze({
+    bfsId: 5648,
+    municipality: 'Saint-Sulpice (VD)',
+    language: 'fr' as const,
+    formUrl: saintSulpiceLightingUrl,
+    reportingUrl: saintSulpiceLightingUrl,
+  }),
   'bussigny-lighting': Object.freeze({
     bfsId: 5624,
     municipality: 'Bussigny',
@@ -1153,6 +1170,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (isSieMunicipality(name))
     throw new Error('SIE requires its complete pinned public source manifest.');
+  if (name === 'saint-sulpice-lighting')
+    throw new Error('SaintSulpice requires its complete pinned public source manifest.');
   if (name === 'bussigny-lighting')
     throw new Error('Bussigny requires its complete pinned public source manifest.');
   if (name === 'lavigny-molok')
@@ -1894,6 +1913,34 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'saint-sulpice-lighting') {
+      this.reportingService = 'Commune de Saint-Sulpice – éclairage public';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident privacy, retention, processing country and receipt remain unknown. Protected generic contact fields, antispam and client state are not inherited or requested. No native payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: saintSulpiceScope,
+        responsibility:
+          'Confirm a nonurgent malfunction of an actual communal public streetlight at its precise Saint-Sulpice VD point. Boundary and resident confirmation alone do not prove ownership. Current2026–2031 authority and communal voirie maintenance apply; Lausanne gas works do not establish a lighting mandate.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title: 'Explicit municipal lighting malfunction telephone invitation',
+            url: saintSulpiceLightingUrl,
+          },
+          {
+            title: 'Communal voirie lighting maintenance and contacts',
+            url: saintSulpiceVoirieUrl,
+          },
+          {
+            title: 'Actual2026–2031 authority despite legacy URL',
+            url: saintSulpiceMunicipalityUrl,
+          },
+        ],
+      };
+    }
     if (name === 'bussigny-lighting') {
       this.reportingService = 'Romande Energie – éclairage public (Bussigny)';
       this.privacy =
@@ -2281,6 +2328,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (this.name === 'saint-sulpice-lighting')
+      return Promise.resolve(saintSulpiceCategories.map((c) => ({ ...c })));
     if (this.name === 'bussigny-lighting')
       return Promise.resolve(bussignyCategories.map((c) => ({ ...c })));
     if (this.name === 'lavigny-molok')
@@ -2312,6 +2361,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
     if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
+    if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
     if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
     if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
     if (this.name === 'rivaz-water') assertRivazSourcesAvailable(this.request);
@@ -2411,6 +2461,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (isSieMunicipality(this.name)) {
             const value = await loadSieCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'saint-sulpice-lighting') {
+            const value = await loadSaintSulpiceCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2633,6 +2697,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
+    if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
     if (this.name === 'bussigny-lighting') return bussignyRequirements();
     if (this.name === 'lavigny-molok') return lavignyRequirements();
     if (this.name === 'rivaz-water') return rivazRequirements();

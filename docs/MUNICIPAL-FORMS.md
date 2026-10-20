@@ -1515,3 +1515,20 @@ legal/provider/privacy URL/digest pins share ten-second starts and permanent
 failure stops before cached peers. No copied municipal/provider text or bundles
 in code/fixtures; independently authored verifier tests and private actual-capture
 verification are separate from real municipal acceptance. No automatic retry.
+
+## Saint-Sulpice VD communal lighting telephone note
+
+`MunicipalFormClient('saint-sulpice-lighting')` prepares local French text only
+for a nonurgent malfunction of an actual communal public streetlight at its
+precise point in Saint-Sulpice VD5648. The municipality explicitly invites calls
+to0216943350 or publishes literalgreffe(at)st-sulpice.ch. This is an initial
+optional phone note; no reporter contacts/photos, native client/state/payload,
+sending, external completion or tracking. No urgent danger/wires/sparks, network/
+domestic outages, private lamps, connections, billing, general roads/water/drainage/
+gas/pollution. Telephone requirements/anonymous acceptance and incident privacy/
+retention/country/receipt remain unknown. Current2026–2031 authority body is
+pinned despite its legacy2021–2026 URL. Five factual robots/works/voirie/authority/
+lighting pins use the shared ten-second verifier and permanent cached-peer stop.
+Own fixtures only. Protected generic contact/antispam/client/state never requested
+or inherited. Never automatically retry, recreate or switch channels after
+uncertainty. No invented privacy URL or native phone requirements.
