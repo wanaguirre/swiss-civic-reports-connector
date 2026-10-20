@@ -1661,3 +1661,22 @@ payload, calls/email/sending/external completion/tracking or ordinary emergency
 phone fallback. No danger/wires/sparks/general outage/traffic risk/private assets/
 other services. Never automatically retry/recreate/change channel after uncertainty.
 Own logic/fixtures/factual digests, no copied municipal pages/client bundles.
+
+## Duillier and Prangins SEIC local lighting facts
+
+`seic-duillier-lighting-note` (BFS5715) and `seic-prangins-lighting-note`
+(BFS5725) reuse the independently authored SEIC local worksheet rules with
+separate point guards, ownership confirmation values, destination identities and
+four municipal full-byte source pins each. Existing Begnins exports remain
+compatible. Actual municipal SEIC relationships and current lighting responsibility
+agree with the previously captured provider's explicit municipality choices.
+No new provider/contact requests: protected forms, clients, native state and
+payloads are excluded. Municipal pins alone are read by the bounded verifier.
+Nonurgent actual communal streetlights, nonworking/intermittent only; unknown
+street/mast numbers stay absent. The official form also needs street number,
+title, surname, first name and email; the worksheet intentionally remains incomplete
+and collects no contacts/photos/consent. Native photo/privacy/retention/country/
+guest acceptance/receipt unknown. Repair requires municipal mandate, not guaranteed
+acceptance. No calls/email/sending/completion/tracking or ordinary fallback.
+Six electricity shareholder communes do not imply six lighting destinations.
+Never automatically retry/recreate/change channel after uncertainty.

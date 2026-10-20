@@ -1,4 +1,24 @@
 import {
+  pranginsLightingUrl,
+  pranginsAuthorityUrl,
+  pranginsServicesUrl,
+  pranginsScope,
+  pranginsCategories,
+  pranginsRequirements,
+  assertPranginsSourcesAvailable,
+  loadPranginsCategories,
+} from './seic-lighting-form.js';
+import {
+  duillierLightingUrl,
+  duillierAuthorityUrl,
+  duillierServicesUrl,
+  duillierScope,
+  duillierCategories,
+  duillierRequirements,
+  assertDuillierSourcesAvailable,
+  loadDuillierCategories,
+} from './seic-lighting-form.js';
+import {
   begninsLightingUrl,
   begninsAuthorityUrl,
   begninsServicesUrl,
@@ -1091,6 +1111,20 @@ export const municipalForms = Object.freeze({
     formUrl: chavannesMoudonRoadsUrl,
     reportingUrl: chavannesMoudonRoadsUrl,
   }),
+  'seic-duillier-lighting-note': Object.freeze({
+    bfsId: 5715,
+    municipality: 'Duillier',
+    language: 'fr' as const,
+    formUrl: duillierLightingUrl,
+    reportingUrl: duillierLightingUrl,
+  }),
+  'seic-prangins-lighting-note': Object.freeze({
+    bfsId: 5725,
+    municipality: 'Prangins',
+    language: 'fr' as const,
+    formUrl: pranginsLightingUrl,
+    reportingUrl: pranginsLightingUrl,
+  }),
   'seic-begnins-lighting-note': Object.freeze({
     bfsId: 5704,
     municipality: 'Begnins',
@@ -1324,6 +1358,10 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('AVM requires its complete pinned public source manifest.');
   if (name === 'chavannes-moudon-maintenance')
     throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
+  if (name === 'seic-duillier-lighting-note')
+    throw new Error('Duillier requires its complete pinned public source manifest.');
+  if (name === 'seic-prangins-lighting-note')
+    throw new Error('Prangins requires its complete pinned public source manifest.');
   if (name === 'seic-begnins-lighting-note')
     throw new Error('Begnins requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
@@ -2130,6 +2168,50 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'seic-duillier-lighting-note') {
+      this.reportingService = 'Commune de Duillier – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Provider form requires title, surname, first name, email and street-number; this worksheet collects none of those contacts, and unknown street/mast identifiers remain empty. Native photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: duillierScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5715 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Actual municipal SEIC relationship and current public-lighting responsibility plus the captured provider city choice support this destination only. Each other municipality needs its own profile, point guard and municipal pins. Repair requires a municipal mandate, not guaranteed acceptance.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Actual municipal SEIC relationship', url: duillierLightingUrl },
+          { title: 'Actual municipal authority, 2026–2031', url: duillierAuthorityUrl },
+          {
+            title: 'Municipal utilities or public-lighting service context',
+            url: duillierServicesUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'seic-prangins-lighting-note') {
+      this.reportingService = 'Commune de Prangins – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Provider form requires title, surname, first name, email and street-number; this worksheet collects none of those contacts, and unknown street/mast identifiers remain empty. Native photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: pranginsScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5725 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Actual municipal SEIC relationship and current public-lighting responsibility plus the captured provider city choice support this destination only. Each other municipality needs its own profile, point guard and municipal pins. Repair requires a municipal mandate, not guaranteed acceptance.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Actual municipal SEIC relationship', url: pranginsLightingUrl },
+          { title: 'Actual municipal authority, 2026–2031', url: pranginsAuthorityUrl },
+          {
+            title: 'Municipal utilities or public-lighting service context',
+            url: pranginsServicesUrl,
+          },
+        ],
+      };
+    }
     if (name === 'seic-begnins-lighting-note') {
       this.reportingService = 'Commune de Begnins – éclairage public';
       this.privacy =
@@ -2711,6 +2793,10 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
     if (this.name === 'chavannes-moudon-maintenance')
       return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'seic-duillier-lighting-note')
+      return Promise.resolve(duillierCategories.map((c) => ({ ...c })));
+    if (this.name === 'seic-prangins-lighting-note')
+      return Promise.resolve(pranginsCategories.map((c) => ({ ...c })));
     if (this.name === 'seic-begnins-lighting-note')
       return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
@@ -2757,6 +2843,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
     if (this.name === 'chavannes-moudon-maintenance')
       assertChavannesMoudonSourcesAvailable(this.request);
+    if (this.name === 'seic-duillier-lighting-note') assertDuillierSourcesAvailable(this.request);
+    if (this.name === 'seic-prangins-lighting-note') assertPranginsSourcesAvailable(this.request);
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
     if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
@@ -2890,6 +2978,34 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'chavannes-moudon-maintenance') {
             const value = await loadChavannesMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'seic-duillier-lighting-note') {
+            const value = await loadDuillierCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'seic-prangins-lighting-note') {
+            const value = await loadPranginsCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3198,6 +3314,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
+    if (this.name === 'seic-duillier-lighting-note') return duillierRequirements();
+    if (this.name === 'seic-prangins-lighting-note') return pranginsRequirements();
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
     if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
