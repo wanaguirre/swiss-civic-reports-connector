@@ -1,4 +1,15 @@
 import {
+  ewrFormUrl,
+  ewrPrivacyUrl,
+  ewrMunicipalities,
+  isEwrMunicipality,
+  ewrScope,
+  ewrCategories,
+  ewrRequirements,
+  assertEwrSourcesAvailable,
+  loadEwrCategories,
+} from './ewr-form.js';
+import {
   reaFormUrl,
   reaPrivacyUrl,
   reaMunicipalities,
@@ -364,6 +375,24 @@ import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'ewr-romanshorn': Object.freeze({
+    ...ewrMunicipalities['ewr-romanshorn'],
+    language: 'de' as const,
+    formUrl: ewrFormUrl,
+    reportingUrl: ewrFormUrl,
+  }),
+  'ewr-salmsach': Object.freeze({
+    ...ewrMunicipalities['ewr-salmsach'],
+    language: 'de' as const,
+    formUrl: ewrFormUrl,
+    reportingUrl: ewrFormUrl,
+  }),
+  'ewr-uttwil': Object.freeze({
+    ...ewrMunicipalities['ewr-uttwil'],
+    language: 'de' as const,
+    formUrl: ewrFormUrl,
+    reportingUrl: ewrFormUrl,
+  }),
   'rea-hefenhofen': Object.freeze({
     ...reaMunicipalities['rea-hefenhofen'],
     language: 'de' as const,
@@ -921,6 +950,7 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'ibw-wohlen-ag') throw new Error('Use the complete checked ibw source manifest.');
   if (name === 'eww-wettingen')
     throw new Error('Use the complete checked Wettingen source manifest.');
+  if (isEwrMunicipality(name)) throw new Error('Use the complete pinned EWR source manifest.');
   if (isReaMunicipality(name)) throw new Error('Use the complete pinned REA source manifest.');
   if (isEgsMunicipality(name)) throw new Error('Use the complete pinned EGS source manifest.');
   if (name === 'ewn-neuenhof') throw new Error('Use the complete pinned EWN source manifest.');
@@ -1667,6 +1697,25 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (isEwrMunicipality(name)) {
+      this.reportingService = `EW Romanshorn – ${this.municipality} Strassenbeleuchtung`;
+      this.termsUrl = ewrPrivacyUrl;
+      this.privacy =
+        'Required private combined name, phone and email remain outside AI. No reporter address, photos or PDF email fallback. Native storage/processing consent required. Policy17October2024 covers communication/fault handling, service providers/partners/authorities and foreign processing with exceptions; purpose/legal/technical retention, business communication up to ten years, no fixed lamp period. No native client/protection execution, payload, sending or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: ewrScope(name),
+        sources: [
+          {
+            title: 'EWR public-lighting mandate for three municipalities',
+            url: 'https://ewr.ch/dienstleistungen/oeffentliche-beleuchtung/',
+          },
+          { title: 'Dedicated EWR lighting fault form', url: ewrFormUrl },
+          { title: 'EWR privacy policy', url: ewrPrivacyUrl },
+        ],
+      };
+    }
     if (isReaMunicipality(name)) {
       this.reportingService = `Regio Energie Amriswil – ${this.municipality} Strassenbeleuchtung`;
       this.termsUrl = reaPrivacyUrl;
@@ -1858,6 +1907,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (this.name === 'zofingen-infrastructure')
       return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
@@ -1876,6 +1926,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
     if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
     if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
     if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
@@ -1894,6 +1945,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.pending = (async () => {
         try {
           if (
+            isEwrMunicipality(this.name) ||
             isReaMunicipality(this.name) ||
             this.name === 'zofingen-infrastructure' ||
             this.name === 'obermumpf-lighting' ||
@@ -1912,37 +1964,39 @@ export class MunicipalFormClient implements ReportingAdapter {
             this.name === 'tbs-suhr'
           ) {
             const value = await (
-              isReaMunicipality(this.name)
-                ? loadReaCategories
-                : this.name === 'zofingen-infrastructure'
-                  ? loadZofingenCategories
-                  : this.name === 'obermumpf-lighting'
-                    ? loadObermumpfCategories
-                    : this.name === 'elektra-auw'
-                      ? loadAuwCategories
-                      : this.name === 'swl-staufen'
-                        ? loadSwlCategories
-                        : this.name === 'tbseon-egliswil'
-                          ? loadTbseonCategories
-                          : this.name === 'egm-muelligen'
-                            ? loadEgmCategories
-                            : this.name === 'ibw-wohlen-ag'
-                              ? loadIbwCategories
-                              : this.name === 'eww-wettingen'
-                                ? loadEwwCategories
-                                : isEgsMunicipality(this.name)
-                                  ? loadEgsCategories
-                                  : this.name === 'ewn-neuenhof'
-                                    ? loadEwnCategories
-                                    : this.name === 'rwb-windisch'
-                                      ? loadRwbWindischCategories
-                                      : this.name === 'rwb-ennetbaden'
-                                        ? loadRwbCategories
-                                        : this.name === 'hornet-aarau'
-                                          ? loadHornetCategories
-                                          : this.name === 'tbs-suhr'
-                                            ? loadTbsCategories
-                                            : loadTbgraenichenCategories
+              isEwrMunicipality(this.name)
+                ? loadEwrCategories
+                : isReaMunicipality(this.name)
+                  ? loadReaCategories
+                  : this.name === 'zofingen-infrastructure'
+                    ? loadZofingenCategories
+                    : this.name === 'obermumpf-lighting'
+                      ? loadObermumpfCategories
+                      : this.name === 'elektra-auw'
+                        ? loadAuwCategories
+                        : this.name === 'swl-staufen'
+                          ? loadSwlCategories
+                          : this.name === 'tbseon-egliswil'
+                            ? loadTbseonCategories
+                            : this.name === 'egm-muelligen'
+                              ? loadEgmCategories
+                              : this.name === 'ibw-wohlen-ag'
+                                ? loadIbwCategories
+                                : this.name === 'eww-wettingen'
+                                  ? loadEwwCategories
+                                  : isEgsMunicipality(this.name)
+                                    ? loadEgsCategories
+                                    : this.name === 'ewn-neuenhof'
+                                      ? loadEwnCategories
+                                      : this.name === 'rwb-windisch'
+                                        ? loadRwbWindischCategories
+                                        : this.name === 'rwb-ennetbaden'
+                                          ? loadRwbCategories
+                                          : this.name === 'hornet-aarau'
+                                            ? loadHornetCategories
+                                            : this.name === 'tbs-suhr'
+                                              ? loadTbsCategories
+                                              : loadTbgraenichenCategories
             )(
               this.request,
               (delay) => {
@@ -2045,6 +2099,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
     if (this.name === 'swl-staufen') return swlRequirements();
+    if (isEwrMunicipality(this.name)) return ewrRequirements(this.name);
     if (isReaMunicipality(this.name)) return reaRequirements(this.name);
     if (this.name === 'zofingen-infrastructure') return zofingenRequirements();
     if (this.name === 'obermumpf-lighting') return obermumpfRequirements();

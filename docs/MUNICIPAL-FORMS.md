@@ -1350,3 +1350,11 @@ tracking remain unverified. No send or external completion under any enable flag
 never automatically resend, recreate or switch channels after an uncertain outcome.
 An approved genuine report or authorized test environment is required for real
 sending verification, after supported transport and identity binding are resolved.
+
+### EWR public lighting — 20 October 2026
+
+`ewr-romanshorn` (4436), `ewr-salmsach` (4441) and `ewr-uttwil` (4451) prepare one confirmed EWR-maintained public lamp at its precise municipal point. Provider explicitly names all three lighting mandates. Five nonurgent fault choices; native collision/fallen-pole choices excluded. Genuine pole number and actual street required, nearby house number optional. Native web contact name, phone and email required despite unstarred name/phone labels, and storage/processing consent required. No photos. No reporter address invented. Native multi-municipality checkboxes constrained to the frozen destination.
+
+Nine complete reviewed source pins, shared ten-second pacing, bounded GET-only reads and permanent shared-context stop on any drift/failure, including cached peers. Municipality gate precedes source reads. No request to the Romanshorn municipal host, which returned429 during research. Provider's independent mandate and public form supply its binding. No normalization/reuse of WP Armour state or script execution, CF7 schema/refill/feedback calls, native payload, sending, tracking or automatic PDF fallback.
+
+PDF version25August2024 is a separate manual route to netz@ewr.ch with place/date and no email field; it does not weaken web requirements. Privacy17October2024 covers communication/fault support, service-provider/partner/authority sharing, foreign processing, purpose/legal/technical retention and potentially up to ten-year business correspondence; no fixed lamp retention guaranteed. Native mail_sent/posted_data_hash remain unverified acceptance signals. Never replay or change channels after uncertain outcomes. Genuine specifically approved report or authorized environment required to verify sending.
