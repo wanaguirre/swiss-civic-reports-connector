@@ -1,4 +1,14 @@
 import {
+  bassinsWaterUrl,
+  bassinsAuthorityUrl,
+  bassinsPrivacyUrl,
+  bassinsScope,
+  bassinsCategories,
+  bassinsRequirements,
+  assertBassinsSourcesAvailable,
+  loadBassinsCategories,
+} from './bassins-enquiry-form.js';
+import {
   vucherensWaterUrl,
   vucherensVoirieUrl,
   vucherensAuthorityUrl,
@@ -1078,6 +1088,13 @@ export const municipalForms = Object.freeze({
     formUrl: moudonLightingUrl,
     reportingUrl: moudonLightingUrl,
   }),
+  'bassins-water-enquiry': Object.freeze({
+    bfsId: 5703,
+    municipality: 'Bassins',
+    language: 'fr' as const,
+    formUrl: bassinsWaterUrl,
+    reportingUrl: bassinsWaterUrl,
+  }),
   'vucherens-water': Object.freeze({
     bfsId: 5692,
     municipality: 'Vucherens',
@@ -1292,6 +1309,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
     throw new Error('Moudon requires its complete pinned public source manifest.');
+  if (name === 'bassins-water-enquiry')
+    throw new Error('Bassins requires its complete pinned public source manifest.');
   if (name === 'vucherens-water')
     throw new Error('Vucherens requires its complete pinned public source manifest.');
   if (name === 'dompierre-roads')
@@ -2111,6 +2130,34 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'bassins-water-enquiry') {
+      this.reportingService = 'Commune de Bassins – question d’entretien de l’eau';
+      this.privacy =
+        'Local enquiry draft collects no reporter contacts/photos/native consent and makes no transfer. Email contact requirements/anonymous acceptance/incident privacy/retention/country/forwarding/receipt unknown. Actual website account/message periods and EU hosting are not guarantees for email incidents; no anonymous/no-sharing/Swiss-only claim. No client/state/payload/emails/calls/sending/mail-client launch/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: bassinsScope,
+        responsibility:
+          'Exact BFS5703 point plus actual communal drinking-water asset/nonurgent enquiry confirmation beyond boundary/resident confirmation. Public municipal water operation/invitation and Denis Currat water portfolio agree; current term not explicit. No regional/private plumbing/other-service coverage inferred.',
+        routing_note:
+          'Local French maintenance-enquiry facts draft only. Public primary municipal water-question email commune@bassins.ch may redirect to Renevier SA; no verified fault acceptance. No contact/photo collection, sending, mail-client launch, native consent/state/payload or tracking. Emergency contractor phones not routine fallback. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit municipal water-question email invitation, emergencies separate',
+            url: bassinsWaterUrl,
+          },
+          {
+            title: 'Actual municipal water responsibility; term not explicit',
+            url: bassinsAuthorityUrl,
+          },
+          {
+            title: 'Website policy; email applicability remains unqualified',
+            url: bassinsPrivacyUrl,
+          },
+        ],
+      };
+    }
     if (name === 'vucherens-water') {
       this.reportingService = 'Commune de Vucherens – eau potable';
       this.privacy =
@@ -2578,6 +2625,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
       return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'bassins-water-enquiry')
+      return Promise.resolve(bassinsCategories.map((c) => ({ ...c })));
     if (this.name === 'vucherens-water')
       return Promise.resolve(vucherensCategories.map((c) => ({ ...c })));
     if (this.name === 'dompierre-roads')
@@ -2619,6 +2668,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'chavannes-moudon-maintenance')
       assertChavannesMoudonSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
+    if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
     if (this.name === 'vucherens-water') assertVucherensSourcesAvailable(this.request);
     if (this.name === 'dompierre-roads') assertDompierreSourcesAvailable(this.request);
     if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
@@ -2763,6 +2813,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'moudon-lighting-note') {
             const value = await loadMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'bassins-water-enquiry') {
+            const value = await loadBassinsCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3030,6 +3094,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
+    if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
     if (this.name === 'vucherens-water') return vucherensRequirements();
     if (this.name === 'dompierre-roads') return dompierreRequirements();
     if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();

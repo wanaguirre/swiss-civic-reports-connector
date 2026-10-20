@@ -436,3 +436,21 @@ Four factual public robots/voirie/water/authority pins; strict ten-second verifi
 permanent cached-peer stops. Protected generic contact excluded; own fixtures, no
 copied pages/bundles. Paid exceptional private services are not water-report fees.
 Never automatically retry/recreate/change channel after uncertainty.
+
+## Bassins local water maintenance-enquiry draft
+
+`MunicipalFormClient('bassins-water-enquiry')` prepares local French enquiry facts
+for nonurgent physical defects of actual communal drinking-water assets at exact
+BFS5703 points, with additional ownership/nonurgent-enquiry confirmation. The
+public water page invites distribution questions to commune@bassins.ch, with
+possible municipal redirection to Renevier SA. This is not verified fault acceptance
+or a telephone/native email adapter. Emergency contractor phones are excluded.
+No contacts/photos/native consent/client/state/payload/emails/calls/sending/mail-
+client launch/completion/tracking. Email requiredness/anonymous acceptance/incident
+privacy/retention/country/forwarding/receipt unknown. Website account/message
+periods and EU hosting do not establish email-incident guarantees. Four factual
+public robots/water/authority/canonical-privacy pins, strict ten-second verifier
+and permanent cached-peer stops; own fixtures, no copied pages or client bundles.
+Term not explicit; CGU placeholder not actual terms. No emergency/health/outage/
+leak/flooding/private plumbing/new connection/hydrant-use/other-service/billing
+scope. Never automatically retry/recreate/change channel after uncertainty.
