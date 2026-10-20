@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.90",
+  "version": "0.4.0-rc.91",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -416,6 +416,10 @@
     "./dompierre-form": {
       "types": "./dist/dompierre-form.d.ts",
       "import": "./dist/dompierre-form.js"
+    },
+    "./moudon-form": {
+      "types": "./dist/moudon-form.d.ts",
+      "import": "./dist/moudon-form.js"
     }
   }
 }

@@ -1,4 +1,14 @@
 import {
+  moudonLightingUrl,
+  moudonAuthorityUrl,
+  moudonServicesUrl,
+  moudonScope,
+  moudonCategories,
+  moudonRequirements,
+  assertMoudonSourcesAvailable,
+  loadMoudonCategories,
+} from './moudon-form.js';
+import {
   dompierreHomeUrl,
   dompierreServicesUrl,
   dompierreAuthorityUrl,
@@ -1051,6 +1061,13 @@ export const municipalForms = Object.freeze({
     formUrl: chavannesMoudonRoadsUrl,
     reportingUrl: chavannesMoudonRoadsUrl,
   }),
+  'moudon-lighting-note': Object.freeze({
+    bfsId: 5678,
+    municipality: 'Moudon',
+    language: 'fr' as const,
+    formUrl: moudonLightingUrl,
+    reportingUrl: moudonLightingUrl,
+  }),
   'dompierre-roads': Object.freeze({
     bfsId: 5671,
     municipality: 'Dompierre (VD)',
@@ -1256,6 +1273,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('AVM requires its complete pinned public source manifest.');
   if (name === 'chavannes-moudon-maintenance')
     throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
+  if (name === 'moudon-lighting-note')
+    throw new Error('Moudon requires its complete pinned public source manifest.');
   if (name === 'dompierre-roads')
     throw new Error('Dompierre requires its complete pinned public source manifest.');
   if (name === 'saint-sulpice-lighting')
@@ -2054,6 +2073,25 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'moudon-lighting-note') {
+      this.reportingService = 'Commune de Moudon – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: moudonScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5678 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Selected authority has no explicit current term; native Office population title differs from Services industriels referral, recipient unverified.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Official public lighting fault instructions', url: moudonLightingUrl },
+          { title: 'Municipal authority; term not explicit', url: moudonAuthorityUrl },
+          { title: 'Services industriels responsibility', url: moudonServicesUrl },
+        ],
+      };
+    }
     if (name === 'dompierre-roads') {
       this.reportingService = 'Commune de Dompierre VD – routes';
       this.privacy =
@@ -2497,6 +2535,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
     if (this.name === 'chavannes-moudon-maintenance')
       return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'moudon-lighting-note')
+      return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
     if (this.name === 'dompierre-roads')
       return Promise.resolve(dompierreCategories.map((c) => ({ ...c })));
     if (this.name === 'saint-sulpice-lighting')
@@ -2535,6 +2575,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
     if (this.name === 'chavannes-moudon-maintenance')
       assertChavannesMoudonSourcesAvailable(this.request);
+    if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
     if (this.name === 'dompierre-roads') assertDompierreSourcesAvailable(this.request);
     if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
     if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
@@ -2664,6 +2705,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'chavannes-moudon-maintenance') {
             const value = await loadChavannesMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'moudon-lighting-note') {
+            const value = await loadMoudonCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2916,6 +2971,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
+    if (this.name === 'moudon-lighting-note') return moudonRequirements();
     if (this.name === 'dompierre-roads') return dompierreRequirements();
     if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
     if (this.name === 'bussigny-lighting') return bussignyRequirements();

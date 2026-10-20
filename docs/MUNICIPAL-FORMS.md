@@ -1589,3 +1589,21 @@ stops; own fixtures only, no municipal page copies. Planned lighting23–05off a
 EauSud/AIR-PRO links do not establish road or lamp-fault coverage. Finance phone
 display/href discrepancy remains separate. Never automatically retry/recreate/
 change channel after uncertainty.
+
+## Moudon local lighting worksheet
+
+`MunicipalFormClient('moudon-lighting-note')` prepares a local French facts
+worksheet for nonurgent faults of actual communal public streetlights at exact
+BFS5678 points, with additional ownership/nonurgent confirmation. Ordinary faults
+are directed to the online form; emergency telephone is not an ordinary fallback.
+Local street-name/fault-kind rules are not native validation. Actual street/lamp
+numbers are optional if unknown; never invent identifiers or replace them by zero.
+This is not a complete official form. No contacts/photos/native consent/client/
+state/payload/calls/email/sending/completion/tracking. Native contact/photo/privacy/
+guest acceptance/receipt unknown; protected native host is excluded entirely.
+Four factual main-host robots/authority/lighting/SI pins use the strict ten-second
+verifier and permanent cached-peer stops; own fixtures, no copied pages/bundles.
+No danger/wires/sparks/general outage/active traffic risk/private assets/enforcement/
+accusations/water/gas/roads/drains/waste. Destruction describes visible nonurgent
+maintenance facts only. Never automatically retry/recreate/change channel after
+uncertainty. Source qualification:20October2026; no live submission verified.
