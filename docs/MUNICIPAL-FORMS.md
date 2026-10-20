@@ -1552,3 +1552,22 @@ cached peers after failure; ten-second shared starts and no retry. Municipal
 robots/protected form/cartography stops preserved, no stopped host reads. Yens
 staff address and historical Bussy-Chardonney do not add service geography.
 Never automatically retry/recreate/change channel after uncertainty.
+
+## Chavannes-sur-Moudon maintenance telephone notes
+
+`MunicipalFormClient('chavannes-moudon-maintenance')` prepares local French
+initial optional call notes for nonurgent actual communal road/path/signage or
+public-lighting faults in exact BFS5665. Municipal fault invitations publish
+0219056094 and request location. Each category has a distinct actual-asset
+confirmation. Boundary/resident confirmation alone does not prove ownership.
+Exclude immediate danger/active traffic risks/obstructions/wires/sparks/outages/
+private assets/enforcement/neighbour disputes/water/drains/gas/pollution/graves/
+inhumation/cards/fees. No reporter contacts/photos/native fields/consent/client/
+state/payload, calls/email/sending/completion/tracking. Phone requiredness/anonymous
+acceptance/incident privacy/retention/country/receipt unknown. Generic NinjaForms4
+contacts/consent/native honeypot/client not inherited or requested. Authority term
+not explicit; no broader AISTBV/AECLC/RE geography. Four factual robots/roads/
+authority/legal pins share the strict ten-second verifier/permanent cached-peer
+stop, own fixtures only. Copyright conditions preserved, no source copies.
+Dedicated privacy URL referenced but unread. Never automatically retry/recreate/
+change channel after uncertainty.

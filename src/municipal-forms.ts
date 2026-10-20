@@ -1,4 +1,14 @@
 import {
+  chavannesMoudonRoadsUrl,
+  chavannesMoudonAuthorityUrl,
+  chavannesMoudonLegalUrl,
+  chavannesMoudonScope,
+  chavannesMoudonCategories,
+  chavannesMoudonRequirements,
+  assertChavannesMoudonSourcesAvailable,
+  loadChavannesMoudonCategories,
+} from './chavannes-moudon-form.js';
+import {
   avmProviderUrl,
   avmReferralUrl,
   avmMunicipalPrivacyUrl,
@@ -1024,6 +1034,13 @@ export const municipalForms = Object.freeze({
     formUrl: avmProviderUrl,
     reportingUrl: avmProviderUrl,
   }),
+  'chavannes-moudon-maintenance': Object.freeze({
+    bfsId: 5665,
+    municipality: 'Chavannes-sur-Moudon',
+    language: 'fr' as const,
+    formUrl: chavannesMoudonRoadsUrl,
+    reportingUrl: chavannesMoudonRoadsUrl,
+  }),
   'saint-sulpice-lighting': Object.freeze({
     bfsId: 5648,
     municipality: 'Saint-Sulpice (VD)',
@@ -1220,6 +1237,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('SIE requires its complete pinned public source manifest.');
   if (isAvmMunicipality(name))
     throw new Error('AVM requires its complete pinned public source manifest.');
+  if (name === 'chavannes-moudon-maintenance')
+    throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
   if (name === 'saint-sulpice-lighting')
     throw new Error('SaintSulpice requires its complete pinned public source manifest.');
   if (name === 'bussigny-lighting')
@@ -1987,6 +2006,35 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'chavannes-moudon-maintenance') {
+      this.reportingService = 'Commune de Chavannes-sur-Moudon – administration';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt remain unknown. Dedicated privacy URL referenced but unread. Generic form contacts/consent/native honeypot/client/state are not inherited or requested. No sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: chavannesMoudonScope,
+        responsibility:
+          'Confirm the exact BFS5665 point and actual communal responsibility for the selected streetlight or road/path/signage asset. Category-specific nonurgent asset confirmations are distinct. Boundary and resident confirmation alone do not prove ownership; no wider AISTBV/AECLC/RE responsibility or explicit current authority term inferred.',
+        routing_note:
+          'Administration0219056094 published alongside explicit fault invitations. Initial optional nonurgent telephone note only. No contacts/photos/calls/email/native client/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title:
+              'Explicit communal road/signage and lighting fault invitations plus administration telephone',
+            url: chavannesMoudonRoadsUrl,
+          },
+          {
+            title: 'Published authority responsibilities; current term not explicit',
+            url: chavannesMoudonAuthorityUrl,
+          },
+          {
+            title: 'Legal13Oct2026; copying conditions and referenced unread privacy notice',
+            url: chavannesMoudonLegalUrl,
+          },
+        ],
+      };
+    }
     if (name === 'saint-sulpice-lighting') {
       this.reportingService = 'Commune de Saint-Sulpice – éclairage public';
       this.privacy =
@@ -2403,6 +2451,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
     if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
+    if (this.name === 'chavannes-moudon-maintenance')
+      return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
     if (this.name === 'saint-sulpice-lighting')
       return Promise.resolve(saintSulpiceCategories.map((c) => ({ ...c })));
     if (this.name === 'bussigny-lighting')
@@ -2437,6 +2487,8 @@ export class MunicipalFormClient implements ReportingAdapter {
   private async loadCategories(fresh: boolean): Promise<Category[]> {
     if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
     if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
+    if (this.name === 'chavannes-moudon-maintenance')
+      assertChavannesMoudonSourcesAvailable(this.request);
     if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
     if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
     if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
@@ -2551,6 +2603,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (isAvmMunicipality(this.name)) {
             const value = await loadAvmCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'chavannes-moudon-maintenance') {
+            const value = await loadChavannesMoudonCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2788,6 +2854,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'marthalen') return marthalenRequirements();
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
+    if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
     if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
     if (this.name === 'bussigny-lighting') return bussignyRequirements();
     if (this.name === 'lavigny-molok') return lavignyRequirements();
