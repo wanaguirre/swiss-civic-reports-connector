@@ -1477,3 +1477,21 @@ receipt remain unknown. Four full-byte source pins cover robots, water, current
 authority and privacy; the protected generic contact form is never requested.
 Shared ten-second starts and context failure stops precede cached peer reuse.
 Public-source drift pauses preparation; no automatic retry or channel change.
+
+## Lavigny communal Molok telephone note
+
+`MunicipalFormClient('lavigny-molok')` prepares only local text for a confirmed
+nonurgent breakdown of an actual communal Molok at its exact point in Lavigny
+VD5637. The municipal waste page explicitly asks residents to report breakdowns
+to the administration or waste councillor. No emergencies/danger/fire/hazardous
+waste, litter/illegal dumping/deposits outside containers, private bins,
+access-card/fee disputes, waste identification or general roads/utility faults.
+No reporter contacts/photos, native client/state/payload, sending, external
+completion or tracking. Telephone requirements and anonymous acceptance remain
+unknown; a disposal card does not establish a reporting login requirement.
+Four full-byte robots/waste/authority/privacy pins share ten-second starts and
+stop cached peers on failure. The policy allows request processing, Swiss web
+providers, legal disclosure and possible foreign transfers; malformed policy
+URLs/emails are never destinations. Incident retention/country/receipt unknown.
+Newsletter antispam is retained in source bytes but never executed. No automatic
+retry, recreation or channel change after uncertainty.

@@ -1,4 +1,14 @@
 import {
+  lavignyWasteUrl,
+  lavignyMunicipalityUrl,
+  lavignyPrivacyUrl,
+  lavignyScope,
+  lavignyCategories,
+  lavignyRequirements,
+  assertLavignySourcesAvailable,
+  loadLavignyCategories,
+} from './lavigny-form.js';
+import {
   rivazWaterUrl,
   rivazMunicipalityUrl,
   rivazPrivacyUrl,
@@ -944,6 +954,13 @@ export const municipalForms = Object.freeze({
     formUrl: sieReportUrl,
     reportingUrl: sieReportUrl,
   }),
+  'lavigny-molok': Object.freeze({
+    bfsId: 5637,
+    municipality: 'Lavigny',
+    language: 'fr' as const,
+    formUrl: lavignyWasteUrl,
+    reportingUrl: lavignyWasteUrl,
+  }),
   'rivaz-water': Object.freeze({
     bfsId: 5609,
     municipality: 'Rivaz',
@@ -1117,6 +1134,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (isSieMunicipality(name))
     throw new Error('SIE requires its complete pinned public source manifest.');
+  if (name === 'lavigny-molok')
+    throw new Error('Lavigny requires its complete pinned public source manifest.');
   if (name === 'rivaz-water')
     throw new Error('Rivaz requires its complete pinned public source manifest.');
   if (name === 'grandson-voirie')
@@ -1854,6 +1873,35 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'lavigny-molok') {
+      this.reportingService = 'Commune de Lavigny – Administration / déchets';
+      this.privacy =
+        'Local telephone-note preparation collects no reporter contacts or photos and makes no municipal transfer. Phone reporter requirements and anonymous acceptance remain unknown. The general policy permits request processing, Swiss website providers, legal sharing and possible foreign transfers; its malformed contact strings are not destinations. Incident retention, processing country and receipt are unverified. No native form/client/payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: lavignyScope,
+        responsibility:
+          'Confirm the actual faulty communal Molok at its precise Lavigny point and municipal maintenance responsibility. Boundary and resident confirmation alone do not prove ownership. Disposal access cards, private bins, litter, illegal dumping, general roads and utility faults are outside this note.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title:
+              'Explicit invitation to report Molok breakdowns to administration or waste councillor',
+            url: lavignyWasteUrl,
+          },
+          {
+            title: 'Published municipal waste responsibility and telephone contacts',
+            url: lavignyMunicipalityUrl,
+          },
+          {
+            title: 'General privacy policy; incident retention/country/receipt unknown',
+            url: lavignyPrivacyUrl,
+          },
+        ],
+      };
+    }
     if (name === 'rivaz-water') {
       this.reportingService = 'Commune de Rivaz – Municipal en charge des eaux';
       this.privacy =
@@ -2182,6 +2230,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (this.name === 'lavigny-molok')
+      return Promise.resolve(lavignyCategories.map((c) => ({ ...c })));
     if (this.name === 'rivaz-water') return Promise.resolve(rivazCategories.map((c) => ({ ...c })));
     if (this.name === 'grandson-voirie')
       return Promise.resolve(grandsonCategories.map((c) => ({ ...c })));
@@ -2209,6 +2259,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
     if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
+    if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
     if (this.name === 'rivaz-water') assertRivazSourcesAvailable(this.request);
     if (this.name === 'grandson-voirie') assertGrandsonSourcesAvailable(this.request);
     if (this.name === 'essertines-voirie') assertEssertinesSourcesAvailable(this.request);
@@ -2306,6 +2357,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (isSieMunicipality(this.name)) {
             const value = await loadSieCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'lavigny-molok') {
+            const value = await loadLavignyCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2500,6 +2565,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
+    if (this.name === 'lavigny-molok') return lavignyRequirements();
     if (this.name === 'rivaz-water') return rivazRequirements();
     if (this.name === 'grandson-voirie') return grandsonRequirements();
     if (this.name === 'essertines-voirie') return essertinesRequirements();
