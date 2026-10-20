@@ -1532,3 +1532,23 @@ lighting pins use the shared ten-second verifier and permanent cached-peer stop.
 Own fixtures only. Protected generic contact/antispam/client/state never requested
 or inherited. Never automatically retry, recreate or switch channels after
 uncertainty. No invented privacy URL or native phone requirements.
+
+## AVM water maintenance telephone notes
+
+`avm-chigny`, `avm-clarmont`, `avm-echichens`, `avm-vaux`, `avm-vufflens`,
+`avm-hautemorges` prepare local French initial optional call notes for nonurgent
+maintenance faults of confirmed actual AVM communal drinking-water assets in
+BFS5628/5629/5634/5650/5653/5656 respectively. Six explicit provider service names
+and dedicated dépannage contacts are supported by Vaux's independent referral.
+Main0796380181/substitute0799152487 are contextual, never automatic fallback.
+No emergencies/active leaks/floods/contamination/health/outages/private plumbing/
+connections/billing/hydrant use/general roads/lighting/wastewater. Exact boundary
+and resident confirmation alone do not prove ownership. No reporter contacts/
+photos, native form/client/state/consent/payload, sending/external completion/
+tracking. Telephone requiredness/anonymous acceptance/incident privacy/retention/
+country/receipt unknown; Vaux website policy does not govern AVM calls.
+Six factual pins, own fixtures and a single strict shared verifier stop all six
+cached peers after failure; ten-second shared starts and no retry. Municipal
+robots/protected form/cartography stops preserved, no stopped host reads. Yens
+staff address and historical Bussy-Chardonney do not add service geography.
+Never automatically retry/recreate/change channel after uncertainty.

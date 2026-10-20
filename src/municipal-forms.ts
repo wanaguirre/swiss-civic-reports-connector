@@ -1,4 +1,16 @@
 import {
+  avmProviderUrl,
+  avmReferralUrl,
+  avmMunicipalPrivacyUrl,
+  avmMunicipalities,
+  isAvmMunicipality,
+  avmScopeFor,
+  avmCategories,
+  avmRequirements,
+  assertAvmSourcesAvailable,
+  loadAvmCategories,
+} from './avm-form.js';
+import {
   saintSulpiceLightingUrl,
   saintSulpiceMunicipalityUrl,
   saintSulpiceVoirieUrl,
@@ -976,6 +988,42 @@ export const municipalForms = Object.freeze({
     formUrl: sieReportUrl,
     reportingUrl: sieReportUrl,
   }),
+  'avm-chigny': Object.freeze({
+    ...avmMunicipalities['avm-chigny'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-clarmont': Object.freeze({
+    ...avmMunicipalities['avm-clarmont'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-echichens': Object.freeze({
+    ...avmMunicipalities['avm-echichens'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-vaux': Object.freeze({
+    ...avmMunicipalities['avm-vaux'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-vufflens': Object.freeze({
+    ...avmMunicipalities['avm-vufflens'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-hautemorges': Object.freeze({
+    ...avmMunicipalities['avm-hautemorges'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
   'saint-sulpice-lighting': Object.freeze({
     bfsId: 5648,
     municipality: 'Saint-Sulpice (VD)',
@@ -1170,6 +1218,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'marthalen') return inspectMarthalenForm(html);
   if (isSieMunicipality(name))
     throw new Error('SIE requires its complete pinned public source manifest.');
+  if (isAvmMunicipality(name))
+    throw new Error('AVM requires its complete pinned public source manifest.');
   if (name === 'saint-sulpice-lighting')
     throw new Error('SaintSulpice requires its complete pinned public source manifest.');
   if (name === 'bussigny-lighting')
@@ -1913,6 +1963,30 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (isAvmMunicipality(name)) {
+      this.reportingService = `AVM – eau potable communale de ${avmMunicipalities[name].municipality}`;
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt are unknown. Vaux website privacy does not establish AVM telephone policy. No municipal native forms/clients/state/consent, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: avmScopeFor(name),
+        responsibility: `Confirm the exact ${avmMunicipalities[name].municipality} point and an actual AVM communal drinking-water asset. Boundary and resident confirmation alone do not prove ownership or responsibility for every asset. Yens staff address and historical Bussy-Chardonney do not add service geography.`,
+        routing_note:
+          'AVM dépannage main0796380181; substitute0799152487 retained as context. Initial optional nonurgent call note only, no contacts/photos/calls/email/sending/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'AVM explicit six-municipality service list and dedicated dépannage',
+            url: avmProviderUrl,
+          },
+          { title: 'Vaux independent water dépannage/intervention referral', url: avmReferralUrl },
+          {
+            title: 'Vaux website policy; not AVM telephone incident privacy',
+            url: avmMunicipalPrivacyUrl,
+          },
+        ],
+      };
+    }
     if (name === 'saint-sulpice-lighting') {
       this.reportingService = 'Commune de Saint-Sulpice – éclairage public';
       this.privacy =
@@ -2328,6 +2402,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
     if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
     if (this.name === 'saint-sulpice-lighting')
       return Promise.resolve(saintSulpiceCategories.map((c) => ({ ...c })));
     if (this.name === 'bussigny-lighting')
@@ -2361,6 +2436,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
     if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
+    if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
     if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
     if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
     if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
@@ -2461,6 +2537,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (isSieMunicipality(this.name)) {
             const value = await loadSieCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (isAvmMunicipality(this.name)) {
+            const value = await loadAvmCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2697,6 +2787,7 @@ export class MunicipalFormClient implements ReportingAdapter {
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
     if (isSieMunicipality(this.name)) return sieRequirements(this.name);
+    if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
     if (this.name === 'bussigny-lighting') return bussignyRequirements();
     if (this.name === 'lavigny-molok') return lavignyRequirements();
