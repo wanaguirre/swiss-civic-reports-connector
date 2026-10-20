@@ -49,6 +49,13 @@ establish those live journeys.
 The shared package also includes disabled [Bern/Fribourg preparation adapters](docs/MUNICIPAL-FORMS.md).
 They collect the observed fields but cannot send; actual uploads and municipal receipts remain unverified.
 
+Essertines-sur-Yverdon (BFS5520) adds GET-only local preparation for confirmed
+municipal voirie infrastructure. Required private names/email/phone stay outside AI;
+postal contacts are optional, photos excluded. Privacy terms and native acceptance
+remain unqualified and explicitly disclosed. Three pinned public sources, including
+robots policy, use shared ten-second starts. No client execution or sending.
+See [municipal forms](docs/MUNICIPAL-FORMS.md).
+
 ## Develop
 
 `src/` contains the core and transports; `test/` covers behavior with mocked

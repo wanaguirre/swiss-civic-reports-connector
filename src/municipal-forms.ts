@@ -1,4 +1,13 @@
 import {
+  essertinesFormUrl,
+  essertinesMunicipalityUrl,
+  essertinesScope,
+  essertinesCategories,
+  essertinesRequirements,
+  assertEssertinesSourcesAvailable,
+  loadEssertinesCategories,
+} from './essertines-form.js';
+import {
   ewrFormUrl,
   ewrPrivacyUrl,
   ewrMunicipalities,
@@ -878,6 +887,13 @@ export const municipalForms = Object.freeze({
     formUrl: 'https://eg-m.ch/online-schalter/',
     reportingUrl: 'https://eg-m.ch/online-schalter/',
   }),
+  'essertines-voirie': Object.freeze({
+    bfsId: 5520,
+    municipality: 'Essertines-sur-Yverdon',
+    language: 'fr' as const,
+    formUrl: essertinesFormUrl,
+    reportingUrl: essertinesFormUrl,
+  }),
   boenigen: Object.freeze({
     bfsId: 572,
     municipality: 'Bönigen',
@@ -1028,6 +1044,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'staefa') throw new Error('Stäfa requires its public JSON schema and translations.');
   if (name === 'erlenbach' || name === 'zollikon') return inspectWazForm(html);
   if (name === 'marthalen') return inspectMarthalenForm(html);
+  if (name === 'essertines-voirie')
+    throw new Error('Essertines requires its complete pinned source manifest.');
   if (name === 'boenigen') return inspectBoenigenForm(html);
   if (name === 'gossau') return inspectGossauForm(html);
   if (name === 'ebikon') return inspectEbikonForm(html);
@@ -1734,6 +1752,23 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'essertines-voirie') {
+      this.reportingService = 'Commune d’Essertines-sur-Yverdon – Voirie';
+      this.privacy =
+        'Local text preparation keeps required private names, phone and email and optional postal contacts in Civic, outside AI. No photos or municipal transfer. A specific incident/contact privacy policy, retention period and processing country have not been qualified. Native protection, validation, recipient delivery and receipt remain unverified. No client, trap or native state is executed or reused; no payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: essertinesScope,
+        sources: [
+          {
+            title: 'Official technical-problem referral and selected Voirie contact recipient',
+            url: essertinesFormUrl,
+          },
+          { title: 'Municipal lighting and road responsibility', url: essertinesMunicipalityUrl },
+        ],
+      };
+    }
     if (isEwrMunicipality(name)) {
       this.reportingService = `EW Romanshorn – ${this.municipality} Strassenbeleuchtung`;
       this.termsUrl = ewrPrivacyUrl;
@@ -1987,6 +2022,8 @@ export class MunicipalFormClient implements ReportingAdapter {
   categories() {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
+    if (this.name === 'essertines-voirie')
+      return Promise.resolve(essertinesCategories.map((c) => ({ ...c })));
     if (this.name === 'zofingen-infrastructure')
       return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
     if (this.name === 'tbw-weinfelden')
@@ -2008,6 +2045,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'essertines-voirie') assertEssertinesSourcesAvailable(this.request);
     if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
     if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
     if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
@@ -2088,6 +2126,20 @@ export class MunicipalFormClient implements ReportingAdapter {
                                                   ? loadTbsCategories
                                                   : loadTbgraenichenCategories
             )(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'essertines-voirie') {
+            const value = await loadEssertinesCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2239,6 +2291,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'erlenbach' || this.name === 'zollikon')
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
+    if (this.name === 'essertines-voirie') return essertinesRequirements();
     if (this.name === 'boenigen') return boenigenRequirements();
     if (this.name === 'gossau') return gossauRequirements();
     if (this.name === 'meggen')

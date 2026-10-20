@@ -1,3 +1,46 @@
+## Essertines-sur-Yverdon — municipal voirie preparation (BFS5520),20 October2026
+
+`MunicipalFormClient('essertines-voirie')` prepares nonurgent technical or maintenance
+observations about confirmed municipal roads, paths, public space and public lighting.
+The actual municipal contact page explicitly refers technical problems and infrastructure
+maintenance to voirie, a recipient in its general Gravity Forms3 contact form. This is
+one department, not an enumerated defect taxonomy. Exclude private assets, network outages,
+gas/water emergencies and Essertines-sur-Rolle. Exact BFS and resident asset confirmation
+do not independently prove ownership. Precise issue location is a local review field.
+
+Private split names, email and phone are required; reporter postal address and
+postcode/locality optional and separate from the issue location. Message and department
+are natively required. Civic selects only Voirie locally. No invented consent field,
+file upload or native geolocation field. Photos0; source photos must be explicitly
+excluded from municipal attachments. Text/contact length limits are conservative local
+rules. Contact data stay outside AI.
+
+The selected form and all52 script declarations, including GF3.1.2 and the declared
+honeypot plugin, are covered by a complete original-character fingerprint. Only one
+precisely located hidden state_3 attribute with772 base64 characters/two padding
+characters is shaped, discarded and replaced for comparison. Its value is never decoded,
+returned, reused, serialized or executed. Every other byte, including the currency
+configuration, trap, scripts, surrounding contact referral and recipient, remains
+significant. Two actual20October captures match. Inert compressed test captures replace
+only that masked state with shaped offline text; they are never executed or packaged.
+
+Three fixed bounded GETs check the exact robots policy first, then the contact page
+and current municipal responsibility page. Shared starts are at least10seconds apart
+(minimum20seconds cold); five-minute schema cache. Any policy/source/status/type/UTF8/
+redirect failure stops that request context permanently before cached peers. No cookies,
+URL discovery or following redirects. Existing published policy allows these public
+paths; a later policy change pauses preparation pending review.
+
+No substantive incident/contact privacy policy, fixed retention, processing country or
+publication/EXIF contract has been qualified. This uncertainty is explicitly disclosed.
+Local preparation sends nothing and grants no municipal consent. Native protection,
+private validation, actual recipient delivery, receipt and reconciliation are unverified.
+No native client, trap, challenge, validation request, upload or POST is implemented.
+Sending, external completion and tracking remain unavailable under every experimental
+or global flag. A supported transport and individually approved genuine report or
+operator-authorized test environment are required for future sending. Uncertainty
+must never trigger retry, recreation or another sending channel.
+
 ## Aarau individual hornet sightings (BFS4001), 19 October 2026
 
 `MunicipalFormClient('hornet-aarau')` prepares an individual suspected Asian-hornet
