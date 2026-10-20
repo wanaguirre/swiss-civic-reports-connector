@@ -1,3 +1,23 @@
+# Grandson telephone-note preparation
+
+`MunicipalFormClient('grandson-voirie')` prepares a local French telephone note
+for nonurgent faults of confirmed municipal roads, public space or lighting at
+an exact point in Grandson VD (BFS5561). The official works service explicitly
+invites communal voirie fault reports by telephone. Its published email is
+contextual; no delivery through it is inferred. This is a local routing class,
+not a native form category or municipal acceptance guarantee.
+
+No reporter contact fields, photos, invented native consent or payload are
+accepted. Native reporter requiredness, anonymous acceptance, incident privacy,
+retention, processing country and receipt remain unverified. Four fixed public
+GET sources include robots, works scope/referral, current portfolios and contact
+directory. Every byte is pinned, with shared ten-second start spacing and strict
+MIME, size, UTF-8 and redirect checks. First source failure or drift stops the
+shared context before cached peers. No native/security client is fetched or
+executed. No sending, external completion or tracking; global/experimental send
+flags cannot enable it. Never retry, recreate or switch channels automatically
+after an uncertain outcome.
+
 ## Essertines-sur-Yverdon — municipal voirie preparation (BFS5520),20 October2026
 
 `MunicipalFormClient('essertines-voirie')` prepares nonurgent technical or maintenance

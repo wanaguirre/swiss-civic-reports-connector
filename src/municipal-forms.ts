@@ -1,4 +1,14 @@
 import {
+  grandsonWorksUrl,
+  grandsonMunicipalityUrl,
+  grandsonContactUrl,
+  grandsonScope,
+  grandsonCategories,
+  grandsonRequirements,
+  assertGrandsonSourcesAvailable,
+  loadGrandsonCategories,
+} from './grandson-form.js';
+import {
   essertinesFormUrl,
   essertinesMunicipalityUrl,
   essertinesScope,
@@ -887,6 +897,13 @@ export const municipalForms = Object.freeze({
     formUrl: 'https://eg-m.ch/online-schalter/',
     reportingUrl: 'https://eg-m.ch/online-schalter/',
   }),
+  'grandson-voirie': Object.freeze({
+    bfsId: 5561,
+    municipality: 'Grandson',
+    language: 'fr' as const,
+    formUrl: grandsonWorksUrl,
+    reportingUrl: grandsonWorksUrl,
+  }),
   'essertines-voirie': Object.freeze({
     bfsId: 5520,
     municipality: 'Essertines-sur-Yverdon',
@@ -1044,6 +1061,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
   if (name === 'staefa') throw new Error('Stäfa requires its public JSON schema and translations.');
   if (name === 'erlenbach' || name === 'zollikon') return inspectWazForm(html);
   if (name === 'marthalen') return inspectMarthalenForm(html);
+  if (name === 'grandson-voirie')
+    throw new Error('Grandson requires its complete pinned public source manifest.');
   if (name === 'essertines-voirie')
     throw new Error('Essertines requires its complete pinned source manifest.');
   if (name === 'boenigen') return inspectBoenigenForm(html);
@@ -1752,6 +1771,34 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'grandson-voirie') {
+      this.reportingService = 'Commune de Grandson – Service Travaux et environnement';
+      this.privacy =
+        'Local telephone-note preparation collects no reporter contacts or photos and makes no municipal transfer. Native reporter requirements, anonymous acceptance, incident privacy, retention, processing country and receipt remain unverified. The explicit fault invitation is by telephone; the published email is contextual. No payload, sending, external completion, tracking or native/security client execution.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: grandsonScope,
+        responsibility:
+          'Confirm the exact Grandson point and actual municipal maintenance responsibility; boundary and resident confirmation do not independently prove ownership.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title: 'Explicit communal voirie fault invitation and maintenance scope',
+            url: grandsonWorksUrl,
+          },
+          {
+            title: 'Current municipal roads and lighting responsibility',
+            url: grandsonMunicipalityUrl,
+          },
+          {
+            title: 'Works contact and duty directory; native requirements unverified',
+            url: grandsonContactUrl,
+          },
+        ],
+      };
+    }
     if (name === 'essertines-voirie') {
       this.reportingService = 'Commune d’Essertines-sur-Yverdon – Voirie';
       this.privacy =
@@ -2022,6 +2069,8 @@ export class MunicipalFormClient implements ReportingAdapter {
   categories() {
     if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
     if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
+    if (this.name === 'grandson-voirie')
+      return Promise.resolve(grandsonCategories.map((c) => ({ ...c })));
     if (this.name === 'essertines-voirie')
       return Promise.resolve(essertinesCategories.map((c) => ({ ...c })));
     if (this.name === 'zofingen-infrastructure')
@@ -2045,6 +2094,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (this.name === 'grandson-voirie') assertGrandsonSourcesAvailable(this.request);
     if (this.name === 'essertines-voirie') assertEssertinesSourcesAvailable(this.request);
     if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
     if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
@@ -2126,6 +2176,20 @@ export class MunicipalFormClient implements ReportingAdapter {
                                                   ? loadTbsCategories
                                                   : loadTbgraenichenCategories
             )(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'grandson-voirie') {
+            const value = await loadGrandsonCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2291,6 +2355,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'erlenbach' || this.name === 'zollikon')
       return wazRequirements(this.municipality);
     if (this.name === 'marthalen') return marthalenRequirements();
+    if (this.name === 'grandson-voirie') return grandsonRequirements();
     if (this.name === 'essertines-voirie') return essertinesRequirements();
     if (this.name === 'boenigen') return boenigenRequirements();
     if (this.name === 'gossau') return gossauRequirements();
