@@ -1747,3 +1747,34 @@ anonymous acceptance and receipt remain unresolved. General site analytics
 may process outside Switzerland; administrative-ID deletion rules do not apply
 to email incidents. Never automatically retry, recreate or change channel after
 uncertainty; no office, substitute, website, phone or provider fallback.
+
+## Jorat-Menthue local Molok-access facts
+
+`jorat-menthue-molok-note` (BFS5804) prepares incomplete local French facts
+for nonurgent mechanical access failure of an actual communal underground
+Molok at Montaubion-Chardonney (former dairy opposite college) or Sottens
+(village square towards Moudon). The published waste page asks residents to
+notify administration or the responsible official when underground-container
+access is temporarily impossible. Administration publishes greffe@jorat-menthue.ch.
+
+Exact municipality point, source-listed actual site and separate confirmation
+of residency, a legitimately issued access card, actual communal asset and
+nonurgent mechanical failure are local rules. Boundary/site choice alone do
+not prove asset ownership/location. Other villages use compactors and are
+excluded. Lost/invalid cards, billing, weighing, hazards and wider complaints
+remain outside this first profile. No container operation, repair or dumping.
+
+Five fixed raw URL/digest pins cover robots, home, waste, administration and
+authority. Shared ten-second pacing and permanent source-failure stops
+invalidate cached peers. General contact.php, native clients/state/schema/
+validation and Ecowaste login remain unused. Only factual paraphrases, URL/
+digests and independently authored fixtures are distributed.
+
+No reporter contacts/photos/card numbers/account credentials/native consent/
+payload/mail preparation/calls/email sending/completion/tracking. Unknown
+actual container identifiers/time remain absent, never invented or zero.
+Email sender metadata, identity/photo/privacy/retention/country/anonymous
+acceptance/receipt requirements remain unknown; physical access cards are
+not report login. Not a complete official form. Never automatically retry,
+recreate or change channel after uncertainty; no office/member/substitute/
+phone/provider fallback. AIEHJ water-network responsibilities are separate.

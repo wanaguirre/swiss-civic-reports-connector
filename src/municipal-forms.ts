@@ -1,4 +1,15 @@
 import {
+  joratMenthueWasteUrl,
+  joratMenthueAuthorityUrl,
+  joratMenthueAdministrationUrl,
+  joratMenthueHomeUrl,
+  joratMenthueScope,
+  joratMenthueCategories,
+  joratMenthueRequirements,
+  assertJoratMenthueSourcesAvailable,
+  loadJoratMenthueCategories,
+} from './jorat-menthue-form.js';
+import {
   romainmotierLightingUrl,
   romainmotierAuthorityUrl,
   romainmotierPrivacyUrl,
@@ -1170,6 +1181,13 @@ export const municipalForms = Object.freeze({
     formUrl: coppetLightingUrl,
     reportingUrl: coppetLightingUrl,
   }),
+  'jorat-menthue-molok-note': Object.freeze({
+    bfsId: 5804,
+    municipality: 'Jorat-Menthue',
+    language: 'fr' as const,
+    formUrl: joratMenthueWasteUrl,
+    reportingUrl: joratMenthueWasteUrl,
+  }),
   'romainmotier-lighting-note': Object.freeze({
     bfsId: 5761,
     municipality: 'Romainmôtier-Envy',
@@ -1418,6 +1436,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Begnins requires its complete pinned public source manifest.');
   if (name === 'coppet-lighting-note')
     throw new Error('Coppet requires its complete pinned public source manifest.');
+  if (name === 'jorat-menthue-molok-note')
+    throw new Error('JoratMenthue requires its complete pinned public source manifest.');
   if (name === 'romainmotier-lighting-note')
     throw new Error('Romainmotier requires its complete pinned public source manifest.');
   if (name === 'founex-lighting-note')
@@ -2361,6 +2381,35 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'jorat-menthue-molok-note') {
+      this.reportingService = 'Commune de Jorat-Menthue – administration';
+      this.privacy =
+        'Local facts only, no reporter contacts/photos/card numbers/account credentials/native consent or transfer. Email exposes sender metadata; official identity/photo/privacy/retention/country/guest/receipt unknown. Physical cards and Ecowaste accounts are not report login. No native client/state/payload/mail preparation/calls/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: joratMenthueScope,
+        responsibility:
+          'Exact BFS5804 point and independently confirmed actual source-listed communal underground Molok, resident with legitimately issued card and nonurgent mechanical access failure. Only Montaubion-Chardonney former dairy opposite college or Sottens village square towards Moudon; other villages compactors excluded. Boundary/site choice alone do not prove asset ownership/location. No card numbers/credentials or lost-card/billing workflow. Published executive prefers email; term dates not explicit.',
+        routing_note:
+          'Published waste page explicitly asks residents to notify administration or responsible official when underground-container access is temporarily impossible. Administration page publishes greffe@jorat-menthue.ch. First local profile uses administration context only, no mail preparation/sending/calls or automatic official/substitute/provider fallback. General contact.php remains unread, no client/state/validation. Local facts rules and actual identifiers only if known, never invent or zero. Identity/photo/privacy/retention/country/guest/acceptance unresolved. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit underground-container access notification and village-specific assets',
+            url: joratMenthueWasteUrl,
+          },
+          {
+            title: 'Published administration and greffe contact',
+            url: joratMenthueAdministrationUrl,
+          },
+          {
+            title: 'Waste responsibility and email contact preference; term not explicit',
+            url: joratMenthueAuthorityUrl,
+          },
+          { title: 'Municipal identity and five-village context', url: joratMenthueHomeUrl },
+        ],
+      };
+    }
     if (name === 'romainmotier-lighting-note') {
       this.reportingService = 'Commune de Romainmôtier-Envy – éclairage public';
       this.privacy =
@@ -2926,6 +2975,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
     if (this.name === 'coppet-lighting-note')
       return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
+    if (this.name === 'jorat-menthue-molok-note')
+      return Promise.resolve(joratMenthueCategories.map((c) => ({ ...c })));
     if (this.name === 'romainmotier-lighting-note')
       return Promise.resolve(romainmotierCategories.map((c) => ({ ...c })));
     if (this.name === 'founex-lighting-note')
@@ -2978,6 +3029,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-prangins-lighting-note') assertPranginsSourcesAvailable(this.request);
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
+    if (this.name === 'jorat-menthue-molok-note') assertJoratMenthueSourcesAvailable(this.request);
     if (this.name === 'romainmotier-lighting-note')
       assertRomainmotierSourcesAvailable(this.request);
     if (this.name === 'founex-lighting-note') assertFounexSourcesAvailable(this.request);
@@ -3169,6 +3221,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'coppet-lighting-note') {
             const value = await loadCoppetCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'jorat-menthue-molok-note') {
+            const value = await loadJoratMenthueCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3495,6 +3561,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-prangins-lighting-note') return pranginsRequirements();
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'coppet-lighting-note') return coppetRequirements();
+    if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
     if (this.name === 'romainmotier-lighting-note') return romainmotierRequirements();
     if (this.name === 'founex-lighting-note') return founexRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
