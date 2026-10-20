@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.91",
+  "version": "0.4.0-rc.92",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -420,6 +420,10 @@
     "./moudon-form": {
       "types": "./dist/moudon-form.d.ts",
       "import": "./dist/moudon-form.js"
+    },
+    "./vucherens-form": {
+      "types": "./dist/vucherens-form.d.ts",
+      "import": "./dist/vucherens-form.js"
     }
   }
 }

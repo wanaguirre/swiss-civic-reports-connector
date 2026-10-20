@@ -1,4 +1,14 @@
 import {
+  vucherensWaterUrl,
+  vucherensVoirieUrl,
+  vucherensAuthorityUrl,
+  vucherensScope,
+  vucherensCategories,
+  vucherensRequirements,
+  assertVucherensSourcesAvailable,
+  loadVucherensCategories,
+} from './vucherens-form.js';
+import {
   moudonLightingUrl,
   moudonAuthorityUrl,
   moudonServicesUrl,
@@ -1068,6 +1078,13 @@ export const municipalForms = Object.freeze({
     formUrl: moudonLightingUrl,
     reportingUrl: moudonLightingUrl,
   }),
+  'vucherens-water': Object.freeze({
+    bfsId: 5692,
+    municipality: 'Vucherens',
+    language: 'fr' as const,
+    formUrl: vucherensWaterUrl,
+    reportingUrl: vucherensWaterUrl,
+  }),
   'dompierre-roads': Object.freeze({
     bfsId: 5671,
     municipality: 'Dompierre (VD)',
@@ -1275,6 +1292,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
   if (name === 'moudon-lighting-note')
     throw new Error('Moudon requires its complete pinned public source manifest.');
+  if (name === 'vucherens-water')
+    throw new Error('Vucherens requires its complete pinned public source manifest.');
   if (name === 'dompierre-roads')
     throw new Error('Dompierre requires its complete pinned public source manifest.');
   if (name === 'saint-sulpice-lighting')
@@ -2092,6 +2111,28 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'vucherens-water') {
+      this.reportingService = 'Commune de Vucherens – eau potable';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos or native consent and makes no transfer. Telephone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt unknown. No dedicated incident policy qualified, no invented privacy URL/Swiss-only/anonymity guarantee. Native protected generic contact not inherited or requested; no calls/email/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: vucherensScope,
+        responsibility:
+          'Exact BFS5692 point and actual communal drinking-water asset/nonurgent confirmation required; boundary/resident confirmation alone does not prove ownership. Water page explicit network-problem contact, communal employee role and authority body since1July2026 agree despite older authority URL. No private/regional/all-service coverage inferred.',
+        routing_note:
+          'Public water-problem invitation to communal employee0794464074. Local initial optional telephone note only; no contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. No emergency, health concern, outage, leak, flooding, private plumbing or new connection/hydrant-use request. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          { title: 'Explicit water-network problem telephone invitation', url: vucherensWaterUrl },
+          {
+            title: 'Communal employee maintenance role and separate paid private services',
+            url: vucherensVoirieUrl,
+          },
+          { title: 'Actual authority since1July2026 despite old URL', url: vucherensAuthorityUrl },
+        ],
+      };
+    }
     if (name === 'dompierre-roads') {
       this.reportingService = 'Commune de Dompierre VD – routes';
       this.privacy =
@@ -2537,6 +2578,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
     if (this.name === 'moudon-lighting-note')
       return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'vucherens-water')
+      return Promise.resolve(vucherensCategories.map((c) => ({ ...c })));
     if (this.name === 'dompierre-roads')
       return Promise.resolve(dompierreCategories.map((c) => ({ ...c })));
     if (this.name === 'saint-sulpice-lighting')
@@ -2576,6 +2619,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'chavannes-moudon-maintenance')
       assertChavannesMoudonSourcesAvailable(this.request);
     if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
+    if (this.name === 'vucherens-water') assertVucherensSourcesAvailable(this.request);
     if (this.name === 'dompierre-roads') assertDompierreSourcesAvailable(this.request);
     if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
     if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
@@ -2719,6 +2763,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'moudon-lighting-note') {
             const value = await loadMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'vucherens-water') {
+            const value = await loadVucherensCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -2972,6 +3030,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
     if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
     if (this.name === 'moudon-lighting-note') return moudonRequirements();
+    if (this.name === 'vucherens-water') return vucherensRequirements();
     if (this.name === 'dompierre-roads') return dompierreRequirements();
     if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
     if (this.name === 'bussigny-lighting') return bussignyRequirements();

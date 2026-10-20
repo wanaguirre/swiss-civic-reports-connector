@@ -1607,3 +1607,19 @@ No danger/wires/sparks/general outage/active traffic risk/private assets/enforce
 accusations/water/gas/roads/drains/waste. Destruction describes visible nonurgent
 maintenance facts only. Never automatically retry/recreate/change channel after
 uncertainty. Source qualification:20October2026; no live submission verified.
+
+## Vucherens local water telephone note
+
+`MunicipalFormClient('vucherens-water')` prepares local French initial optional
+telephone notes for nonurgent physical maintenance faults of actual communal
+drinking-water assets at exact BFS5692 points with additional ownership/nonurgent
+confirmation. Public water-network problem invitation: communal employee
+0794464074. Authority body since1July2026 agrees despite old URL. No emergencies,
+health/contamination, outages, leaks/flooding, private plumbing, new connections/
+hydrant-use requests, roads/drains/lighting/gas/waste/billing. No contacts/photos/
+native consent/client/state/payload/calls/email/sending/completion/tracking. Phone
+requiredness/anonymous acceptance/incident privacy/retention/country/receipt unknown.
+Four factual public robots/voirie/water/authority pins; strict ten-second verifier/
+permanent cached-peer stops. Protected generic contact excluded; own fixtures, no
+copied pages/bundles. Paid exceptional private services are not water-report fees.
+Never automatically retry/recreate/change channel after uncertainty.
