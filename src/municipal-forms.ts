@@ -1,4 +1,16 @@
 import {
+  simplonHomeUrl,
+  simplonAuthorityUrl,
+  simplonStaffUrl,
+  simplonElectricityUrl,
+  simplonRegulationUrl,
+  simplonScope,
+  simplonCategories,
+  simplonRequirements,
+  assertSimplonSourcesAvailable,
+  loadSimplonCategories,
+} from './simplon-form.js';
+import {
   yvonandHomeUrl,
   yvonandAdministrationUrl,
   yvonandNoticeUrl,
@@ -1271,6 +1283,13 @@ export const municipalForms = Object.freeze({
     formUrl: orzensHomeUrl,
     reportingUrl: orzensHomeUrl,
   }),
+  'simplon-evs-meter-note': Object.freeze({
+    bfsId: 6009,
+    municipality: 'Simplon',
+    language: 'de' as const,
+    formUrl: simplonElectricityUrl,
+    reportingUrl: simplonElectricityUrl,
+  }),
   'yvonand-hornet-nest-note': Object.freeze({
     bfsId: 5939,
     municipality: 'Yvonand',
@@ -1553,6 +1572,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Suscevaz requires its complete pinned public source manifest.');
   if (name === 'orzens-hornet-observation-note')
     throw new Error('Orzens requires its complete pinned public source manifest.');
+  if (name === 'simplon-evs-meter-note')
+    throw new Error('Simplon requires its complete pinned public source manifest.');
   if (name === 'yvonand-hornet-nest-note')
     throw new Error('Yvonand requires its complete pinned public source manifest.');
   if (name === 'villars-epeney-meter-note')
@@ -2593,6 +2614,32 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'simplon-evs-meter-note') {
+      this.reportingService = 'Elektrizitätsversorgung Simplon EVS – lokale Zähleranzeige-Fakten';
+      this.privacy =
+        'Local existing EVS meter-display facts only; no contacts, account/customer/serial identifiers, photos, clinical/native fields, consent or transfer. Required without-delay notification is NOT performed; no compliance or deadline extension. Official transport, identity, privacy, retention, country, guest acceptance and receipt unknown. No safety/urgency assessment, mail/call preparation, sending, completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: simplonScope,
+        responsibility:
+          'Exact BFS6009 point and separate legitimate EVS customer/actual EVS-owned meter/existing independently nonurgent DISPLAY-facts confirmation. Point alone establishes none of these. Regulation13.6 without-delay notice remains unperformed. No electrical safety or urgency assessment; no shared EnBAG intake or individual staff mandate inferred.',
+        routing_note: simplonScope,
+        sources: [
+          { title: 'Municipal office context, not a native meter contract', url: simplonHomeUrl },
+          { title: 'Undated authority, no individual intake mandate', url: simplonAuthorityUrl },
+          { title: 'Staff context, no alternative recipient', url: simplonStaffUrl },
+          {
+            title: 'Actual EVS operator, distinct from EnBAG affiliation',
+            url: simplonElectricityUrl,
+          },
+          {
+            title: 'Actual electricity regulation13.1/13.6, notice not performed',
+            url: simplonRegulationUrl,
+          },
+        ],
+      };
+    }
     if (name === 'yvonand-hornet-nest-note') {
       this.reportingService = 'Commune d’Yvonand – nid présumé de frelon asiatique, faits locaux';
       this.privacy =
@@ -3293,6 +3340,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(suscevazCategories.map((c) => ({ ...c })));
     if (this.name === 'orzens-hornet-observation-note')
       return Promise.resolve(orzensCategories.map((c) => ({ ...c })));
+    if (this.name === 'simplon-evs-meter-note')
+      return Promise.resolve(simplonCategories.map((c) => ({ ...c })));
     if (this.name === 'yvonand-hornet-nest-note')
       return Promise.resolve(yvonandCategories.map((c) => ({ ...c })));
     if (this.name === 'villars-epeney-meter-note')
@@ -3357,6 +3406,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'suscevaz-hornet-observation-note')
       assertSuscevazSourcesAvailable(this.request, this.now);
     if (this.name === 'orzens-hornet-observation-note') assertOrzensSourcesAvailable(this.request);
+    if (this.name === 'simplon-evs-meter-note') assertSimplonSourcesAvailable(this.request);
     if (this.name === 'yvonand-hornet-nest-note') assertYvonandSourcesAvailable(this.request);
     if (this.name === 'villars-epeney-meter-note')
       assertVillarsEpeneySourcesAvailable(this.request);
@@ -3595,6 +3645,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'orzens-hornet-observation-note') {
             const value = await loadOrzensCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'simplon-evs-meter-note') {
+            const value = await loadSimplonCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3980,6 +4044,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
     if (this.name === 'suscevaz-hornet-observation-note') return suscevazRequirements();
     if (this.name === 'orzens-hornet-observation-note') return orzensRequirements();
+    if (this.name === 'simplon-evs-meter-note') return simplonRequirements();
     if (this.name === 'yvonand-hornet-nest-note') return yvonandRequirements();
     if (this.name === 'villars-epeney-meter-note') return villarsEpeneyRequirements();
     if (this.name === 'cuarny-water-quality-note') return cuarnyRequirements();

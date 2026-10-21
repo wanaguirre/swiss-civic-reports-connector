@@ -793,3 +793,37 @@ Never automatically retry, recreate or change channel after uncertainty; no offi
 member, substitute, phone, contractor or provider fallback. Local source and
 consumer tests remain separate from exact approved public release, canonical
 consumer delivery and verified sending. All send flags refuse this profile.
+
+## Simplon EVS meter-display local facts
+
+`simplon-evs-meter-note` (BFS6009, export `simplon-form`) prepares German local
+facts for a legitimate EVS customer’s actual EVS-owned meter and an ALREADY
+OBSERVED independently established NONURGENT DISPLAY irregularity at the exact
+point. Required local `evs_meter_observation_confirmed` is not account validation or
+verified official requiredness. Point alone establishes none of these facts.
+Regulation13.1 identifies utility meters;13.6 asks notification without delay.
+This local worksheet performs NO notification, establishes NO legal compliance,
+extends NO deadline and must not delay actual required notification. It does not
+assess urgency or safety. It is not a complete official form or alternative channel.
+
+No new approach, inspection, reading, testing, photo, handling, unsealing,
+dismantling or repair requested. Exclude suspected electrical safety symptoms,
+heat/noise/sparks/smoke/smell, damaged enclosure/seal/cable, outages/supply problems,
+switching/control/fuse/cable devices, other assets, billing/accuracy/calibration,
+connection/account changes, medical concerns and repair/removal requests. No
+reporter contacts, account/customer/serial identifiers, photos, clinical/native
+fields or consent; no diagnosis, safety, urgency, legal, tariff or cost promise.
+No mail/call preparation, sending, external completion or tracking. Official
+identity/photo/privacy/retention/country/forwarding/guest/receipt remain unqualified.
+Historical1995–1996/2012 dates differ from metadata/upload; no legal-validity or
+current-tariff guarantee. EnBAG affiliation does not establish shared fault intake.
+
+Six raw pins cover own robots, home, undated executive, staff, EVS operator page
+and actual opaque electricity PDF. The shared verifier is unchanged: strict PDF
+MIME/signature/exact bytes under1MB, fatal UTF8 HTML/robots, ten-second shared
+spacing/fifty-second cold reads and permanent refusal before cached peers. No PDF
+parsing/execution, merger deadline or later-tariff inference. Source bodies stay
+private. Never automatically retry, recreate or change channel after uncertainty;
+no office, EVS staff, member, substitute, phone, contractor, EnBAG or provider fallback.
+Local tests and integration are separate from approved public release, canonical
+consumer delivery and verified sending. Global send switches still refuse.
