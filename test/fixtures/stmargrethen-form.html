@@ -1,0 +1,183 @@
+<div class="form-builder js-form-builder">
+        <script>
+        window.form161 = {
+            
+            executeFn: [],
+            resources: [{
+                alias: 'lib',
+                name: 'validator',
+                isLoadedFn: () => globalThis.Validator
+            }, {
+                alias: 'master',
+                type: 'js',
+                path: 'femodules/form/form.js',
+                modulePath: 'govis.module.form.init'
+            }],
+            afterInitFn: [],
+            services: {
+                gmaps: {
+                    formId: 'cometForm798F985C-9A4B-4BC0-B5EC8DCF8576BDD6'
+                }
+            },
+            
+            dates: {},
+            files: {}
+        };
+    </script>
+        <p class="form-builder__globalhint" aria-hidden="true">Felder mit * müssen ausgefüllt werden.</p>
+        <form id="cometForm798F985C-9A4B-4BC0-B5EC8DCF8576BDD6" action="https://www.stmargrethen.ch/route/form-submit" method="POST" autocomplete="off" class="co-form">
+         <span class="js-comet-systemfields"> <input type="hidden" name="formId" value="161"> <input type="hidden" name="dispatcher" value="53909C333A88B1C4391DA9096DA16455"> <input type="hidden" name="token" value="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"> <input type="hidden" name="formfield1111111111" class="cffp_mm" value=""> <input type="hidden" name="formfield2222222222" class="cffp_kp" value=""> 
+          <script>
+    if (window.govis && window.govis.util && window.govis.util.cffp) {
+        window.govis.util.cffp.init();
+    }
+</script> 
+          <input type="hidden" name="formfield3333333333" value="0000000000000"> <span style="display:none" aria-hidden="true"> <label for="cffp_ef">Bitte füllen Sie das folgende Feld nicht aus!</label> <input type="text" name="formfield4444444444" id="cffp_ef" value="" tabindex="-1"> </span> 
+          <script id="js-session-notification-template" type="text/x-handlebars-template">
+    <div
+    class="dialog-container js-confirm-dialog"
+    aria-hidden="true"
+    aria-labelledby="form-builder-confirm-dialog-title"
+    aria-describedby="form-builder-confirm-dialog-description"
+>
+    <div class="dialog-overlay" data-a11y-dialog-hide></div>
+    <div class="dialog-content" role="document">
+        <button
+            data-a11y-dialog-hide
+            class="dialog-close js-dialog-close"
+            aria-label="schliessen"
+        >
+            &times;
+        </button>
+
+        <h1 id="form-builder-confirm-dialog-title">Achtung</h1>
+
+        <p id="form-builder-confirm-dialog-description" class="js-dialog-description"></p>
+
+        <div class="form-builder-btn form-builder-btn-group">
+            <button type="button" class="btn js-dialog-confirm" name="confirm">bestätigen</button>
+            <button type="button" class="btn btn--secondary js-dialog-close" name="cancel" >abbrechen</button>
+        </div>
+    </div>
+</div>
+</script> 
+          <script>
+((currentScript)=>{
+window.helperJs.executeScript({
+    executeFn: function() {
+        window.govis.module.user.sessionnotification.init({
+            notificationOffset: parseInt('165', 10),
+            timeout: parseInt('180', 10),
+            texts: {
+                enlarge: {
+                    description: 'Ihre Sitzung läuft in 15 Minuten ab. Benötigen Sie mehr Zeit?',
+                    confirm: 'Ja, bitte',
+                    cancel: 'Nein danke'
+                },
+                expire: {
+                    description: 'Ihre Sitzung ist abgelaufen. Sie müssen die Seite neu laden.',
+                    confirm: 'Neu laden',
+                    cancel: 'Nein danke'
+                }
+            },
+            currentScript: currentScript
+        });
+    },
+    resources: [{
+        alias: 'master',
+        type: 'css',
+        path: 'femodules/confirmation_prompt.css',
+        isLoadedFn: () => document.querySelector("link[href*='css/femodules/confirmation_prompt.css']")
+    }, {
+        alias: 'lib',
+        name: 'handlebars',
+        isLoadedFn: () => window.Handlebars
+    }, {
+        alias: 'master',
+        type: 'js',
+        path: 'femodules/user/sessionnotification.js',
+        modulePath: 'govis.module.user.sessionnotification'
+    },{
+        alias: 'master',
+        type: 'js',
+        path: 'femodules/core/a11yDialog.js',
+        modulePath: 'govis.module.core.a11yDialog'
+    }, {
+        alias: 'lib',
+        name: 'govistimermanager',
+        isLoadedFn: () => window.GovisTimerManager
+    }, {
+        alias: 'lib',
+        name: 'a11y-dialog',
+        isLoadedFn: () => window.A11yDialog
+    }]
+});
+})(document.currentScript);
+</script> 
+          <input type="hidden" name="blockId" value="1255"> <input type="hidden" name="returnSubmitionId" value="1"> <input type="hidden" name="returnSubmitionKey" value="submitionId"> <input type="hidden" name="submitionKey" value="AAAAAAAAAAAAAAAAAAAAAAAA"> </span>
+         <fieldset id="govis-1-1551337029523" class="co-form__fieldset ">
+          <legend class="co-form__legend">Ihre Angaben</legend>
+          <p class="co-form__section co-form__section--text clearfix required" id="lastname-group"><label for="lastname">Name<em aria-hidden="true" title="Pflichtfeld" class="form-required-hint">*</em></label> <input type="text" id="lastname" name="lastname" class="field" required=""></p>
+          <p class="co-form__section co-form__section--text clearfix required" id="firstname-group"><label for="firstname">Vorname<em aria-hidden="true" title="Pflichtfeld" class="form-required-hint">*</em></label> <input type="text" id="firstname" name="firstname" class="field" required=""></p>
+          <p class="co-form__section co-form__section--tel clearfix required" id="phone-group"><label for="phone">Telefon<em aria-hidden="true" title="Pflichtfeld" class="form-required-hint">*</em></label> <input type="tel" id="phone" name="phone" class="field" required=""></p>
+         </fieldset>
+         <fieldset id="govis-1-1551710317793" class="co-form__fieldset ">
+          <legend class="co-form__legend">Standort der defekten Strassenlaterne</legend>
+          <div class="co-form__section co-form__section--streetnr co-form__section--cls-form-street-component clearfix form-street-component required js-component-wrapper-street2 js-component-wrapper-housenumber2" id="govis-3-1551710611401">
+           <span class="form-option-lst-title"> <label for="street2">Strasse<em aria-hidden="true" title="Pflichtfeld" class="form-required-hint">*</em> /</label> <label for="housenumber2">Nr.</label> </span>
+           <div class="form-sizer-wrapper js-validation-id-street2 js-validation-id-housenumber2">
+            <p class="form-sizer"><input id="street2" type="text" value="" name="street2" data-error-placement=".js-validation-id-street2" required=""></p>
+            <p class="form-sizer"><input id="housenumber2" type="text" value="" name="housenumber2" data-error-placement=".js-validation-id-housenumber2"></p>
+           </div>
+          </div>
+          <p class="co-form__section co-form__section--text clearfix required" id="town2-group"><label for="town2">Beschreibung Standort<em aria-hidden="true" title="Pflichtfeld" class="form-required-hint">*</em></label> <input type="text" id="town2" name="town2" class="field" required=""></p>
+         </fieldset>
+         <div class="form-builder-btn">
+          <p class="form-builder-submit">
+           <button type="submit" name="submit" class="btn btn--primary">Absenden</button>
+          </p>
+         </div>
+        </form>
+        <script>
+    
+    window.helperJs.executeScript({
+        executeOnReady: true,
+        executeFn: () => {
+            const formElement = document.getElementById('cometForm798F985C-9A4B-4BC0-B5EC8DCF8576BDD6');
+            const submitButton = formElement.querySelector('[type="submit"]');
+
+            
+            window.govis.module.form.init({
+                
+                
+                
+                formId: '161',
+                langCode: 'de',
+                components: {
+                    form: formElement,
+                    submitButton: submitButton,
+                    submitContainer: submitButton.closest('.form-builder-btn')
+                },
+                componentTypes: {
+                    
+                },
+                translations: {
+                    validation_error: 'Wir haben folgenden Fehler bei der Überprüfung Ihrer Angaben festgestellt: ',
+                    validation_errors: 'Wir haben folgende Fehler bei der Überprüfung Ihrer Angaben festgestellt:'
+                },
+                
+                uploadUrl: '/route/dam-file-doUpload',
+                actionUrl: 'https://www.stmargrethen.ch/route/form-submit',
+                
+                selectors: {
+                    
+                },
+                validation: {"messages":{},"rules":{"lastname":{"required":{"type":"text","value":1}},"town2":{"required":{"type":"text","value":1}},"firstname":{"required":{"type":"text","value":1}},"street2":{"required":{"type":"text","value":1}},"phone":{"required":{"type":"tel","value":1}}},"titles":{"lastname":"Name","town2":"Beschreibung Standort","firstname":"Vorname","street2":"Strasse","phone":"Telefon"}},
+            });
+
+            
+        },
+        resources: window.form161.resources
+    });
+    </script>
+       </div>

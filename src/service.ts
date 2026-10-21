@@ -82,8 +82,12 @@ export class ReportService {
       throw new Error(
         `This category accepts a location label of at most ${rule.location_label_max_length} characters.`,
       );
+    if (rule.email_supported === false && input.email.trim())
+      throw new Error('This municipality does not accept a reporter email.');
     if (rule.email_required !== false && !input.email)
       throw new Error('This reporting service requires an email address.');
+    if (rule.email_max_length !== undefined && input.email.length > rule.email_max_length)
+      throw new Error(`This service accepts at most ${rule.email_max_length} email characters.`);
     if (
       rule.description_max_length !== undefined &&
       input.description.length > rule.description_max_length
@@ -118,6 +122,8 @@ export class ReportService {
       throw new Error(
         `This service requires a phone number with exactly ${rule.phone_digits} digits.`,
       );
+    if (rule.phone_max_length !== undefined && (input.phone?.length ?? 0) > rule.phone_max_length)
+      throw new Error(`This service accepts at most ${rule.phone_max_length} phone characters.`);
     const fields = new Map(rule.extra_fields.map((field) => [field.code, field]));
     for (const [key, value] of Object.entries(input.extra_fields)) {
       if (RESERVED_FIELDS.has(key) || /^photo|^password|^submit_/i.test(key) || !fields.has(key))
@@ -127,6 +133,37 @@ export class ReportService {
         throw new Error(`${field.description} must not exceed ${field.max_length} characters.`);
       if (field.datatype && !['string', 'text'].includes(field.datatype))
         throw new Error(`Use the official form for this category's typed field: ${key}`);
+      if (value.trim() && field.format) {
+        const formats = {
+          postcode_4_5_digits: /^[0-9]{4,5}$/,
+          postcode_1000_99999: /^[1-9][0-9]{3,4}$/,
+          local_time: /^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/,
+          digit_identifier: /^[0-9]+$/,
+          numeric_date: /^[0-9.,]+$/,
+          past_iso_date: /^(?!0000)[0-9]{4}-[0-9]{2}-[0-9]{2}$/,
+          ckw_lamp_number: /^[A-Z][0-9]{1,2}-[0-9]{1,2}[A-Z]?$/,
+        };
+        const pattern = formats[field.format];
+        if (!pattern || pattern.exec(value)?.[0] !== value)
+          throw new Error(`Invalid format for extra field: ${key}`);
+      }
+      if (value.trim() && field.format === 'past_iso_date') {
+        const date = new Date(value + 'T12:00:00Z');
+        const parts = new Intl.DateTimeFormat('en', {
+          timeZone: 'Europe/Zurich',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).formatToParts(new Date(this.store.now()));
+        const part = (type: string) => parts.find((p) => p.type === type)?.value;
+        const today = `${part('year')}-${part('month')}-${part('day')}`;
+        if (
+          !Number.isFinite(date.getTime()) ||
+          date.toISOString().slice(0, 10) !== value ||
+          value > today
+        )
+          throw new Error(`Invalid or future observation date: ${key}`);
+      }
       if (value.trim() && field.values) {
         if (
           !Array.isArray(field.values) ||

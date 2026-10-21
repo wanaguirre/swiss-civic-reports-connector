@@ -1,0 +1,95 @@
+[
+  {
+    "city": "Lungern",
+    "signatur": "Freundliche Grüsse\n\nEinwohnergemeinde Lungern\nBrünigstrasse 66 | Postfach 36 | 6078 Lungern | 041 679 79 79 ",
+    "menuFontColor": "#ffffff",
+    "alert": "4",
+    "geoLocation": "46.78515,8.15948",
+    "formfields": "firstname|lastname|locationDetails|map|photo",
+    "mailText": "Guten Tag\n\nVielen Dank für Ihre Mängelmeldung.\nWir werden uns gerne darum kümmern. Sobald der Mangel behoben ist, werden Sie darüber informiert.\n",
+    "requiredFormfields": "firstname|lastname|locationDetails",
+    "texts": "/de/wGlobal/content/texts/maengelmelder/meldung.wTexts.php",
+    "useHtmlMails": "1",
+    "polygon": []
+  },
+  {
+    "options": [
+      {
+        "key": "Abfall im Wald wild deponiert",
+        "value": "Abfall im Wald wild deponiert",
+        "group": ""
+      },
+      {
+        "key": "Abfallkübel defekt / überfüllt",
+        "value": "Abfallkübel defekt / überfüllt",
+        "group": ""
+      },
+      {
+        "key": "Robidogkasten defekt / überfüllt",
+        "value": "Robidogkasten defekt / überfüllt",
+        "group": ""
+      },
+      {
+        "key": "Schachtdeckel defekt oder offen",
+        "value": "Schachtdeckel defekt oder offen",
+        "group": ""
+      },
+      {
+        "key": "Signalisation (Strassenschilder) umgefallen / defekt",
+        "value": "Signalisation (Strassenschilder) umgefallen / defekt",
+        "group": ""
+      },
+      {
+        "key": "Sitzbank beschädigt",
+        "value": "Sitzbank beschädigt",
+        "group": ""
+      },
+      {
+        "key": "Spielplatz (öffentlich) defekt / verunreinigt",
+        "value": "Spielplatz (öffentlich) defekt / verunreinigt",
+        "group": ""
+      },
+      {
+        "key": "Strassenbeleuchtung defekt",
+        "value": "Strassenbeleuchtung defekt",
+        "group": ""
+      },
+      {
+        "key": "Vandalismus an öffentlichen Gebäuden / Einrichtungen",
+        "value": "Vandalismus an öffentlichen Gebäuden / Einrichtungen",
+        "group": ""
+      },
+      {
+        "key": "WC Anlagen (öffentlich) defekt",
+        "value": "WC Anlagen (öffentlich) defekt",
+        "group": ""
+      },
+      {
+        "key": "Sonstiges",
+        "value": "Sonstiges",
+        "group": ""
+      }
+    ],
+    "optiongroups": []
+  },
+  "46.78515,8.15948",
+  {
+    "mangel": "Meldung",
+    "maengel": "Meldungen",
+    "des_mangels": "der Meldung",
+    "den_mangel": "die Meldung",
+    "zum_mangel": "zur Meldung",
+    "einen_mangel": "eine Meldung",
+    "ihr_mangel": "Ihre Meldung",
+    "neuen_mangel": "Neue Meldung",
+    "offener_mangel": "offene Meldung",
+    "offene_maengel": "offene Meldungen",
+    "offenen_maengeln": "offenen Meldungen",
+    "maengeluebersicht": "Meldungsübersicht",
+    "diesen_mangel": "Diese Meldung",
+    "dieser_mangel": "Diese Meldung",
+    "vom_mangel": "der Meldung",
+    "ihre_maengelmeldung": "Ihre Meldung",
+    "zur_maengeluebersicht": "offene Meldungen"
+  }
+]

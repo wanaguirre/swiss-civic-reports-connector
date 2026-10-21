@@ -1,7 +1,675 @@
+import {
+  simplonHomeUrl,
+  simplonAuthorityUrl,
+  simplonStaffUrl,
+  simplonElectricityUrl,
+  simplonRegulationUrl,
+  simplonScope,
+  simplonCategories,
+  simplonRequirements,
+  assertSimplonSourcesAvailable,
+  loadSimplonCategories,
+} from './simplon-form.js';
+import {
+  yvonandHomeUrl,
+  yvonandAdministrationUrl,
+  yvonandNoticeUrl,
+  yvonandLeafletUrl,
+  yvonandAuthorityUrl,
+  yvonandScope,
+  yvonandCategories,
+  yvonandRequirements,
+  assertYvonandSourcesAvailable,
+  loadYvonandCategories,
+} from './yvonand-form.js';
+import {
+  villarsEpeneyWaterUrl,
+  villarsEpeneyRegulationsUrl,
+  villarsEpeneyAnnexUrl,
+  villarsEpeneyAdministrationUrl,
+  villarsEpeneyAuthorityUrl,
+  villarsEpeneyHomeUrl,
+  villarsEpeneyScope,
+  villarsEpeneyCategories,
+  villarsEpeneyRequirements,
+  assertVillarsEpeneySourcesAvailable,
+  loadVillarsEpeneyCategories,
+} from './villars-epeney-form.js';
+import {
+  suscevazHomeUrl,
+  suscevazAdministrationUrl,
+  suscevazAuthorityUrl,
+  suscevazNoticeUrl,
+  suscevazScope,
+  suscevazCategories,
+  suscevazRequirements,
+  assertSuscevazSourcesAvailable,
+  loadSuscevazCategories,
+} from './suscevaz-form.js';
+import {
+  orzensHomeUrl,
+  orzensAdministrationUrl,
+  orzensAuthorityUrl,
+  orzensPrivacyUrl,
+  orzensScope,
+  orzensCategories,
+  orzensRequirements,
+  assertOrzensSourcesAvailable,
+  loadOrzensCategories,
+} from './orzens-form.js';
+import {
+  cuarnyWaterUrl,
+  cuarnyAdministrationUrl,
+  cuarnyAuthorityUrl,
+  cuarnyHomeUrl,
+  cuarnyScope,
+  cuarnyCategories,
+  cuarnyRequirements,
+  assertCuarnySourcesAvailable,
+  loadCuarnyCategories,
+} from './cuarny-form.js';
+import {
+  labbayeLightingUrl,
+  labbayeAdministrationUrl,
+  labbayePresentationUrl,
+  labbayeHomeUrl,
+  labbayeScope,
+  labbayeCategories,
+  labbayeRequirements,
+  assertLabbayeSourcesAvailable,
+  loadLabbayeCategories,
+} from './labbaye-form.js';
+import {
+  joratMenthueWasteUrl,
+  joratMenthueAuthorityUrl,
+  joratMenthueAdministrationUrl,
+  joratMenthueHomeUrl,
+  joratMenthueScope,
+  joratMenthueCategories,
+  joratMenthueRequirements,
+  assertJoratMenthueSourcesAvailable,
+  loadJoratMenthueCategories,
+} from './jorat-menthue-form.js';
+import {
+  romainmotierLightingUrl,
+  romainmotierAuthorityUrl,
+  romainmotierPrivacyUrl,
+  romainmotierLegalUrl,
+  romainmotierScope,
+  romainmotierCategories,
+  romainmotierRequirements,
+  assertRomainmotierSourcesAvailable,
+  loadRomainmotierCategories,
+} from './romainmotier-form.js';
+import {
+  founexLightingUrl,
+  founexAuthorityUrl,
+  founexServicesUrl,
+  founexScope,
+  founexCategories,
+  founexRequirements,
+  assertFounexSourcesAvailable,
+  loadFounexCategories,
+} from './founex-form.js';
+import {
+  coppetLightingUrl,
+  coppetPrivacyUrl,
+  coppetServicesUrl,
+  coppetScope,
+  coppetCategories,
+  coppetRequirements,
+  assertCoppetSourcesAvailable,
+  loadCoppetCategories,
+} from './coppet-form.js';
+import {
+  pranginsLightingUrl,
+  pranginsAuthorityUrl,
+  pranginsServicesUrl,
+  pranginsScope,
+  pranginsCategories,
+  pranginsRequirements,
+  assertPranginsSourcesAvailable,
+  loadPranginsCategories,
+} from './seic-lighting-form.js';
+import {
+  duillierLightingUrl,
+  duillierAuthorityUrl,
+  duillierServicesUrl,
+  duillierScope,
+  duillierCategories,
+  duillierRequirements,
+  assertDuillierSourcesAvailable,
+  loadDuillierCategories,
+} from './seic-lighting-form.js';
+import {
+  begninsLightingUrl,
+  begninsAuthorityUrl,
+  begninsServicesUrl,
+  begninsScope,
+  begninsCategories,
+  begninsRequirements,
+  assertBegninsSourcesAvailable,
+  loadBegninsCategories,
+} from './seic-lighting-form.js';
+import {
+  bassinsWaterUrl,
+  bassinsAuthorityUrl,
+  bassinsPrivacyUrl,
+  bassinsScope,
+  bassinsCategories,
+  bassinsRequirements,
+  assertBassinsSourcesAvailable,
+  loadBassinsCategories,
+} from './bassins-enquiry-form.js';
+import {
+  vucherensWaterUrl,
+  vucherensVoirieUrl,
+  vucherensAuthorityUrl,
+  vucherensScope,
+  vucherensCategories,
+  vucherensRequirements,
+  assertVucherensSourcesAvailable,
+  loadVucherensCategories,
+} from './vucherens-form.js';
+import {
+  moudonLightingUrl,
+  moudonAuthorityUrl,
+  moudonServicesUrl,
+  moudonScope,
+  moudonCategories,
+  moudonRequirements,
+  assertMoudonSourcesAvailable,
+  loadMoudonCategories,
+} from './moudon-form.js';
+import {
+  dompierreHomeUrl,
+  dompierreServicesUrl,
+  dompierreAuthorityUrl,
+  dompierreScope,
+  dompierreCategories,
+  dompierreRequirements,
+  assertDompierreSourcesAvailable,
+  loadDompierreCategories,
+} from './dompierre-form.js';
+import {
+  chavannesMoudonRoadsUrl,
+  chavannesMoudonAuthorityUrl,
+  chavannesMoudonLegalUrl,
+  chavannesMoudonScope,
+  chavannesMoudonCategories,
+  chavannesMoudonRequirements,
+  assertChavannesMoudonSourcesAvailable,
+  loadChavannesMoudonCategories,
+} from './chavannes-moudon-form.js';
+import {
+  avmProviderUrl,
+  avmReferralUrl,
+  avmMunicipalPrivacyUrl,
+  avmMunicipalities,
+  isAvmMunicipality,
+  avmScopeFor,
+  avmCategories,
+  avmRequirements,
+  assertAvmSourcesAvailable,
+  loadAvmCategories,
+} from './avm-form.js';
+import {
+  saintSulpiceLightingUrl,
+  saintSulpiceMunicipalityUrl,
+  saintSulpiceVoirieUrl,
+  saintSulpiceScope,
+  saintSulpiceCategories,
+  saintSulpiceRequirements,
+  assertSaintSulpiceSourcesAvailable,
+  loadSaintSulpiceCategories,
+} from './saint-sulpice-form.js';
+import {
+  bussignyLightingUrl,
+  bussignyMunicipalityUrl,
+  bussignyPrivacyUrl,
+  bussignyProviderUrl,
+  bussignyLegalUrl,
+  bussignyScope,
+  bussignyCategories,
+  bussignyRequirements,
+  assertBussignySourcesAvailable,
+  loadBussignyCategories,
+} from './bussigny-form.js';
+import {
+  lavignyWasteUrl,
+  lavignyMunicipalityUrl,
+  lavignyPrivacyUrl,
+  lavignyScope,
+  lavignyCategories,
+  lavignyRequirements,
+  assertLavignySourcesAvailable,
+  loadLavignyCategories,
+} from './lavigny-form.js';
+import {
+  rivazWaterUrl,
+  rivazMunicipalityUrl,
+  rivazPrivacyUrl,
+  rivazScope,
+  rivazCategories,
+  rivazRequirements,
+  assertRivazSourcesAvailable,
+  loadRivazCategories,
+} from './rivaz-form.js';
+import {
+  sieReportUrl,
+  sieFaqUrl,
+  sieMandateUrl,
+  siePrivacyUrl,
+  sieScopeFor,
+  sieMunicipalities,
+  isSieMunicipality,
+  sieCategories,
+  sieRequirements,
+  assertSieSourcesAvailable,
+  loadSieCategories,
+} from './sie-form.js';
+import {
+  grandsonWorksUrl,
+  grandsonMunicipalityUrl,
+  grandsonContactUrl,
+  grandsonScope,
+  grandsonCategories,
+  grandsonRequirements,
+  assertGrandsonSourcesAvailable,
+  loadGrandsonCategories,
+} from './grandson-form.js';
+import {
+  essertinesFormUrl,
+  essertinesMunicipalityUrl,
+  essertinesScope,
+  essertinesCategories,
+  essertinesRequirements,
+  assertEssertinesSourcesAvailable,
+  loadEssertinesCategories,
+} from './essertines-form.js';
+import {
+  ewrFormUrl,
+  ewrPrivacyUrl,
+  ewrMunicipalities,
+  isEwrMunicipality,
+  ewrScope,
+  ewrCategories,
+  ewrRequirements,
+  assertEwrSourcesAvailable,
+  loadEwrCategories,
+} from './ewr-form.js';
+import {
+  reaFormUrl,
+  reaPrivacyUrl,
+  reaMunicipalities,
+  isReaMunicipality,
+  reaScope,
+  reaCategories,
+  reaRequirements,
+  assertReaSourcesAvailable,
+  loadReaCategories,
+} from './rea-form.js';
+import {
+  zofingenFormUrl,
+  zofingenPrivacyUrl,
+  zofingenReferralUrl,
+  zofingenScope,
+  zofingenCategories,
+  zofingenRequirements,
+  loadZofingenCategories,
+  assertZofingenSourcesAvailable,
+} from './zofingen-form.js';
+import {
+  tbwFormUrl,
+  tbwPrivacyUrl,
+  tbwReferralUrl,
+  tbwScope,
+  tbwCategories,
+  tbwRequirements,
+  loadTbwCategories,
+  assertTbwSourcesAvailable,
+} from './tbw-form.js';
+import {
+  diessenhofenFormUrl,
+  diessenhofenPrivacyUrl,
+  diessenhofenReferralUrl,
+  diessenhofenScope,
+  diessenhofenCategories,
+  diessenhofenRequirements,
+  loadDiessenhofenCategories,
+  assertDiessenhofenSourcesAvailable,
+} from './diessenhofen-form.js';
+import {
+  obermumpfFormUrl,
+  obermumpfPrivacyUrl,
+  obermumpfReferralUrl,
+  obermumpfScope,
+  obermumpfCategories,
+  obermumpfRequirements,
+  loadObermumpfCategories,
+  assertObermumpfSourcesAvailable,
+} from './obermumpf-form.js';
+import {
+  auwFormUrl,
+  auwPrivacyUrl,
+  auwReferralUrl,
+  auwScope,
+  auwCategories,
+  auwRequirements,
+  loadAuwCategories,
+  assertAuwSourcesAvailable,
+} from './auw-form.js';
+import {
+  swlLightingFormUrl,
+  swlLightingPrivacyUrl,
+  swlReferralUrl,
+  swlElectricityUrl,
+  swlScope,
+  swlCategories,
+  swlRequirements,
+  loadSwlCategories,
+  assertSwlSourcesAvailable,
+} from './swl-form.js';
+import {
+  tbseonFormUrl,
+  tbseonPrivacyUrl,
+  tbseonReferralUrl,
+  tbseonScope,
+  tbseonCategories,
+  tbseonRequirements,
+  loadTbseonCategories,
+  assertTbseonSourcesAvailable,
+} from './tbseon-form.js';
+import {
+  rwbWindischIdentityUrl,
+  rwbWindischReferralUrl,
+  assertRwbWindischSourcesAvailable,
+  loadRwbWindischCategories,
+  rwbWindischRequirements,
+} from './rwb-windisch-form.js';
+import {
+  egmFormUrl,
+  egmIdentityUrl,
+  egmPrivacyUrl,
+  egmScope,
+  egmCategories,
+  egmRequirements,
+  loadEgmCategories,
+} from './egm-form.js';
+import { assertEgmSourcesAvailable } from './egm-source.js';
+import {
+  ibwFormUrl,
+  ibwPrivacyUrl,
+  ibwIdentityUrl,
+  ibwScope,
+  ibwCategories,
+  ibwRequirements,
+  loadIbwCategories,
+} from './ibw-form.js';
+import { assertIbwSourcesAvailable } from './ibw-source.js';
+import {
+  ewwFormUrl,
+  ewwPrivacyUrl,
+  ewwIdentityUrl,
+  ewwScope,
+  ewwCategories,
+  ewwRequirements,
+  loadEwwCategories,
+} from './eww-form.js';
+import { assertEwwSourcesAvailable } from './eww-source.js';
+import {
+  egsFormUrl,
+  egsPrivacyUrl,
+  egsMunicipalities,
+  egsCategories,
+  isEgsMunicipality,
+  egsScope,
+  egsRequirements,
+  loadEgsCategories,
+  assertEgsSourcesAvailable,
+} from './egs-form.js';
+import {
+  ewnFormUrl,
+  ewnPrivacyUrl,
+  ewnReferralUrl,
+  ewnScope,
+  ewnRequirements,
+  loadEwnCategories,
+} from './ewn-form.js';
+import {
+  rwbFormUrl,
+  rwbPrivacyUrl,
+  rwbInvitationUrl,
+  rwbReferralUrl,
+  rwbScope,
+  rwbRequirements,
+  rwbCategories,
+  loadRwbCategories,
+} from './rwb-form.js';
+import {
+  tbsFormUrl,
+  tbsPrivacyUrl,
+  tbsReferralUrl,
+  tbsScope,
+  tbsRequirements,
+  inspectTbsForm,
+  loadTbsCategories,
+} from './tbs-form.js';
+import {
+  tbgraenichenFormUrl,
+  tbgraenichenPrivacyUrl,
+  tbgraenichenScope,
+  tbgraenichenRequirements,
+  inspectTbgraenichenForm,
+  loadTbgraenichenCategories,
+} from './tbgraenichen-form.js';
+import {
+  hornetFormUrl,
+  hornetTermsUrl,
+  hornetAarauReferralUrl,
+  hornetAarauScope,
+  hornetRequirements,
+  loadHornetCategories,
+} from './hornet-form.js';
+import {
+  rabiosaFormUrl,
+  rabiosaMandateUrl,
+  rabiosaScope,
+  rabiosaRequirements,
+  inspectRabiosaForm,
+} from './rabiosa-form.js';
+import {
+  energiaEngiadinaFormUrl,
+  energiaEngiadinaMandateUrl,
+  energiaEngiadinaScope,
+  energiaEngiadinaRequirements,
+  inspectEnergiaEngiadinaForm,
+} from './energia-engiadina-form.js';
+import {
+  inspectThusisForm,
+  thusisFormUrl,
+  thusisNoticeUrl,
+  thusisScope,
+  thusisRequirements,
+} from './thusis-form.js';
+import {
+  inspectFaleraForm,
+  faleraFormUrl,
+  faleraWorksUrl,
+  faleraScope,
+  faleraRequirements,
+} from './falera-form.js';
+import {
+  wilLightingFormUrl,
+  wilLightingScope,
+  wilLightingRequirements,
+  inspectWilLightingForm,
+} from './wil-lighting-form.js';
+import {
+  ewsennwaldFormUrl,
+  ewsennwaldMandateUrl,
+  ewsennwaldScope,
+  ewsennwaldRequirements,
+  inspectEwsennwaldForm,
+  isEwsennwaldMunicipality,
+} from './ewsennwald-form.js';
+import {
+  ewbuchsFormUrl,
+  ewbuchsOrganisationUrl,
+  ewbuchsPrivacyUrl,
+  ewbuchsScope,
+  ewbuchsRequirements,
+  inspectEwbuchsForm,
+} from './ewbuchs-form.js';
+import {
+  stmargrethenFormUrl,
+  stmargrethenReferralUrl,
+  stmargrethenScope,
+  stmargrethenRequirements,
+  inspectStmargrethenForm,
+} from './stmargrethen-form.js';
+import {
+  waldstattFormUrl,
+  waldstattReferralUrl,
+  waldstattMandateUrl,
+  waldstattScope,
+  waldstattRequirements,
+  inspectWaldstattForm,
+} from './waldstatt-form.js';
+import {
+  tittertenFormUrl,
+  tittertenReferralUrl,
+  tittertenScope,
+  tittertenRequirements,
+  inspectTittertenForm,
+} from './titterten-form.js';
+import {
+  wintersingenFormUrl,
+  wintersingenReferralUrl,
+  wintersingenScope,
+  wintersingenRequirements,
+  inspectWintersingenForm,
+} from './wintersingen-form.js';
+import {
+  therwilFormUrl,
+  therwilReferralUrl,
+  therwilScope,
+  therwilRequirements,
+  inspectTherwilForm,
+} from './therwil-form.js';
+import {
+  reinachBlFormUrl,
+  reinachBlScope,
+  reinachBlRequirements,
+  inspectReinachBlForm,
+} from './reinach-bl-form.js';
+import {
+  valDeCharmeyFormUrl,
+  valDeCharmeyScope,
+  valDeCharmeyRequirements,
+  inspectValDeCharmeyForm,
+} from './val-de-charmey-form.js';
+import {
+  wuennewilFormUrl,
+  wuennewilScope,
+  wuennewilRequirements,
+  inspectWuennewilForm,
+} from './wuennewil-form.js';
+import {
+  lungernFormUrl,
+  lungernReferralUrl,
+  lungernPrivacyUrl,
+  lungernWidgetUrl,
+  lungernScope,
+  lungernRequirements,
+  loadLungernCategories,
+} from './lungern-form.js';
+import {
+  ebsFormUrl,
+  ebsMandateUrl,
+  ebsMunicipalities,
+  isEbsMunicipality,
+  ebsScope,
+  ebsRequirements,
+  inspectEbsForm,
+} from './ebs-form.js';
+import {
+  erstfeldFormUrl,
+  erstfeldMandateUrl,
+  erstfeldScope,
+  erstfeldRequirements,
+  inspectErstfeldForm,
+} from './erstfeld-form.js';
+import {
+  ckwFormUrl,
+  ckwComponentUrl,
+  inspectCkwForm,
+  ckwMunicipalities,
+  isCkwMunicipality,
+  ckwRequirements,
+  ckwScope,
+} from './ckw-form.js';
+import {
+  buchsiFormUrl,
+  buchsiScope,
+  buchsiRequirements,
+  inspectBuchsiForm,
+} from './buchsi-form.js';
+import {
+  dotzigenFormUrl,
+  dotzigenScope,
+  dotzigenRequirements,
+  inspectDotzigenForm,
+} from './dotzigen-form.js';
+import { evbFormUrl, evbScope, evbRequirements, inspectEvbForm } from './evb-form.js';
+import {
+  ostermundigenForms,
+  ostermundigenScope,
+  ostermundigenRequirements,
+  inspectOstermundigenForm,
+} from './ostermundigen-form.js';
+import {
+  inspectWohlenBeForm,
+  wohlenBeRequirements,
+  wohlenBeScope,
+  wohlenBeFormUrl,
+  wohlenBeTermsUrl,
+} from './wohlen-be-form.js';
+import {
+  inspectRoggwilForm,
+  roggwilRequirements,
+  roggwilScope,
+  roggwilFormUrl,
+} from './roggwil-form.js';
+import {
+  inspectLangenthalForm,
+  langenthalRequirements,
+  langenthalScope,
+  langenthalFormUrl,
+} from './langenthal-form.js';
+import {
+  loadStaefaCategories,
+  staefaRequirements,
+  staefaScope,
+  staefaFormUrl,
+} from './staefa-form.js';
+import { inspectWazForm, wazRequirements, wazScope, wazFormUrl } from './waz-form.js';
+import {
+  inspectMarthalenForm,
+  marthalenRequirements,
+  marthalenScope,
+  marthalenTermsUrl,
+} from './marthalen-form.js';
 import { inspectBoenigenForm, boenigenRequirements, boenigenScope } from './boenigen-form.js';
 import { inspectGossauForm, gossauRequirements, gossauScope } from './gossau-form.js';
 import { inspectMeggenForm, submitOneGov, oneGovReportUrl } from './onegov-form.js';
 import { inspectEbikonForm } from './ebikon-form.js';
+import {
+  inspectNetzulgForm,
+  netzulgFormUrl,
+  netzulgRequirements,
+  netzulgScope,
+} from './netzulg-form.js';
 import { parse, type DefaultTreeAdapterMap } from 'parse5';
 import { CityClient } from './city.js';
 import {
@@ -12,10 +680,728 @@ import {
   type ReportInput,
   type Requirements,
 } from './model.js';
-import type { ReportingAdapter } from './municipalities.js';
+import type { ReportingAdapter, ReportingGuidance } from './municipalities.js';
 import { SwissPlaces } from './places.js';
 
 export const municipalForms = Object.freeze({
+  'ewr-romanshorn': Object.freeze({
+    ...ewrMunicipalities['ewr-romanshorn'],
+    language: 'de' as const,
+    formUrl: ewrFormUrl,
+    reportingUrl: ewrFormUrl,
+  }),
+  'ewr-salmsach': Object.freeze({
+    ...ewrMunicipalities['ewr-salmsach'],
+    language: 'de' as const,
+    formUrl: ewrFormUrl,
+    reportingUrl: ewrFormUrl,
+  }),
+  'ewr-uttwil': Object.freeze({
+    ...ewrMunicipalities['ewr-uttwil'],
+    language: 'de' as const,
+    formUrl: ewrFormUrl,
+    reportingUrl: ewrFormUrl,
+  }),
+  'rea-hefenhofen': Object.freeze({
+    ...reaMunicipalities['rea-hefenhofen'],
+    language: 'de' as const,
+    formUrl: reaFormUrl,
+    reportingUrl: reaFormUrl,
+  }),
+  'rea-amriswil': Object.freeze({
+    ...reaMunicipalities['rea-amriswil'],
+    language: 'de' as const,
+    formUrl: reaFormUrl,
+    reportingUrl: reaFormUrl,
+  }),
+  'zofingen-infrastructure': Object.freeze({
+    bfsId: 4289,
+    municipality: 'Zofingen',
+    language: 'de' as const,
+    formUrl: zofingenFormUrl,
+    reportingUrl: zofingenFormUrl,
+  }),
+  'tbw-weinfelden': Object.freeze({
+    bfsId: 4946,
+    municipality: 'Weinfelden',
+    language: 'de' as const,
+    formUrl: tbwFormUrl,
+    reportingUrl: tbwFormUrl,
+  }),
+  'diessenhofen-stadtmelder': Object.freeze({
+    bfsId: 4545,
+    municipality: 'Diessenhofen',
+    language: 'de' as const,
+    formUrl: diessenhofenFormUrl,
+    reportingUrl: diessenhofenFormUrl,
+  }),
+  'obermumpf-lighting': Object.freeze({
+    bfsId: 4256,
+    municipality: 'Obermumpf',
+    language: 'de' as const,
+    formUrl: obermumpfFormUrl,
+    reportingUrl: obermumpfFormUrl,
+  }),
+  'egm-muelligen': Object.freeze({
+    bfsId: 4107,
+    municipality: 'Mülligen',
+    language: 'de' as const,
+    formUrl: egmFormUrl,
+    reportingUrl: egmFormUrl,
+  }),
+  'swl-staufen': Object.freeze({
+    bfsId: 4210,
+    municipality: 'Staufen',
+    language: 'de' as const,
+    formUrl: swlLightingFormUrl,
+    reportingUrl: swlLightingFormUrl,
+  }),
+  'elektra-auw': Object.freeze({
+    bfsId: 4223,
+    municipality: 'Auw',
+    language: 'de' as const,
+    formUrl: auwFormUrl,
+    reportingUrl: auwFormUrl,
+  }),
+  'tbseon-egliswil': Object.freeze({
+    bfsId: 4195,
+    municipality: 'Egliswil',
+    language: 'de' as const,
+    formUrl: tbseonFormUrl,
+    reportingUrl: tbseonFormUrl,
+  }),
+  'ibw-wohlen-ag': Object.freeze({
+    bfsId: 4082,
+    municipality: 'Wohlen (AG)',
+    language: 'de' as const,
+    formUrl: ibwFormUrl,
+    reportingUrl: ibwFormUrl,
+  }),
+  'eww-wettingen': Object.freeze({
+    bfsId: 4045,
+    municipality: 'Wettingen',
+    language: 'de' as const,
+    formUrl: ewwFormUrl,
+    reportingUrl: ewwFormUrl,
+  }),
+  'egs-obersiggenthal': Object.freeze({
+    ...egsMunicipalities['egs-obersiggenthal'],
+    language: 'de' as const,
+    formUrl: egsFormUrl,
+    reportingUrl: egsFormUrl,
+  }),
+  'egs-untersiggenthal': Object.freeze({
+    ...egsMunicipalities['egs-untersiggenthal'],
+    language: 'de' as const,
+    formUrl: egsFormUrl,
+    reportingUrl: egsFormUrl,
+  }),
+  'ewn-neuenhof': Object.freeze({
+    bfsId: 4034,
+    municipality: 'Neuenhof',
+    language: 'de' as const,
+    formUrl: ewnFormUrl,
+    reportingUrl: ewnFormUrl,
+  }),
+  'rwb-windisch': Object.freeze({
+    bfsId: 4123,
+    municipality: 'Windisch',
+    language: 'de' as const,
+    formUrl: rwbFormUrl,
+    reportingUrl: rwbFormUrl,
+  }),
+  'rwb-ennetbaden': Object.freeze({
+    bfsId: 4026,
+    municipality: 'Ennetbaden',
+    language: 'de' as const,
+    formUrl: rwbFormUrl,
+    reportingUrl: rwbFormUrl,
+  }),
+  'tbs-suhr': Object.freeze({
+    bfsId: 4012,
+    municipality: 'Suhr',
+    language: 'de' as const,
+    formUrl: tbsFormUrl,
+    reportingUrl: tbsFormUrl,
+  }),
+  tbgraenichen: Object.freeze({
+    bfsId: 4006,
+    municipality: 'Gränichen',
+    language: 'de' as const,
+    formUrl: tbgraenichenFormUrl,
+    reportingUrl: tbgraenichenFormUrl,
+  }),
+  'hornet-aarau': Object.freeze({
+    bfsId: 4001,
+    municipality: 'Aarau',
+    language: 'de' as const,
+    formUrl: hornetFormUrl,
+    reportingUrl: hornetFormUrl,
+  }),
+  'rabiosa-churwalden': Object.freeze({
+    bfsId: 3911,
+    municipality: 'Churwalden',
+    language: 'de' as const,
+    formUrl: rabiosaFormUrl,
+    reportingUrl: rabiosaFormUrl,
+  }),
+  'ee-engiadina-scuol': Object.freeze({
+    bfsId: 3762,
+    municipality: 'Scuol',
+    language: 'de' as const,
+    formUrl: energiaEngiadinaFormUrl,
+    reportingUrl: energiaEngiadinaFormUrl,
+  }),
+  thusis: Object.freeze({
+    bfsId: 3668,
+    municipality: 'Thusis',
+    language: 'de' as const,
+    formUrl: thusisFormUrl,
+    reportingUrl: thusisFormUrl,
+  }),
+  falera: Object.freeze({
+    bfsId: 3572,
+    municipality: 'Falera',
+    language: 'de' as const,
+    formUrl: faleraFormUrl,
+    reportingUrl: faleraFormUrl,
+  }),
+  'wil-lighting': Object.freeze({
+    bfsId: 3427,
+    municipality: 'Wil (SG)',
+    language: 'de' as const,
+    formUrl: wilLightingFormUrl,
+    reportingUrl: wilLightingFormUrl,
+  }),
+  'ewsennwald-sennwald': Object.freeze({
+    bfsId: 3274,
+    municipality: 'Sennwald',
+    language: 'de' as const,
+    formUrl: ewsennwaldFormUrl,
+    reportingUrl: ewsennwaldFormUrl,
+  }),
+  'ewsennwald-altstaetten': Object.freeze({
+    bfsId: 3251,
+    municipality: 'Altstätten',
+    language: 'de' as const,
+    formUrl: ewsennwaldFormUrl,
+    reportingUrl: ewsennwaldFormUrl,
+  }),
+  ewbuchs: Object.freeze({
+    bfsId: 3271,
+    municipality: 'Buchs (SG)',
+    language: 'de' as const,
+    formUrl: ewbuchsFormUrl,
+    reportingUrl: ewbuchsFormUrl,
+  }),
+  stmargrethen: Object.freeze({
+    bfsId: 3236,
+    municipality: 'St. Margrethen',
+    language: 'de' as const,
+    formUrl: stmargrethenFormUrl,
+    reportingUrl: stmargrethenFormUrl,
+  }),
+  waldstatt: Object.freeze({
+    bfsId: 3007,
+    municipality: 'Waldstatt',
+    language: 'de' as const,
+    formUrl: waldstattFormUrl,
+    reportingUrl: waldstattFormUrl,
+  }),
+  titterten: Object.freeze({
+    bfsId: 2894,
+    municipality: 'Titterten',
+    language: 'de' as const,
+    formUrl: tittertenFormUrl,
+    reportingUrl: tittertenFormUrl,
+  }),
+  wintersingen: Object.freeze({
+    bfsId: 2866,
+    municipality: 'Wintersingen',
+    language: 'de' as const,
+    formUrl: wintersingenFormUrl,
+    reportingUrl: wintersingenFormUrl,
+  }),
+  therwil: Object.freeze({
+    bfsId: 2775,
+    municipality: 'Therwil',
+    language: 'de' as const,
+    formUrl: therwilFormUrl,
+    reportingUrl: therwilFormUrl,
+  }),
+  'reinach-bl': Object.freeze({
+    bfsId: 2773,
+    municipality: 'Reinach (BL)',
+    language: 'de' as const,
+    formUrl: reinachBlFormUrl,
+    reportingUrl: reinachBlFormUrl,
+  }),
+  'val-de-charmey': Object.freeze({
+    bfsId: 2163,
+    municipality: 'Val-de-Charmey',
+    language: 'fr' as const,
+    formUrl: valDeCharmeyFormUrl,
+    reportingUrl: valDeCharmeyFormUrl,
+  }),
+  'wuennewil-flamatt': Object.freeze({
+    bfsId: 2309,
+    municipality: 'Wünnewil-Flamatt',
+    language: 'de' as const,
+    formUrl: wuennewilFormUrl,
+    reportingUrl: wuennewilFormUrl,
+  }),
+  lungern: Object.freeze({
+    bfsId: 1405,
+    municipality: 'Lungern',
+    language: 'de' as const,
+    formUrl: lungernFormUrl,
+    reportingUrl: lungernFormUrl,
+  }),
+  sattel: Object.freeze({
+    bfsId: 1371,
+    municipality: 'Sattel',
+    language: 'de' as const,
+    formUrl: ebsFormUrl,
+    reportingUrl: ebsFormUrl,
+  }),
+  schwyz: Object.freeze({
+    bfsId: 1372,
+    municipality: 'Schwyz',
+    language: 'de' as const,
+    formUrl: ebsFormUrl,
+    reportingUrl: ebsFormUrl,
+  }),
+  erstfeld: Object.freeze({
+    bfsId: 1206,
+    municipality: 'Erstfeld',
+    language: 'de' as const,
+    formUrl: erstfeldFormUrl,
+    reportingUrl: erstfeldFormUrl,
+  }),
+  wauwil: Object.freeze({
+    bfsId: 1146,
+    municipality: 'Wauwil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  wikon: Object.freeze({
+    bfsId: 1147,
+    municipality: 'Wikon',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  schoetz: Object.freeze({
+    bfsId: 1143,
+    municipality: 'Schötz',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  ettiswil: Object.freeze({
+    bfsId: 1128,
+    municipality: 'Ettiswil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  dagmersellen: Object.freeze({
+    bfsId: 1125,
+    municipality: 'Dagmersellen',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  sursee: Object.freeze({
+    bfsId: 1103,
+    municipality: 'Sursee',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  schenkon: Object.freeze({
+    bfsId: 1099,
+    municipality: 'Schenkon',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  ruswil: Object.freeze({
+    bfsId: 1098,
+    municipality: 'Ruswil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  oberkirch: Object.freeze({
+    bfsId: 1095,
+    municipality: 'Oberkirch',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  knutwil: Object.freeze({
+    bfsId: 1089,
+    municipality: 'Knutwil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  eich: Object.freeze({
+    bfsId: 1084,
+    municipality: 'Eich',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  bueron: Object.freeze({
+    bfsId: 1082,
+    municipality: 'Büron',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  adligenswil: Object.freeze({
+    bfsId: 1051,
+    municipality: 'Adligenswil',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  werthenstein: Object.freeze({
+    bfsId: 1009,
+    municipality: 'Werthenstein',
+    language: 'de' as const,
+    formUrl: ckwFormUrl,
+    reportingUrl: ckwFormUrl,
+  }),
+  oberhofen: Object.freeze({
+    bfsId: 934,
+    municipality: 'Oberhofen am Thunersee',
+    language: 'de' as const,
+    formUrl: netzulgFormUrl,
+    reportingUrl: netzulgFormUrl,
+  }),
+  steffisburg: Object.freeze({
+    bfsId: 939,
+    municipality: 'Steffisburg',
+    language: 'de' as const,
+    formUrl: netzulgFormUrl,
+    reportingUrl: netzulgFormUrl,
+  }),
+  buchsi: Object.freeze({
+    bfsId: 546,
+    municipality: 'Münchenbuchsee',
+    language: 'de',
+    formUrl: buchsiFormUrl,
+    reportingUrl: 'https://www.energiebuchsi.ch/de/online-schalter/',
+  }),
+  dotzigen: Object.freeze({
+    bfsId: 386,
+    municipality: 'Dotzigen',
+    language: 'de',
+    formUrl: dotzigenFormUrl,
+    reportingUrl: dotzigenFormUrl,
+  }),
+  bueren: Object.freeze({
+    bfsId: 383,
+    municipality: 'Büren an der Aare',
+    language: 'de',
+    formUrl: evbFormUrl,
+    reportingUrl: evbFormUrl,
+  }),
+  ostermundigen: Object.freeze({
+    bfsId: 363,
+    municipality: 'Ostermundigen',
+    language: 'de',
+    formUrl: ostermundigenForms.lighting.url,
+    reportingUrl: 'https://www.ostermundigen.ch/de/verwaltung/abteilungen/detail/detail.php?i=16',
+  }),
+  'wohlen-be': Object.freeze({
+    bfsId: 360,
+    municipality: 'Wohlen bei Bern',
+    language: 'de' as const,
+    formUrl: wohlenBeFormUrl,
+    reportingUrl: wohlenBeFormUrl,
+  }),
+  roggwil: Object.freeze({
+    bfsId: 337,
+    municipality: 'Roggwil (BE)',
+    language: 'de' as const,
+    formUrl: roggwilFormUrl,
+    reportingUrl: roggwilFormUrl,
+  }),
+  langenthal: Object.freeze({
+    bfsId: 329,
+    municipality: 'Langenthal',
+    language: 'de' as const,
+    formUrl: langenthalFormUrl,
+    reportingUrl: langenthalFormUrl,
+  }),
+  staefa: Object.freeze({
+    bfsId: 158,
+    municipality: 'Stäfa',
+    language: 'de' as const,
+    formUrl: staefaFormUrl,
+    reportingUrl: staefaFormUrl,
+  }),
+  erlenbach: Object.freeze({
+    bfsId: 151,
+    municipality: 'Erlenbach (ZH)',
+    language: 'de' as const,
+    formUrl: wazFormUrl,
+    reportingUrl: wazFormUrl,
+  }),
+  zollikon: Object.freeze({
+    bfsId: 161,
+    municipality: 'Zollikon',
+    language: 'de' as const,
+    formUrl: wazFormUrl,
+    reportingUrl: wazFormUrl,
+  }),
+  marthalen: Object.freeze({
+    bfsId: 35,
+    municipality: 'Marthalen',
+    language: 'de' as const,
+    formUrl: 'https://eg-m.ch/online-schalter/',
+    reportingUrl: 'https://eg-m.ch/online-schalter/',
+  }),
+  'sie-crissier': Object.freeze({
+    ...sieMunicipalities['sie-crissier'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'sie-renens': Object.freeze({
+    ...sieMunicipalities['sie-renens'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'sie-chavannes': Object.freeze({
+    ...sieMunicipalities['sie-chavannes'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'sie-ecublens': Object.freeze({
+    ...sieMunicipalities['sie-ecublens'],
+    language: 'fr' as const,
+    formUrl: sieReportUrl,
+    reportingUrl: sieReportUrl,
+  }),
+  'avm-chigny': Object.freeze({
+    ...avmMunicipalities['avm-chigny'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-clarmont': Object.freeze({
+    ...avmMunicipalities['avm-clarmont'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-echichens': Object.freeze({
+    ...avmMunicipalities['avm-echichens'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-vaux': Object.freeze({
+    ...avmMunicipalities['avm-vaux'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-vufflens': Object.freeze({
+    ...avmMunicipalities['avm-vufflens'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'avm-hautemorges': Object.freeze({
+    ...avmMunicipalities['avm-hautemorges'],
+    language: 'fr' as const,
+    formUrl: avmProviderUrl,
+    reportingUrl: avmProviderUrl,
+  }),
+  'chavannes-moudon-maintenance': Object.freeze({
+    bfsId: 5665,
+    municipality: 'Chavannes-sur-Moudon',
+    language: 'fr' as const,
+    formUrl: chavannesMoudonRoadsUrl,
+    reportingUrl: chavannesMoudonRoadsUrl,
+  }),
+  'seic-duillier-lighting-note': Object.freeze({
+    bfsId: 5715,
+    municipality: 'Duillier',
+    language: 'fr' as const,
+    formUrl: duillierLightingUrl,
+    reportingUrl: duillierLightingUrl,
+  }),
+  'seic-prangins-lighting-note': Object.freeze({
+    bfsId: 5725,
+    municipality: 'Prangins',
+    language: 'fr' as const,
+    formUrl: pranginsLightingUrl,
+    reportingUrl: pranginsLightingUrl,
+  }),
+  'seic-begnins-lighting-note': Object.freeze({
+    bfsId: 5704,
+    municipality: 'Begnins',
+    language: 'fr' as const,
+    formUrl: begninsLightingUrl,
+    reportingUrl: begninsLightingUrl,
+  }),
+  'coppet-lighting-note': Object.freeze({
+    bfsId: 5712,
+    municipality: 'Coppet',
+    language: 'fr' as const,
+    formUrl: coppetLightingUrl,
+    reportingUrl: coppetLightingUrl,
+  }),
+  'jorat-menthue-molok-note': Object.freeze({
+    bfsId: 5804,
+    municipality: 'Jorat-Menthue',
+    language: 'fr' as const,
+    formUrl: joratMenthueWasteUrl,
+    reportingUrl: joratMenthueWasteUrl,
+  }),
+  'suscevaz-hornet-observation-note': Object.freeze({
+    bfsId: 5930,
+    municipality: 'Suscevaz',
+    language: 'fr' as const,
+    formUrl: suscevazHomeUrl,
+    reportingUrl: suscevazHomeUrl,
+  }),
+  'orzens-hornet-observation-note': Object.freeze({
+    bfsId: 5925,
+    municipality: 'Orzens',
+    language: 'fr' as const,
+    formUrl: orzensHomeUrl,
+    reportingUrl: orzensHomeUrl,
+  }),
+  'simplon-evs-meter-note': Object.freeze({
+    bfsId: 6009,
+    municipality: 'Simplon',
+    language: 'de' as const,
+    formUrl: simplonElectricityUrl,
+    reportingUrl: simplonElectricityUrl,
+  }),
+  'yvonand-hornet-nest-note': Object.freeze({
+    bfsId: 5939,
+    municipality: 'Yvonand',
+    language: 'fr' as const,
+    formUrl: yvonandNoticeUrl,
+    reportingUrl: yvonandNoticeUrl,
+  }),
+  'villars-epeney-meter-note': Object.freeze({
+    bfsId: 5935,
+    municipality: 'Villars-Epeney',
+    language: 'fr' as const,
+    formUrl: villarsEpeneyHomeUrl,
+    reportingUrl: villarsEpeneyHomeUrl,
+  }),
+  'cuarny-water-quality-note': Object.freeze({
+    bfsId: 5911,
+    municipality: 'Cuarny',
+    language: 'fr' as const,
+    formUrl: cuarnyWaterUrl,
+    reportingUrl: cuarnyWaterUrl,
+  }),
+  'labbaye-lighting-note': Object.freeze({
+    bfsId: 5871,
+    municipality: "L'Abbaye",
+    language: 'fr' as const,
+    formUrl: labbayeLightingUrl,
+    reportingUrl: labbayeLightingUrl,
+  }),
+  'romainmotier-lighting-note': Object.freeze({
+    bfsId: 5761,
+    municipality: 'Romainmôtier-Envy',
+    language: 'fr' as const,
+    formUrl: romainmotierLightingUrl,
+    reportingUrl: romainmotierLightingUrl,
+  }),
+  'founex-lighting-note': Object.freeze({
+    bfsId: 5717,
+    municipality: 'Founex',
+    language: 'fr' as const,
+    formUrl: founexLightingUrl,
+    reportingUrl: founexLightingUrl,
+  }),
+  'moudon-lighting-note': Object.freeze({
+    bfsId: 5678,
+    municipality: 'Moudon',
+    language: 'fr' as const,
+    formUrl: moudonLightingUrl,
+    reportingUrl: moudonLightingUrl,
+  }),
+  'bassins-water-enquiry': Object.freeze({
+    bfsId: 5703,
+    municipality: 'Bassins',
+    language: 'fr' as const,
+    formUrl: bassinsWaterUrl,
+    reportingUrl: bassinsWaterUrl,
+  }),
+  'vucherens-water': Object.freeze({
+    bfsId: 5692,
+    municipality: 'Vucherens',
+    language: 'fr' as const,
+    formUrl: vucherensWaterUrl,
+    reportingUrl: vucherensWaterUrl,
+  }),
+  'dompierre-roads': Object.freeze({
+    bfsId: 5671,
+    municipality: 'Dompierre (VD)',
+    language: 'fr' as const,
+    formUrl: dompierreServicesUrl,
+    reportingUrl: dompierreServicesUrl,
+  }),
+  'saint-sulpice-lighting': Object.freeze({
+    bfsId: 5648,
+    municipality: 'Saint-Sulpice (VD)',
+    language: 'fr' as const,
+    formUrl: saintSulpiceLightingUrl,
+    reportingUrl: saintSulpiceLightingUrl,
+  }),
+  'bussigny-lighting': Object.freeze({
+    bfsId: 5624,
+    municipality: 'Bussigny',
+    language: 'fr' as const,
+    formUrl: bussignyLightingUrl,
+    reportingUrl: bussignyLightingUrl,
+  }),
+  'lavigny-molok': Object.freeze({
+    bfsId: 5637,
+    municipality: 'Lavigny',
+    language: 'fr' as const,
+    formUrl: lavignyWasteUrl,
+    reportingUrl: lavignyWasteUrl,
+  }),
+  'rivaz-water': Object.freeze({
+    bfsId: 5609,
+    municipality: 'Rivaz',
+    language: 'fr' as const,
+    formUrl: rivazWaterUrl,
+    reportingUrl: rivazWaterUrl,
+  }),
+  'grandson-voirie': Object.freeze({
+    bfsId: 5561,
+    municipality: 'Grandson',
+    language: 'fr' as const,
+    formUrl: grandsonWorksUrl,
+    reportingUrl: grandsonWorksUrl,
+  }),
+  'essertines-voirie': Object.freeze({
+    bfsId: 5520,
+    municipality: 'Essertines-sur-Yverdon',
+    language: 'fr' as const,
+    formUrl: essertinesFormUrl,
+    reportingUrl: essertinesFormUrl,
+  }),
   boenigen: Object.freeze({
     bfsId: 572,
     municipality: 'Bönigen',
@@ -109,6 +1495,117 @@ const specs = {
 
 /** Return only public metadata. Never retain HTML, session tokens or cookies. */
 export function inspectMunicipalForm(name: Name, html: string): Category[] {
+  if (name === 'zofingen-infrastructure')
+    throw new Error('Use the complete pinned Zofingen source contract.');
+  if (name === 'swl-staufen') throw new Error('Use the complete pinned SWL source contract.');
+  if (name === 'tbw-weinfelden') throw new Error('Use the complete pinned TBW source contract.');
+  if (name === 'diessenhofen-stadtmelder')
+    throw new Error('Use the complete pinned Diessenhofen source contract.');
+  if (name === 'obermumpf-lighting')
+    throw new Error('Use the complete pinned Obermumpf source contract.');
+  if (name === 'elektra-auw')
+    throw new Error('Use the complete pinned Elektra Auw source manifest.');
+  if (name === 'tbseon-egliswil')
+    throw new Error('Use the complete pinned TB Seon source manifest.');
+  if (name === 'egm-muelligen') throw new Error('Use the complete checked EGM source manifest.');
+  if (name === 'ibw-wohlen-ag') throw new Error('Use the complete checked ibw source manifest.');
+  if (name === 'eww-wettingen')
+    throw new Error('Use the complete checked Wettingen source manifest.');
+  if (isEwrMunicipality(name)) throw new Error('Use the complete pinned EWR source manifest.');
+  if (isReaMunicipality(name)) throw new Error('Use the complete pinned REA source manifest.');
+  if (isEgsMunicipality(name)) throw new Error('Use the complete pinned EGS source manifest.');
+  if (name === 'ewn-neuenhof') throw new Error('Use the complete pinned EWN source manifest.');
+  if (name === 'rwb-ennetbaden' || name === 'rwb-windisch')
+    throw new Error('Use the complete pinned RWB source manifest.');
+  if (name === 'hornet-aarau') throw new Error('Use the complete pinned hornet source manifest.');
+  if (name === 'tbs-suhr') return inspectTbsForm(html);
+  if (name === 'tbgraenichen') return inspectTbgraenichenForm(html);
+  if (name === 'rabiosa-churwalden') return inspectRabiosaForm(html);
+  if (name === 'ee-engiadina-scuol') return inspectEnergiaEngiadinaForm(html);
+  if (name === 'thusis') return inspectThusisForm(html);
+  if (name === 'falera') return inspectFaleraForm(html);
+  if (name === 'wil-lighting') return inspectWilLightingForm(html);
+  if (isEwsennwaldMunicipality(name)) return inspectEwsennwaldForm(html);
+  if (name === 'ewbuchs') return inspectEwbuchsForm(html);
+  if (name === 'stmargrethen') return inspectStmargrethenForm(html);
+  if (name === 'waldstatt') return inspectWaldstattForm(html);
+  if (name === 'titterten') return inspectTittertenForm(html);
+  if (name === 'wintersingen') return inspectWintersingenForm(html);
+  if (name === 'therwil') return inspectTherwilForm(html);
+  if (name === 'reinach-bl') return inspectReinachBlForm(html);
+  if (name === 'lungern')
+    throw new Error('The Lungern portal requires its complete tenant configuration.');
+  if (isEbsMunicipality(name)) return inspectEbsForm(html);
+  if (name === 'val-de-charmey') return inspectValDeCharmeyForm(html);
+  if (name === 'wuennewil-flamatt') return inspectWuennewilForm(html);
+  if (name === 'erstfeld') return inspectErstfeldForm(html);
+  if (isCkwMunicipality(name)) return inspectCkwForm(html);
+  if (name === 'oberhofen' || name === 'steffisburg') return inspectNetzulgForm(html);
+  if (name === 'buchsi') return inspectBuchsiForm(html);
+  if (name === 'dotzigen') return inspectDotzigenForm(html);
+  if (name === 'bueren') return inspectEvbForm(html);
+  if (name === 'ostermundigen')
+    throw new Error('Ostermundigen requires both separate form contracts.');
+  if (name === 'wohlen-be') return inspectWohlenBeForm(html);
+  if (name === 'roggwil') return inspectRoggwilForm(html);
+  if (name === 'langenthal') return inspectLangenthalForm(html);
+  if (name === 'staefa') throw new Error('Stäfa requires its public JSON schema and translations.');
+  if (name === 'erlenbach' || name === 'zollikon') return inspectWazForm(html);
+  if (name === 'marthalen') return inspectMarthalenForm(html);
+  if (isSieMunicipality(name))
+    throw new Error('SIE requires its complete pinned public source manifest.');
+  if (isAvmMunicipality(name))
+    throw new Error('AVM requires its complete pinned public source manifest.');
+  if (name === 'chavannes-moudon-maintenance')
+    throw new Error('ChavannesMoudon requires its complete pinned public source manifest.');
+  if (name === 'seic-duillier-lighting-note')
+    throw new Error('Duillier requires its complete pinned public source manifest.');
+  if (name === 'seic-prangins-lighting-note')
+    throw new Error('Prangins requires its complete pinned public source manifest.');
+  if (name === 'seic-begnins-lighting-note')
+    throw new Error('Begnins requires its complete pinned public source manifest.');
+  if (name === 'coppet-lighting-note')
+    throw new Error('Coppet requires its complete pinned public source manifest.');
+  if (name === 'jorat-menthue-molok-note')
+    throw new Error('JoratMenthue requires its complete pinned public source manifest.');
+  if (name === 'suscevaz-hornet-observation-note')
+    throw new Error('Suscevaz requires its complete pinned public source manifest.');
+  if (name === 'orzens-hornet-observation-note')
+    throw new Error('Orzens requires its complete pinned public source manifest.');
+  if (name === 'simplon-evs-meter-note')
+    throw new Error('Simplon requires its complete pinned public source manifest.');
+  if (name === 'yvonand-hornet-nest-note')
+    throw new Error('Yvonand requires its complete pinned public source manifest.');
+  if (name === 'villars-epeney-meter-note')
+    throw new Error('VillarsEpeney requires its complete pinned public source manifest.');
+  if (name === 'cuarny-water-quality-note')
+    throw new Error('Cuarny requires its complete pinned public source manifest.');
+  if (name === 'labbaye-lighting-note')
+    throw new Error('Labbaye requires its complete pinned public source manifest.');
+  if (name === 'romainmotier-lighting-note')
+    throw new Error('Romainmotier requires its complete pinned public source manifest.');
+  if (name === 'founex-lighting-note')
+    throw new Error('Founex requires its complete pinned public source manifest.');
+  if (name === 'moudon-lighting-note')
+    throw new Error('Moudon requires its complete pinned public source manifest.');
+  if (name === 'bassins-water-enquiry')
+    throw new Error('Bassins requires its complete pinned public source manifest.');
+  if (name === 'vucherens-water')
+    throw new Error('Vucherens requires its complete pinned public source manifest.');
+  if (name === 'dompierre-roads')
+    throw new Error('Dompierre requires its complete pinned public source manifest.');
+  if (name === 'saint-sulpice-lighting')
+    throw new Error('SaintSulpice requires its complete pinned public source manifest.');
+  if (name === 'bussigny-lighting')
+    throw new Error('Bussigny requires its complete pinned public source manifest.');
+  if (name === 'lavigny-molok')
+    throw new Error('Lavigny requires its complete pinned public source manifest.');
+  if (name === 'rivaz-water')
+    throw new Error('Rivaz requires its complete pinned public source manifest.');
+  if (name === 'grandson-voirie')
+    throw new Error('Grandson requires its complete pinned public source manifest.');
+  if (name === 'essertines-voirie')
+    throw new Error('Essertines requires its complete pinned source manifest.');
   if (name === 'boenigen') return inspectBoenigenForm(html);
   if (name === 'gossau') return inspectGossauForm(html);
   if (name === 'ebikon') return inspectEbikonForm(html);
@@ -263,7 +1760,7 @@ export class MunicipalFormClient implements ReportingAdapter {
   readonly placeMapUrl = 'https://map.geo.admin.ch/?center={longitude},{latitude}&z=10';
   readonly privacy: string;
   readonly termsUrl?: string;
-  readonly guidance;
+  readonly guidance: ReportingGuidance;
   private places: Pick<SwissPlaces, 'municipality'>;
   private now: () => number;
   private cached?: { expires: number; value: Category[] };
@@ -287,19 +1784,107 @@ export class MunicipalFormClient implements ReportingAdapter {
       this.submissionMode === 'direct'
         ? 'After your approval, Civic sends your reviewed contact details, report and optional normalized photo to the municipality. Its service emails a ticket reference; Civic does not request a personal-data copy by email.'
         : 'Preparation keeps contact details and normalized photos in Civic. Sending is disabled pending a genuine municipal delivery pilot.';
+    if (name === 'val-de-charmey')
+      this.privacy =
+        'Preparation stays in Civic and accepts no reporter contact fields. The official portal is configured to publish title, details, coordinates and any attached photo publicly. Choose publication yourself after review; Civic does not send or publish anything.';
+    if (name === 'hornet-aarau')
+      this.privacy =
+        'Preparation keeps private contact details and normalized photos in Civic. The provider policy allows competent responders to receive contacts and observation data to be shared under its rules; exact coordinate publication has conditions. Civic does not send, publish, look up contacts or execute the provider client.';
+    if (name === 'tbgraenichen')
+      this.privacy =
+        'Preparation keeps private contacts in Civic, outside AI, and accepts no photos. The linked provider privacy page yielded no substantive sharing/retention policy body. Civic performs no provider client/protection execution, sending or external transfer.';
+    if (name === 'tbs-suhr')
+      this.privacy =
+        'Local preparation keeps private reporter names/address/contact preference separate from the fault location and outside AI. The provider describes contact-form delivery by email and storage for inquiries; its general sharing/cross-border policy applies, with no fixed report retention established. Civic sends nothing and never executes or simulates native interaction.';
     this.bfsId = config.bfsId;
     this.municipality = config.municipality;
     this.deliveryLanguage = config.language;
     this.serviceId = `${name}-defect-form`;
-    this.termsUrl = name === 'gossau' ? config.formUrl : undefined;
+    this.termsUrl =
+      name === 'hornet-aarau'
+        ? hornetTermsUrl
+        : name === 'ewbuchs'
+          ? ewbuchsPrivacyUrl
+          : name === 'lungern'
+            ? lungernPrivacyUrl
+            : name === 'dotzigen'
+              ? 'https://www.dotzigen.ch/de/datenschutz/'
+              : name === 'bueren'
+                ? 'https://www.ev-bueren.ch/datenschutz/'
+                : name === 'ostermundigen'
+                  ? 'https://www.ostermundigen.ch/de/datenschutz/nutzungsbedingungen.php'
+                  : name === 'wohlen-be'
+                    ? wohlenBeTermsUrl
+                    : name === 'marthalen'
+                      ? marthalenTermsUrl
+                      : name === 'gossau'
+                        ? config.formUrl
+                        : undefined;
     this.reportingService =
-      name === 'gossau'
-        ? 'Problem melden'
-        : name === 'meggen'
-          ? 'Meldung Sicherheitsproblem'
-          : name !== 'fribourg'
-            ? 'Schaden melden'
-            : 'Avis de défectuosité';
+      name === 'tbs-suhr'
+        ? 'TBS Strom AG – Strassenbeleuchtung Suhr'
+        : name === 'tbgraenichen'
+          ? 'TB Gränichen Energie AG – Strassenbeleuchtung'
+          : name === 'hornet-aarau'
+            ? 'info fauna – Asiatische Hornisse (Aarau)'
+            : name === 'rabiosa-churwalden'
+              ? 'Rabiosa Energie – Strassenbeleuchtung Churwalden'
+              : name === 'ee-engiadina-scuol'
+                ? 'EE Energia Engiadina – Öffentliche Beleuchtung Scuol'
+                : name === 'thusis'
+                  ? 'Gemeinde Thusis – Freizeitinfrastruktur'
+                  : name === 'falera'
+                    ? 'Gemeinde Falera – Werkhof/Strassenwesen'
+                    : name === 'wil-lighting'
+                      ? 'Stadt Wil – Strassenbeleuchtung'
+                      : isEwsennwaldMunicipality(name)
+                        ? 'EW Sennwald – Strassenbeleuchtung'
+                        : name === 'ewbuchs'
+                          ? 'ewb Buchs SG – Öffentliche Beleuchtung'
+                          : name === 'stmargrethen'
+                            ? 'St. Margrethen – Strassenbeleuchtung'
+                            : name === 'val-de-charmey'
+                              ? 'Commune Val-de-Charmey – Signalement de défauts'
+                              : name === 'wuennewil-flamatt'
+                                ? 'Bauamt Wünnewil-Flamatt – Strassenbeleuchtung'
+                                : name === 'lungern'
+                                  ? 'Mängelmelder Lungern'
+                                  : isEbsMunicipality(name)
+                                    ? 'ebs Energie AG – Strassenbeleuchtung'
+                                    : name === 'erstfeld'
+                                      ? 'Gemeindewerke Erstfeld – Öffentliche Beleuchtung'
+                                      : isCkwMunicipality(name)
+                                        ? 'CKW – Strassenbeleuchtung'
+                                        : name === 'oberhofen' || name === 'steffisburg'
+                                          ? 'NetZulg – Strassenbeleuchtung'
+                                          : name === 'buchsi'
+                                            ? 'Energie Buchsi – Strassenbeleuchtung'
+                                            : name === 'dotzigen'
+                                              ? 'Gemeinde Dotzigen – Öffentliche Beleuchtung'
+                                              : name === 'bueren'
+                                                ? 'EVB – Strassenbeleuchtung'
+                                                : name === 'ostermundigen'
+                                                  ? 'Tiefbau & Betriebe – Beleuchtung und Strassenschäden'
+                                                  : name === 'wohlen-be'
+                                                    ? 'Gemeindebetriebe Wohlen – Strassenbeleuchtung'
+                                                    : name === 'roggwil'
+                                                      ? 'GBR – Strassenbeleuchtung'
+                                                      : name === 'langenthal'
+                                                        ? 'IB Langenthal – Strassenbeleuchtung'
+                                                        : name === 'staefa'
+                                                          ? 'Gemeindewerke Stäfa – Strassenbeleuchtung'
+                                                          : name === 'erlenbach' ||
+                                                              name === 'zollikon'
+                                                            ? 'Werke am Zürichsee – Strassenbeleuchtung'
+                                                            : name === 'marthalen'
+                                                              ? 'EGM – Öffentliche Beleuchtung'
+                                                              : name === 'gossau'
+                                                                ? 'Problem melden'
+                                                                : name === 'meggen'
+                                                                  ? 'Meldung Sicherheitsproblem'
+                                                                  : name !== 'fribourg'
+                                                                    ? 'Schaden melden'
+                                                                    : 'Avis de défectuosité';
     this.reportingUrl = config.reportingUrl;
     this.reportFormUrl = config.formUrl;
     this.places = options.places ?? new SwissPlaces(request);
@@ -308,20 +1893,352 @@ export class MunicipalFormClient implements ReportingAdapter {
       municipality: this.municipality,
       delivery_language: this.deliveryLanguage,
       verified_on:
-        name === 'boenigen'
-          ? '2026-10-17'
-          : name === 'gossau' || name === 'ebikon' || name === 'meggen'
-            ? '2026-10-16'
-            : '2026-10-15',
-      sources: [{ title: 'Official municipal damage form', url: this.reportingUrl }],
+        name === 'tbs-suhr' ||
+        name === 'tbgraenichen' ||
+        name === 'hornet-aarau' ||
+        name === 'rabiosa-churwalden'
+          ? '2026-10-19'
+          : name === 'ee-engiadina-scuol' ||
+              name === 'thusis' ||
+              name === 'falera' ||
+              name === 'wil-lighting' ||
+              isEwsennwaldMunicipality(name) ||
+              name === 'ewbuchs' ||
+              name === 'stmargrethen' ||
+              name === 'waldstatt' ||
+              name === 'titterten' ||
+              name === 'wintersingen'
+            ? '2026-10-18'
+            : name === 'therwil'
+              ? '2026-10-18'
+              : name === 'reinach-bl'
+                ? '2026-10-18'
+                : name === 'val-de-charmey' ||
+                    name === 'staefa' ||
+                    name === 'wuennewil-flamatt' ||
+                    name === 'lungern' ||
+                    isEbsMunicipality(name) ||
+                    name === 'erstfeld' ||
+                    isCkwMunicipality(name) ||
+                    name === 'buchsi' ||
+                    name === 'dotzigen' ||
+                    name === 'oberhofen' ||
+                    name === 'steffisburg'
+                  ? '2026-10-18'
+                  : name === 'bueren' ||
+                      name === 'ostermundigen' ||
+                      name === 'wohlen-be' ||
+                      name === 'roggwil' ||
+                      name === 'langenthal' ||
+                      name === 'erlenbach' ||
+                      name === 'zollikon' ||
+                      name === 'boenigen' ||
+                      name === 'marthalen'
+                    ? '2026-10-17'
+                    : name === 'gossau' || name === 'ebikon' || name === 'meggen'
+                      ? '2026-10-16'
+                      : '2026-10-15',
+      sources: [
+        ...(name === 'tbs-suhr'
+          ? [
+              { title: 'Current municipal utility referral', url: tbsReferralUrl },
+              {
+                title: 'Utility public fault service',
+                url: 'https://www.tbsuhr.ch/support/stoerung.html/81',
+              },
+              { title: 'Provider privacy notice', url: tbsPrivacyUrl },
+            ]
+          : []),
+        ...(name === 'tbgraenichen'
+          ? [
+              {
+                title: 'Municipal utility identity and infrastructure referral',
+                url: 'https://www.graenichen.ch/',
+              },
+              { title: 'Utility lamp form', url: tbgraenichenFormUrl },
+              {
+                title: 'Linked privacy page; substantive policy body unresolved',
+                url: tbgraenichenPrivacyUrl,
+              },
+            ]
+          : []),
+        ...(name === 'hornet-aarau'
+          ? [
+              { title: 'Explicit municipal hornet sighting referral', url: hornetAarauReferralUrl },
+              { title: 'Provider privacy notice', url: hornetTermsUrl },
+            ]
+          : []),
+        ...(name === 'rabiosa-churwalden'
+          ? [
+              { title: 'Provider public-lighting service', url: rabiosaMandateUrl },
+              {
+                title: 'Municipal utility referral and infrastructure fault contacts',
+                url: 'https://churwalden.ch/',
+              },
+            ]
+          : []),
+        ...(name === 'ee-engiadina-scuol'
+          ? [
+              { title: 'Explicit Scuol public-lighting mandate', url: energiaEngiadinaMandateUrl },
+              { title: 'Current merged municipality', url: 'https://www.scuol.net/' },
+            ]
+          : []),
+        ...(name === 'thusis'
+          ? [{ title: 'Official leisure-infrastructure damage form notice', url: thusisNoticeUrl }]
+          : []),
+        ...(name === 'falera'
+          ? [{ title: 'Municipal works questions and problems', url: faleraWorksUrl }]
+          : []),
+        ...(isEwsennwaldMunicipality(name)
+          ? [
+              {
+                title: 'Explicit municipal mandate and four-village scope',
+                url: ewsennwaldMandateUrl,
+              },
+              {
+                title: 'Official municipal village membership',
+                url:
+                  name === 'ewsennwald-sennwald'
+                    ? 'https://www.sennwald.ch/einwohnerzahl'
+                    : 'https://www.altstaetten.ch/uebersichtportrait',
+              },
+            ]
+          : []),
+        ...(name === 'ewbuchs'
+          ? [
+              {
+                title: 'Municipal EWB organisation, article2',
+                url: ewbuchsOrganisationUrl,
+              },
+            ]
+          : []),
+        ...(name === 'stmargrethen'
+          ? [
+              {
+                title: 'Official municipal streetlight form referral',
+                url: stmargrethenReferralUrl,
+              },
+            ]
+          : []),
+        ...(name === 'waldstatt'
+          ? [
+              { title: 'Municipal Ortskorporation lighting referral', url: waldstattReferralUrl },
+              {
+                title: 'Operator public-lighting mandate and asset scope',
+                url: waldstattMandateUrl,
+              },
+            ]
+          : []),
+        ...(name === 'titterten'
+          ? [
+              {
+                title: 'Official municipal streetlighting service referral',
+                url: tittertenReferralUrl,
+              },
+            ]
+          : []),
+        ...(name === 'wintersingen'
+          ? [
+              {
+                title: 'Municipal second-page streetlighting form referral',
+                url: wintersingenReferralUrl,
+              },
+            ]
+          : []),
+        ...(name === 'therwil'
+          ? [{ title: 'Official municipal streetlighting fault referral', url: therwilReferralUrl }]
+          : []),
+        ...(name === 'lungern'
+          ? [
+              { title: 'Municipal infrastructure defect portal referral', url: lungernReferralUrl },
+              { title: 'Published widget source; configuration reads only', url: lungernWidgetUrl },
+            ]
+          : []),
+        ...(isEbsMunicipality(name)
+          ? [
+              {
+                title: 'Municipal streetlight-fault referral to ebs',
+                url: ebsMunicipalities[name].referralUrl,
+              },
+              { title: 'ebs public-lighting maintenance and fault mandate', url: ebsMandateUrl },
+            ]
+          : []),
+        ...(name === 'erstfeld'
+          ? [
+              {
+                title: 'Municipal public lighting responsibility',
+                url: 'https://erstfeld.ch/infrastruktur/wasser-strom',
+              },
+              { title: 'GWE operation, maintenance and fault mandate', url: erstfeldMandateUrl },
+            ]
+          : []),
+        ...(isCkwMunicipality(name)
+          ? [
+              {
+                title: 'Municipal public-lighting referral',
+                url: ckwMunicipalities[name].referralUrl,
+              },
+              {
+                title: 'CKW public component source, reviewed without execution',
+                url: ckwComponentUrl,
+              },
+            ]
+          : []),
+        ...(name === 'oberhofen' || name === 'steffisburg'
+          ? [
+              {
+                title: 'Municipal public-lighting responsibility and NetZulg referral',
+                url:
+                  name === 'oberhofen'
+                    ? 'https://www.oberhofen.ch/verwaltung/bauwesen/infrastruktur'
+                    : 'https://www.steffisburg.ch/de/verwaltung/dienstleistungen/115_strassenbeleuchtung',
+              },
+            ]
+          : []),
+        ...(name === 'buchsi'
+          ? [
+              {
+                title: 'Municipal energy and street-lighting referral',
+                url: 'https://www.muenchenbuchsee.ch/de/verwaltung/dienstleistungen/150_energieversorgung:-stromversorgung-wasserversorgung-strassenbeleuchtung',
+              },
+            ]
+          : []),
+        ...(name === 'dotzigen'
+          ? [
+              {
+                title: 'Werkhof lighting contact referral',
+                url: 'https://www.dotzigen.ch/de/verwaltung/Werkhof/',
+              },
+            ]
+          : []),
+        ...(name === 'wohlen-be'
+          ? [
+              {
+                title: 'Municipal and cantonal road lighting responsibilities',
+                url: 'https://www.wohlen-be.ch/de/verwaltung/dienstleistungen/265_strassen',
+              },
+            ]
+          : []),
+        ...(name === 'roggwil'
+          ? [
+              {
+                title: 'GBR municipal public-lighting mandate, annual report 2024 page 7',
+                url: 'https://www.roggwil.ch/_doc/5714911',
+              },
+            ]
+          : []),
+        { title: 'Official reporting form', url: this.reportingUrl },
+        ...(name === 'langenthal'
+          ? [
+              {
+                title: 'City public-lighting responsibility and IBL referral',
+                url: 'https://www.langenthal.ch/umweltenergie/49274',
+              },
+            ]
+          : []),
+        ...(name === 'staefa'
+          ? [
+              {
+                title: 'GWS municipal public-lighting responsibility',
+                url: 'https://gws.ch/stromversorgung/',
+              },
+            ]
+          : []),
+        ...(name === 'erlenbach' || name === 'zollikon'
+          ? [
+              {
+                title: 'Municipal lighting responsibility',
+                url:
+                  name === 'erlenbach'
+                    ? 'https://www.erlenbach.ch/de/dienstleistungen/strassenbeleuchtung/'
+                    : 'https://www.zollikon.ch/verkehr',
+              },
+            ]
+          : []),
+        ...(name === 'marthalen'
+          ? [
+              {
+                title: 'EGM municipal lighting responsibility',
+                url: 'https://eg-m.ch/projekt/oeffentliche-beleuchtung/',
+              },
+            ]
+          : []),
+      ],
       scope:
-        name === 'boenigen'
-          ? boenigenScope
-          : name === 'gossau'
-            ? gossauScope
-            : name === 'meggen'
-              ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
-              : 'Non-emergency defects in municipal infrastructure and public spaces.',
+        name === 'tbs-suhr'
+          ? tbsScope
+          : name === 'tbgraenichen'
+            ? tbgraenichenScope
+            : name === 'hornet-aarau'
+              ? hornetAarauScope
+              : name === 'rabiosa-churwalden'
+                ? rabiosaScope
+                : name === 'ee-engiadina-scuol'
+                  ? energiaEngiadinaScope
+                  : name === 'thusis'
+                    ? thusisScope
+                    : name === 'falera'
+                      ? faleraScope
+                      : name === 'wil-lighting'
+                        ? wilLightingScope
+                        : isEwsennwaldMunicipality(name)
+                          ? ewsennwaldScope(this.bfsId)
+                          : name === 'ewbuchs'
+                            ? ewbuchsScope
+                            : name === 'stmargrethen'
+                              ? stmargrethenScope
+                              : name === 'waldstatt'
+                                ? waldstattScope
+                                : name === 'titterten'
+                                  ? tittertenScope
+                                  : name === 'wintersingen'
+                                    ? wintersingenScope
+                                    : name === 'therwil'
+                                      ? therwilScope
+                                      : name === 'reinach-bl'
+                                        ? reinachBlScope
+                                        : name === 'val-de-charmey'
+                                          ? valDeCharmeyScope
+                                          : name === 'wuennewil-flamatt'
+                                            ? wuennewilScope
+                                            : name === 'lungern'
+                                              ? lungernScope
+                                              : isEbsMunicipality(name)
+                                                ? ebsScope(name)
+                                                : name === 'erstfeld'
+                                                  ? erstfeldScope
+                                                  : isCkwMunicipality(name)
+                                                    ? ckwScope(name)
+                                                    : name === 'oberhofen' || name === 'steffisburg'
+                                                      ? netzulgScope(name)
+                                                      : name === 'buchsi'
+                                                        ? buchsiScope
+                                                        : name === 'dotzigen'
+                                                          ? dotzigenScope
+                                                          : name === 'bueren'
+                                                            ? evbScope
+                                                            : name === 'ostermundigen'
+                                                              ? ostermundigenScope
+                                                              : name === 'wohlen-be'
+                                                                ? wohlenBeScope
+                                                                : name === 'roggwil'
+                                                                  ? roggwilScope
+                                                                  : name === 'langenthal'
+                                                                    ? langenthalScope
+                                                                    : name === 'staefa'
+                                                                      ? staefaScope
+                                                                      : name === 'erlenbach' ||
+                                                                          name === 'zollikon'
+                                                                        ? wazScope
+                                                                        : name === 'marthalen'
+                                                                          ? marthalenScope
+                                                                          : name === 'boenigen'
+                                                                            ? boenigenScope
+                                                                            : name === 'gossau'
+                                                                              ? gossauScope
+                                                                              : name === 'meggen'
+                                                                                ? 'Non-emergency safety defects in municipal infrastructure, handled by Meggen’s Planning / Construction department. Use its single safety-problem class; not general complaints or police reports.'
+                                                                                : 'Non-emergency defects in municipal infrastructure and public spaces.',
       issue_groups: [],
       exclusions: [
         {
@@ -349,6 +2266,1037 @@ export class MunicipalFormClient implements ReportingAdapter {
           ? 'Experimental source-reviewed transport. A real municipal pilot remains pending. Only a verified ticket receipt means sent; uncertain responses must not be retried.'
           : 'Preparation only. Municipal delivery has not been pilot-verified; do not claim the report has been sent.',
     };
+    if (name === 'rwb-ennetbaden' || name === 'rwb-windisch') {
+      this.reportingService = `Regionalwerke AG Baden – Öffentliche Beleuchtung ${this.municipality}`;
+      this.termsUrl = rwbPrivacyUrl;
+      this.privacy =
+        'Local preparation keeps private salutation, names and full reporter address/email/phone outside AI and separate from the lamp point. Native privacy consent is required. The provider policy describes generally Swiss storage, broad service-provider/partner/authority sharing, cross-border conditions and purpose/legal retention; no fixed lamp-report retention or publication established. Civic sends nothing and never executes reCAPTCHA or the native client.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: name === 'rwb-windisch' ? rwbWindischRequirements()['Strom'].scope! : rwbScope,
+        sources: [
+          {
+            title: 'Municipal utility referral',
+            url: name === 'rwb-windisch' ? rwbWindischReferralUrl : rwbReferralUrl,
+          },
+          ...(name === 'rwb-windisch'
+            ? [
+                {
+                  title: 'EW Windisch public-lighting mandate and RWB operation',
+                  url: rwbWindischIdentityUrl,
+                },
+              ]
+            : []),
+          { title: 'Explicit provider lamp-fault referral', url: rwbInvitationUrl },
+          { title: 'Native public contact form', url: rwbFormUrl },
+          { title: 'Provider privacy notice', url: rwbPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'ewn-neuenhof') {
+      this.reportingService = 'Elektrizität Wasser Neuenhof (ewn) – Strassenbeleuchtung';
+      this.privacy =
+        'Local preparation keeps private salutation, names, phone/email and optional company/postal address outside AI and separate from the lamp. The provider describes purpose-limited retention up to ten years, service-provider/legal sharing and foreign-processing conditions. Its selected hCaptcha differs from the Google-reCaptcha policy entry; delivery privacy remains unresolved. Civic sends nothing and never executes the challenge or native client; no native consent checkbox is invented.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: ewnScope,
+        sources: [
+          { title: 'Municipal explicit utility referral', url: ewnReferralUrl },
+          { title: 'Dedicated native lamp form', url: ewnFormUrl },
+          {
+            title: 'Provider privacy notice; challenge-vendor mismatch unresolved',
+            url: ewnPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (isSieMunicipality(name)) {
+      this.reportingService = `SIE SA – Éclairage communal de ${sieMunicipalities[name].municipality}`;
+      this.privacy =
+        'Local preparation collects no reporter contacts or photos and transfers nothing. SIE asks callers to leave callback details, to add themselves in a separately chosen call. Native online requiredness/guest access and actual acceptance remain unverified. The provider asserts Swiss storage/no foreign transmission while listing processors and foreign-authority exceptions; no fixed incident retention or absolute foreign-processing guarantee. No calls, email, native payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: sieScopeFor(name),
+        responsibility: `Confirm the exact ${sieMunicipalities[name].municipality} point and actual SIE-maintained municipal lamp. Boundary and resident confirmation do not independently prove ownership. No other SIE municipality is enabled by this profile.`,
+        routing_note:
+          'Dedicated SIE instructions publish 021 631 51 11; FAQ instead 021 631 50 00. Discrepancy unresolved. Local note only; provider asks callback details during a separately chosen call. No contact/photo collection, calls, emails, sending or tracking. Never automatically retry, recreate or switch channels after uncertainty.',
+        sources: [
+          {
+            title: 'Dedicated SIE lamp-fault instructions and explicit four-commune scope',
+            url: sieReportUrl,
+          },
+          { title: 'SIE FAQ; conflicting telephone retained', url: sieFaqUrl },
+          { title: 'Explicit public-lighting maintenance mandate', url: sieMandateUrl },
+          {
+            title: 'SIE privacy; processor and foreign-authority exceptions retained',
+            url: siePrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (isAvmMunicipality(name)) {
+      this.reportingService = `AVM – eau potable communale de ${avmMunicipalities[name].municipality}`;
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt are unknown. Vaux website privacy does not establish AVM telephone policy. No municipal native forms/clients/state/consent, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: avmScopeFor(name),
+        responsibility: `Confirm the exact ${avmMunicipalities[name].municipality} point and an actual AVM communal drinking-water asset. Boundary and resident confirmation alone do not prove ownership or responsibility for every asset. Yens staff address and historical Bussy-Chardonney do not add service geography.`,
+        routing_note:
+          'AVM dépannage main0796380181; substitute0799152487 retained as context. Initial optional nonurgent call note only, no contacts/photos/calls/email/sending/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'AVM explicit six-municipality service list and dedicated dépannage',
+            url: avmProviderUrl,
+          },
+          { title: 'Vaux independent water dépannage/intervention referral', url: avmReferralUrl },
+          {
+            title: 'Vaux website policy; not AVM telephone incident privacy',
+            url: avmMunicipalPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'chavannes-moudon-maintenance') {
+      this.reportingService = 'Commune de Chavannes-sur-Moudon – administration';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt remain unknown. Dedicated privacy URL referenced but unread. Generic form contacts/consent/native honeypot/client/state are not inherited or requested. No sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: chavannesMoudonScope,
+        responsibility:
+          'Confirm the exact BFS5665 point and actual communal responsibility for the selected streetlight or road/path/signage asset. Category-specific nonurgent asset confirmations are distinct. Boundary and resident confirmation alone do not prove ownership; no wider AISTBV/AECLC/RE responsibility or explicit current authority term inferred.',
+        routing_note:
+          'Administration0219056094 published alongside explicit fault invitations. Initial optional nonurgent telephone note only. No contacts/photos/calls/email/native client/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title:
+              'Explicit communal road/signage and lighting fault invitations plus administration telephone',
+            url: chavannesMoudonRoadsUrl,
+          },
+          {
+            title: 'Published authority responsibilities; current term not explicit',
+            url: chavannesMoudonAuthorityUrl,
+          },
+          {
+            title: 'Legal13Oct2026; copying conditions and referenced unread privacy notice',
+            url: chavannesMoudonLegalUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'seic-duillier-lighting-note') {
+      this.reportingService = 'Commune de Duillier – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Provider form requires title, surname, first name, email and street-number; this worksheet collects none of those contacts, and unknown street/mast identifiers remain empty. Native photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: duillierScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5715 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Actual municipal SEIC relationship and current public-lighting responsibility plus the captured provider city choice support this destination only. Each other municipality needs its own profile, point guard and municipal pins. Repair requires a municipal mandate, not guaranteed acceptance.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Actual municipal SEIC relationship', url: duillierLightingUrl },
+          { title: 'Actual municipal authority, 2026–2031', url: duillierAuthorityUrl },
+          {
+            title: 'Municipal utilities or public-lighting service context',
+            url: duillierServicesUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'seic-prangins-lighting-note') {
+      this.reportingService = 'Commune de Prangins – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Provider form requires title, surname, first name, email and street-number; this worksheet collects none of those contacts, and unknown street/mast identifiers remain empty. Native photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: pranginsScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5725 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Actual municipal SEIC relationship and current public-lighting responsibility plus the captured provider city choice support this destination only. Each other municipality needs its own profile, point guard and municipal pins. Repair requires a municipal mandate, not guaranteed acceptance.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Actual municipal SEIC relationship', url: pranginsLightingUrl },
+          { title: 'Actual municipal authority, 2026–2031', url: pranginsAuthorityUrl },
+          {
+            title: 'Municipal utilities or public-lighting service context',
+            url: pranginsServicesUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'seic-begnins-lighting-note') {
+      this.reportingService = 'Commune de Begnins – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Provider form requires title, surname, first name, email and street-number; this worksheet collects none of those contacts, and unknown street/mast identifiers remain empty. Native photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: begninsScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5704 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Actual municipal SEIC referral and public-lighting portfolio support this destination only. Provider form choices Begnins/Duillier/Prangins do not enable other destinations. Repair requires a municipal mandate, not guaranteed acceptance.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Official municipal referral to SEIC lighting form', url: begninsLightingUrl },
+          { title: 'Actual municipal authority and first start dates', url: begninsAuthorityUrl },
+          { title: 'Municipal water and public-lighting portfolio', url: begninsServicesUrl },
+        ],
+      };
+    }
+    if (name === 'bassins-water-enquiry') {
+      this.reportingService = 'Commune de Bassins – question d’entretien de l’eau';
+      this.privacy =
+        'Local enquiry draft collects no reporter contacts/photos/native consent and makes no transfer. Email contact requirements/anonymous acceptance/incident privacy/retention/country/forwarding/receipt unknown. Actual website account/message periods and EU hosting are not guarantees for email incidents; no anonymous/no-sharing/Swiss-only claim. No client/state/payload/emails/calls/sending/mail-client launch/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: bassinsScope,
+        responsibility:
+          'Exact BFS5703 point plus actual communal drinking-water asset/nonurgent enquiry confirmation beyond boundary/resident confirmation. Public municipal water operation/invitation and Denis Currat water portfolio agree; current term not explicit. No regional/private plumbing/other-service coverage inferred.',
+        routing_note:
+          'Local French maintenance-enquiry facts draft only. Public primary municipal water-question email commune@bassins.ch may redirect to Renevier SA; no verified fault acceptance. No contact/photo collection, sending, mail-client launch, native consent/state/payload or tracking. Emergency contractor phones not routine fallback. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit municipal water-question email invitation, emergencies separate',
+            url: bassinsWaterUrl,
+          },
+          {
+            title: 'Actual municipal water responsibility; term not explicit',
+            url: bassinsAuthorityUrl,
+          },
+          {
+            title: 'Website policy; email applicability remains unqualified',
+            url: bassinsPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'vucherens-water') {
+      this.reportingService = 'Commune de Vucherens – eau potable';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos or native consent and makes no transfer. Telephone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt unknown. No dedicated incident policy qualified, no invented privacy URL/Swiss-only/anonymity guarantee. Native protected generic contact not inherited or requested; no calls/email/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: vucherensScope,
+        responsibility:
+          'Exact BFS5692 point and actual communal drinking-water asset/nonurgent confirmation required; boundary/resident confirmation alone does not prove ownership. Water page explicit network-problem contact, communal employee role and authority body since1July2026 agree despite older authority URL. No private/regional/all-service coverage inferred.',
+        routing_note:
+          'Public water-problem invitation to communal employee0794464074. Local initial optional telephone note only; no contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. No emergency, health concern, outage, leak, flooding, private plumbing or new connection/hydrant-use request. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          { title: 'Explicit water-network problem telephone invitation', url: vucherensWaterUrl },
+          {
+            title: 'Communal employee maintenance role and separate paid private services',
+            url: vucherensVoirieUrl,
+          },
+          { title: 'Actual authority since1July2026 despite old URL', url: vucherensAuthorityUrl },
+        ],
+      };
+    }
+    if (name === 'coppet-lighting-note') {
+      this.reportingService = 'Commune de Coppet – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: coppetScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5712 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Municipal lighting responsibility and heritage/road-maintenance service linkage are explicit; the maintenance contractor is unnamed. Executive term is not explicit.',
+        routing_note:
+          'Municipality explicitly invites lighting defects through its protected online form and may request further details. FriendlyCaptcha/native client/schema/puzzle/state are excluded. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Public directory links explicit lighting-fault form', url: coppetLightingUrl },
+          {
+            title: 'Published site privacy; incident retention/country unresolved',
+            url: coppetPrivacyUrl,
+          },
+          { title: 'Heritage and road-maintenance service responsibility', url: coppetServicesUrl },
+        ],
+      };
+    }
+    if (name === 'jorat-menthue-molok-note') {
+      this.reportingService = 'Commune de Jorat-Menthue – administration';
+      this.privacy =
+        'Local facts only, no reporter contacts/photos/card numbers/account credentials/native consent or transfer. Email exposes sender metadata; official identity/photo/privacy/retention/country/guest/receipt unknown. Physical cards and Ecowaste accounts are not report login. No native client/state/payload/mail preparation/calls/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: joratMenthueScope,
+        responsibility:
+          'Exact BFS5804 point and independently confirmed actual source-listed communal underground Molok, resident with legitimately issued card and nonurgent mechanical access failure. Only Montaubion-Chardonney former dairy opposite college or Sottens village square towards Moudon; other villages compactors excluded. Boundary/site choice alone do not prove asset ownership/location. No card numbers/credentials or lost-card/billing workflow. Published executive prefers email; term dates not explicit.',
+        routing_note:
+          'Published waste page explicitly asks residents to notify administration or responsible official when underground-container access is temporarily impossible. Administration page publishes greffe@jorat-menthue.ch. First local profile uses administration context only, no mail preparation/sending/calls or automatic official/substitute/provider fallback. General contact.php remains unread, no client/state/validation. Local facts rules and actual identifiers only if known, never invent or zero. Identity/photo/privacy/retention/country/guest/acceptance unresolved. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit underground-container access notification and village-specific assets',
+            url: joratMenthueWasteUrl,
+          },
+          {
+            title: 'Published administration and greffe contact',
+            url: joratMenthueAdministrationUrl,
+          },
+          {
+            title: 'Waste responsibility and email contact preference; term not explicit',
+            url: joratMenthueAuthorityUrl,
+          },
+          { title: 'Municipal identity and five-village context', url: joratMenthueHomeUrl },
+        ],
+      };
+    }
+    if (name === 'suscevaz-hornet-observation-note') {
+      this.reportingService =
+        'Commune de Suscévaz – observation présumée de frelon asiatique, faits locaux';
+      this.privacy =
+        'Local suspected-observation facts only, no reporter contacts/photos/clinical/native fields/consent or municipal transfer. Official identity/photo/privacy/retention/country/forwarding/guest/receipt unknown. Neither platform nor commune announcement is fulfilled; no mail/call preparation,sending,external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: suscevazScope,
+        responsibility:
+          'Exact current BFS5930 point and separate existing independently nonurgent suspected-observation confirmation. Specific municipal PDF asks platform AND commune announcements; local facts fulfill neither. No individual species expertise or removal mandate inferred. Profile retires at2026-12-31T23:00:00Z before cached preparation, reflecting the announced merger without changing baseline identities.',
+        routing_note:
+          'Local French facts worksheet for an existing independently nonurgent suspected Asian-hornet individual or nest observation at its exact current Suscévaz VD BFS5930 point. The actual municipal PDF asks for announcements to the platform AND commune. These local facts fulfill neither announcement, do not replace either and never automate duplication or channel change. The known platform restriction remains binding. Suspicion and uncertainty only: no identification guarantee, diagnosis, safety, urgency, legal or removal conclusion, or approach, capture, trapping, bait or removal advice. Excludes immediate or personal danger, medical/sting concerns, removal requests, bees/other species and other services. Exact point alone proves neither observation nor identity or safety. One local factual/nonurgent confirmation is not verified official requiredness. Internal species_observation imports no Aarau/native case kind or fields. No reporter contacts/photos/clinical/native fields/consent, mail/call preparation, sending, external completion or tracking. Official identity/photo/privacy/retention/country/forwarding/guest/receipt remain unqualified. General office correspondence is not a verified hornet transport. The announced2027 merger retires this profile at2026-12-31T23:00:00Z, before cached preparation. No merged identity or future election result inferred. Never automatically retry,recreate or change channel after uncertainty; no office, member, substitute, phone or provider fallback. This is not a complete official form.',
+        sources: [
+          { title: 'Official homepage and announced merger', url: suscevazHomeUrl },
+          {
+            title: 'Published separate current municipal responsibilities',
+            url: suscevazAuthorityUrl,
+          },
+          {
+            title: 'Greffe office context, not verified hornet transport',
+            url: suscevazAdministrationUrl,
+          },
+          {
+            title: 'Actual hornet PDF asks platform AND commune announcements',
+            url: suscevazNoticeUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'orzens-hornet-observation-note') {
+      this.reportingService =
+        'Commune d’Orzens – observation présumée de frelon asiatique, faits locaux';
+      this.privacy =
+        'Local suspected-observation facts only; no reporter contacts/photos/clinical/native fields/consent or municipal transfer. No identification/safety/urgency/removal conclusion or advice. General info-email one-year/Swiss-hosting policy does not establish the individual recipient contract; official identity/photo/privacy/retention/country/forwarding/guest/receipt unknown. No mail/call preparation,sending,external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: orzensScope,
+        responsibility:
+          'Exact BFS5925 point and separate confirmation of an existing independently nonurgent suspected Asian-hornet observation. The specific hornet-announcement invitation names Frédéric Burkhard, confirmed as a current2026–2031 member. Membership/construction portfolio is not species expertise or a removal mandate; boundary alone proves neither observation, identification nor safety.',
+        routing_note:
+          'Only local French facts from the independent specific municipal invitation, not a complete official form or platform workaround. Suspected identification remains uncertain. No contacts/photos/native fields/consent/mail preparation/calls/sending/completion/tracking; no whitespace mailto repair. General office policy is contextual, not the individual recipient contract. Never automatically retry,recreate or change channel after uncertainty; no office/member/substitute/phone/provider fallback.',
+        sources: [
+          { title: 'Specific local hornet-announcement invitation', url: orzensHomeUrl },
+          {
+            title: 'Actual2026–2031 municipal membership matching the named contact',
+            url: orzensAuthorityUrl,
+          },
+          {
+            title: 'Municipal office and distinct correspondence context',
+            url: orzensAdministrationUrl,
+          },
+          {
+            title: 'General info-email privacy context, not the individual hornet contract',
+            url: orzensPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'simplon-evs-meter-note') {
+      this.reportingService = 'Elektrizitätsversorgung Simplon EVS – lokale Zähleranzeige-Fakten';
+      this.privacy =
+        'Local existing EVS meter-display facts only; no contacts, account/customer/serial identifiers, photos, clinical/native fields, consent or transfer. Required without-delay notification is NOT performed; no compliance or deadline extension. Official transport, identity, privacy, retention, country, guest acceptance and receipt unknown. No safety/urgency assessment, mail/call preparation, sending, completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: simplonScope,
+        responsibility:
+          'Exact BFS6009 point and separate legitimate EVS customer/actual EVS-owned meter/existing independently nonurgent DISPLAY-facts confirmation. Point alone establishes none of these. Regulation13.6 without-delay notice remains unperformed. No electrical safety or urgency assessment; no shared EnBAG intake or individual staff mandate inferred.',
+        routing_note: simplonScope,
+        sources: [
+          { title: 'Municipal office context, not a native meter contract', url: simplonHomeUrl },
+          { title: 'Undated authority, no individual intake mandate', url: simplonAuthorityUrl },
+          { title: 'Staff context, no alternative recipient', url: simplonStaffUrl },
+          {
+            title: 'Actual EVS operator, distinct from EnBAG affiliation',
+            url: simplonElectricityUrl,
+          },
+          {
+            title: 'Actual electricity regulation13.1/13.6, notice not performed',
+            url: simplonRegulationUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'yvonand-hornet-nest-note') {
+      this.reportingService = 'Commune d’Yvonand – nid présumé de frelon asiatique, faits locaux';
+      this.privacy =
+        'Local suspected-nest facts only, no reporter contacts/photos/clinical/native fields/consent or transfer. Neither official announcement nor the published required photos are fulfilled. Identity/photo-transfer/privacy/retention/country/forwarding/guest/receipt unknown. No identification, safety, urgency, removal or cost promise; no mail/call preparation, sending, completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: yvonandScope,
+        responsibility:
+          'Exact BFS5939 point plus separate existing independently nonurgent suspected-NEST confirmation. Published municipal territory funding context proves neither identity, eligibility, removal nor payment. Platform AND commune announcement and source required photos remain unfulfilled; no individual member intake mandate inferred.',
+        routing_note:
+          'Local French facts worksheet for an existing independently nonurgent suspected Asian-hornet NEST at its exact Yvonand VD BFS5939 point. The municipal notice asks for a platform announcement AND commune information by email OR phone, accompanied by one or more photos. These local facts fulfill neither official announcement and leave the required photos unfulfilled; this is not a complete official form or an alternative channel. No email/call preparation, sending, external completion or tracking. Existing already observed facts only; no new approach, inspection, photograph, filming, testing, handling, capture, trapping, bait or removal advice. No identification guarantee, diagnosis, safety, urgency, medical, legal, eligibility, removal, reimbursement or cost conclusion. The published municipal funding statement is context, not a payment or removal promise. Excludes individual-only sightings, other species, immediate or personal danger, medical/sting concerns and removal requests. Exact point alone proves neither observation, species, ownership, safety nor eligibility; require a separate local existing-factual/nonurgent-suspected-nest confirmation, not verified official requiredness. Internal species_observation imports no native platform case kind or fields. No reporter contacts, account/customer identifiers, photos, clinical/native fields, consent, client state or payload collected. Official identity/photo-transfer/privacy/retention/country/forwarding/guest or anonymous acceptance/receipt remain unqualified. Known platform restrictions remain binding. The current2031 executive does not establish an individual member intake mandate. Never automatically retry, recreate or change channel after uncertainty; no office, member, substitute, phone, contractor or provider fallback.',
+        sources: [
+          { title: 'Official homepage confirms current2031 responsibilities', url: yvonandHomeUrl },
+          {
+            title: 'Administration contact context, not native requiredness',
+            url: yvonandAdministrationUrl,
+          },
+          {
+            title: 'Specific nest notice: platform AND commune, required photos',
+            url: yvonandNoticeUrl,
+          },
+          {
+            title: 'Actual opaque municipal leaflet, not identification advice',
+            url: yvonandLeafletUrl,
+          },
+          {
+            title: 'Published current executive, no individual intake mandate',
+            url: yvonandAuthorityUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'villars-epeney-meter-note') {
+      this.reportingService = 'Commune de Villars-Epeney – compteur communal, faits locaux';
+      this.privacy =
+        'Local subscriber/meter facts only; no contacts, account/customer/meter serial identifiers, photos, clinical/native fields, consent or municipal transfer. Official identity/privacy/retention/country/forwarding/guest/receipt unknown. This does not perform the published immediate notification, establish legal compliance or extend deadlines. No mail/call preparation, sending, completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: villarsEpeneyScope,
+        responsibility:
+          'Exact BFS5935 point plus separate confirmation of legitimate subscriber standing, actual communal water meter and an existing independently nonurgent mechanical defect. The published regulation distinguishes the rented communal meter from private pipes/valves; point alone proves neither ownership nor subscription. Generic Municipality notification is not an individual member mandate, verified transport or legal-compliance promise.',
+        routing_note:
+          'Local French facts worksheet for a legitimate subscriber’s actual communal water meter with an already observed, independently nonurgent mechanical defect at its exact Villars-Epeney VD BFS5935 point. Published regulation articles14–15 describe the communal rented meter and ask the subscriber to notify the Municipality immediately of damage. These local facts do not perform that notification, establish legal compliance or extend any deadline. Exact point alone proves neither subscription, meter ownership nor a defect. Require a separate local subscriber/actual-meter/nonurgent-facts confirmation; it is not verified official requiredness or account validation. Record existing observed facts only, without cause, diagnosis, safety, urgency, legal, accuracy, tariff or billing conclusions. Exclude active leaks, supply interruption/pressure or health/contamination concerns, private pipes/valves or other assets, billing/accuracy disputes, connection/subscription changes and requests to inspect, test, handle, unseal, dismantle or repair equipment. No new observation, reading, testing, photograph, manipulation or repair advice. No reporter contacts, account/customer/meter serial identifiers, photos, clinical/native fields, consent, client state, payload, mail/call preparation, sending, external completion or tracking. Official identity/photo/privacy/retention/country/forwarding/guest acceptance/receipt remain unqualified; no anonymous or Swiss-only guarantee. The undated roster is not a confirmed2031 composition or individual meter-intake mandate. The separately published2025 tariff annex is distinct from the old embedded annex; this worksheet makes no charge, liability or legal-entry promise. Never automatically retry, recreate or change channel after uncertainty; no office, member, substitute, phone, contractor or provider fallback. This is not a complete official form.',
+        sources: [
+          {
+            title: 'Official homepage and current appointment/postal context',
+            url: villarsEpeneyHomeUrl,
+          },
+          {
+            title: 'Administration context, not verified meter intake',
+            url: villarsEpeneyAdministrationUrl,
+          },
+          {
+            title: 'Undated published roles, not confirmed2031 mandate',
+            url: villarsEpeneyAuthorityUrl,
+          },
+          {
+            title: 'Current regulation index distinguishes2025 annex',
+            url: villarsEpeneyRegulationsUrl,
+          },
+          {
+            title: 'Actual meter ownership and notification provisions',
+            url: villarsEpeneyWaterUrl,
+          },
+          {
+            title: 'Separate actual2025 tariff annex; no billing promise',
+            url: villarsEpeneyAnnexUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'cuarny-water-quality-note') {
+      this.reportingService = 'Commune de Cuarny – faits sur la qualité perçue de l’eau potable';
+      this.privacy =
+        'Local facts only; no reporter contacts/photos/clinical fields/native consent or transfer. Official identity/photo/privacy/retention/country/forwarding/guest acceptance/receipt unknown. No diagnosis, cause/safety/drinkability/urgency conclusion, sampling/testing advice, protected email decoding, native payload/mail preparation/calls/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: cuarnyScope,
+        responsibility:
+          'Exact BFS5911 point and separate confirmation of actual Cuarny-supplied drinking water and an independently nonurgent factual perceived-quality observation. Explicit water-page invitation and current2026–2031 Jérémie Cartier portfolio agree. No inference of pipe ownership, cause, public-asset fault, safety, drinkability or urgency; boundary alone cannot prove supply. Sagenord origin and local-source rehabilitation do not establish observed cause or completed works.',
+        routing_note:
+          'Perceived-quality observations are invited to the responsible municipal water official. Local French facts only, not a complete official form. Published literal jeremie.cartier(at)cuarny.ch/hash link remains undecoded/unrepaired; no email/call preparation or sending. No contacts/photos/clinical fields/native consent/client/state/payload/completion/tracking. Official requirements/privacy/country/forwarding/guest/receipt unknown. General contact and providers remain unread; no fallback. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit perceived-quality observation invitation and water-supply context',
+            url: cuarnyWaterUrl,
+          },
+          {
+            title: 'Actual2026–2031 water responsibility matches the invitation',
+            url: cuarnyAuthorityUrl,
+          },
+          {
+            title: 'Municipal office and separate administrative contacts',
+            url: cuarnyAdministrationUrl,
+          },
+          { title: 'Municipal identity and dated public notices', url: cuarnyHomeUrl },
+        ],
+      };
+    }
+    if (name === 'labbaye-lighting-note') {
+      this.reportingService = 'Commune de L’Abbaye – éclairage public';
+      this.privacy =
+        'Local facts only, no reporter contacts/photos/native consent or transfer. Email exposes sender metadata; official identity/photo/privacy/retention/country/guest acceptance/receipt remain unknown. No native form/client/state/payload/mail preparation/calls/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: labbayeScope,
+        responsibility:
+          'Exact BFS5871 point and separately confirmed actual communal public streetlight, real village L’Abbaye/Le Pont/Les Bioux and nonurgent failure. Municipal lighting page explicitly states communal network ownership; boundary/village alone do not prove actual lamp ownership/location. No technology assumption. Published 2021–2026 executive roster/election chronology not a current personal recipient mandate.',
+        routing_note:
+          'Lighting page explicitly asks lamp failures to the communal office at 021 564 20 33 or info@labbaye.ch with actual village, street and candelabrum number if possible. This profile prepares only local nonworking/intermittent facts, not a complete official form or native validation. No email preparation, calls, contacts/photos/consent/native client/state/payload/sending/completion/tracking. Actual identifiers only if known, never invent or zero. Privacy/identity/retention/country/guest/receipt unknown. Contact form remains unread; no alternative-channel fallback. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title:
+              'Explicit communal ownership, lamp-failure invitation and requested location facts',
+            url: labbayeLightingUrl,
+          },
+          {
+            title: 'Published communal office and administrative contacts',
+            url: labbayeAdministrationUrl,
+          },
+          { title: 'Three actual villages and municipality context', url: labbayePresentationUrl },
+          { title: 'Municipal identity, office and recent election notices', url: labbayeHomeUrl },
+        ],
+      };
+    }
+    if (name === 'romainmotier-lighting-note') {
+      this.reportingService = 'Commune de Romainmôtier-Envy – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: romainmotierScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public LED streetlight at its exact BFS5761 point. Boundary and resident confirmation alone do not prove ownership. The 2 September 2026 notice explicitly names Cédric Rey for LED reports; directory lighting portfolio is Michel Chabloz, Cédric Rey substitute. No silent recipient replacement or current executive-term claim. No private asset, emergency, brightness-adjustment or wider service coverage inferred.',
+        routing_note:
+          'Dated municipal notice invites LED problems by email to cedric.rey@romainmotier-envy.ch or telephone with location and observed problem; reasons needed for adjustment requests, which this first worksheet excludes. Local nonworking/intermittent facts only, not a complete official form. No email preparation/transport or calls. Sender metadata and email identity/photo/privacy/retention/country/acceptance/receipt unresolved. Website, administrative and newsletter fields not inherited. Actual street/lamp numbers only if known. No contacts/photos/native consent/client/state/payload/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty; no office/substitute/website/phone/provider fallback.',
+        sources: [
+          { title: 'Dated municipal LED lighting invitation', url: romainmotierLightingUrl },
+          {
+            title: 'Published authority and lighting substitute roles; term not explicit',
+            url: romainmotierAuthorityUrl,
+          },
+          {
+            title: 'General site privacy; email incident limits unresolved',
+            url: romainmotierPrivacyUrl,
+          },
+          { title: 'Municipal legal and source-use notice', url: romainmotierLegalUrl },
+        ],
+      };
+    }
+    if (name === 'founex-lighting-note') {
+      this.reportingService = 'Commune de Founex – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: founexScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5717 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Current2026–2031 composition and maintenance service context agree with the explicit FAQ lighting email invitation. No operator/asset ownership inferred.',
+        routing_note:
+          'FAQ explicitly invites lighting faults by email to travaux@founex.ch with location. Local worksheet has no email transport; protected maintenance web form/client/challenge/state excluded, web identity rules not inherited into email. Sender metadata exposure and email privacy/acceptance/receipt unresolved. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Explicit municipal FAQ lighting email invitation', url: founexLightingUrl },
+          { title: 'Municipal composition and2026–2031vice schedule', url: founexAuthorityUrl },
+          { title: 'Municipal service directory', url: founexServicesUrl },
+        ],
+      };
+    }
+    if (name === 'moudon-lighting-note') {
+      this.reportingService = 'Commune de Moudon – éclairage public';
+      this.privacy =
+        'Local facts worksheet collects no reporter contacts/photos or native consent and makes no transfer. Native contact/photo/privacy/retention/country/guest acceptance/receipt requirements remain unknown. No invented privacy URL, anonymous acceptance or Swiss-only guarantee. No native form/client/state/payload, calls/email/sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: moudonScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual communal public streetlight at its exact BFS5678 point. Boundary and resident confirmation alone do not prove ownership. No private asset, emergency or wider service coverage inferred. Selected authority has no explicit current term; native Office population title differs from Services industriels referral, recipient unverified.',
+        routing_note:
+          'Ordinary faults are directed to the online form. Local facts worksheet only, not a complete official form. Emergency telephone is not an ordinary fallback. Actual street/lamp numbers only if known, never invent identifiers. No contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          { title: 'Official public lighting fault instructions', url: moudonLightingUrl },
+          { title: 'Municipal authority; term not explicit', url: moudonAuthorityUrl },
+          { title: 'Services industriels responsibility', url: moudonServicesUrl },
+        ],
+      };
+    }
+    if (name === 'bassins-water-enquiry') {
+      this.reportingService = 'Commune de Bassins – question d’entretien de l’eau';
+      this.privacy =
+        'Local enquiry draft collects no reporter contacts/photos/native consent and makes no transfer. Email contact requirements/anonymous acceptance/incident privacy/retention/country/forwarding/receipt unknown. Actual website account/message periods and EU hosting are not guarantees for email incidents; no anonymous/no-sharing/Swiss-only claim. No client/state/payload/emails/calls/sending/mail-client launch/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: bassinsScope,
+        responsibility:
+          'Exact BFS5703 point plus actual communal drinking-water asset/nonurgent enquiry confirmation beyond boundary/resident confirmation. Public municipal water operation/invitation and Denis Currat water portfolio agree; current term not explicit. No regional/private plumbing/other-service coverage inferred.',
+        routing_note:
+          'Local French maintenance-enquiry facts draft only. Public primary municipal water-question email commune@bassins.ch may redirect to Renevier SA; no verified fault acceptance. No contact/photo collection, sending, mail-client launch, native consent/state/payload or tracking. Emergency contractor phones not routine fallback. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit municipal water-question email invitation, emergencies separate',
+            url: bassinsWaterUrl,
+          },
+          {
+            title: 'Actual municipal water responsibility; term not explicit',
+            url: bassinsAuthorityUrl,
+          },
+          {
+            title: 'Website policy; email applicability remains unqualified',
+            url: bassinsPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'vucherens-water') {
+      this.reportingService = 'Commune de Vucherens – eau potable';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos or native consent and makes no transfer. Telephone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt unknown. No dedicated incident policy qualified, no invented privacy URL/Swiss-only/anonymity guarantee. Native protected generic contact not inherited or requested; no calls/email/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: vucherensScope,
+        responsibility:
+          'Exact BFS5692 point and actual communal drinking-water asset/nonurgent confirmation required; boundary/resident confirmation alone does not prove ownership. Water page explicit network-problem contact, communal employee role and authority body since1July2026 agree despite older authority URL. No private/regional/all-service coverage inferred.',
+        routing_note:
+          'Public water-problem invitation to communal employee0794464074. Local initial optional telephone note only; no contacts/photos/native consent/client/state/payload/calls/email/sending/completion/tracking. No emergency, health concern, outage, leak, flooding, private plumbing or new connection/hydrant-use request. Never automatically retry/recreate/change channel after uncertainty.',
+        sources: [
+          { title: 'Explicit water-network problem telephone invitation', url: vucherensWaterUrl },
+          {
+            title: 'Communal employee maintenance role and separate paid private services',
+            url: vucherensVoirieUrl,
+          },
+          { title: 'Actual authority since1July2026 despite old URL', url: vucherensAuthorityUrl },
+        ],
+      };
+    }
+    if (name === 'dompierre-roads') {
+      this.reportingService = 'Commune de Dompierre VD – routes';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Telephone reporter requirements, anonymous acceptance and incident privacy/retention/country/receipt are unknown. No dedicated linked incident policy qualified; no invented privacy URL or Swiss-only/anonymity guarantee. No native fields/consent/client/state/payload/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: dompierreScope,
+        responsibility:
+          'Confirm the exact BFS5671 point and an actual communal road surface with a nonurgent physical maintenance defect. Boundary and resident confirmation alone do not prove ownership. Actual2026–2031 road portfolio and explicit road-report invitation agree. No cantonal/private road or wider lighting/water/waste responsibility inferred.',
+        routing_note:
+          'Guillaume Diserens0788739737 on explicit communal-road report page. Initial optional call note only, no contacts/photos/calls/email/native payload/sending/completion/tracking. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit communal road report invitation and published telephone',
+            url: dompierreServicesUrl,
+          },
+          {
+            title: 'Current2026–2031 authority confirms road responsibility',
+            url: dompierreAuthorityUrl,
+          },
+          { title: 'Official Dompierre VD identity and administration', url: dompierreHomeUrl },
+        ],
+      };
+    }
+    if (name === 'saint-sulpice-lighting') {
+      this.reportingService = 'Commune de Saint-Sulpice – éclairage public';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident privacy, retention, processing country and receipt remain unknown. Protected generic contact fields, antispam and client state are not inherited or requested. No native payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: saintSulpiceScope,
+        responsibility:
+          'Confirm a nonurgent malfunction of an actual communal public streetlight at its precise Saint-Sulpice VD point. Boundary and resident confirmation alone do not prove ownership. Current2026–2031 authority and communal voirie maintenance apply; Lausanne gas works do not establish a lighting mandate.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title: 'Explicit municipal lighting malfunction telephone invitation',
+            url: saintSulpiceLightingUrl,
+          },
+          {
+            title: 'Communal voirie lighting maintenance and contacts',
+            url: saintSulpiceVoirieUrl,
+          },
+          {
+            title: 'Actual2026–2031 authority despite legacy URL',
+            url: saintSulpiceMunicipalityUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'bussigny-lighting') {
+      this.reportingService = 'Romande Energie – éclairage public (Bussigny)';
+      this.privacy =
+        'Local telephone note collects no reporter contacts/photos and makes no transfer. Phone reporter requirements, anonymous acceptance and incident retention/country/receipt remain unknown. Provider policy allows group/provider/authority sharing and possible international processing. No native client/state/payload, sending, external completion or tracking. Municipal preferred email and independent provider phone are distinct; never switch channels automatically after uncertainty.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: bussignyScope,
+        responsibility:
+          'Confirm a nonurgent fault of an actual Romande Energie public streetlight at its precise Bussigny point. Boundary and resident confirmation alone do not prove ownership. Municipal network sold to the provider in2020; no water, drainage, roads or neighbouring supplier scope.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title: 'Municipal lighting ownership and preferred email instructions',
+            url: bussignyLightingUrl,
+          },
+          { title: 'Independent provider lighting-only phone route', url: bussignyProviderUrl },
+          { title: 'Current municipal authority', url: bussignyMunicipalityUrl },
+          {
+            title: 'Provider general privacy; incident-specific limits unknown',
+            url: bussignyPrivacyUrl,
+          },
+          {
+            title: 'Municipal source-use conditions; no copied snapshots published',
+            url: bussignyLegalUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'lavigny-molok') {
+      this.reportingService = 'Commune de Lavigny – Administration / déchets';
+      this.privacy =
+        'Local telephone-note preparation collects no reporter contacts or photos and makes no municipal transfer. Phone reporter requirements and anonymous acceptance remain unknown. The general policy permits request processing, Swiss website providers, legal sharing and possible foreign transfers; its malformed contact strings are not destinations. Incident retention, processing country and receipt are unverified. No native form/client/payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: lavignyScope,
+        responsibility:
+          'Confirm the actual faulty communal Molok at its precise Lavigny point and municipal maintenance responsibility. Boundary and resident confirmation alone do not prove ownership. Disposal access cards, private bins, litter, illegal dumping, general roads and utility faults are outside this note.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title:
+              'Explicit invitation to report Molok breakdowns to administration or waste councillor',
+            url: lavignyWasteUrl,
+          },
+          {
+            title: 'Published municipal waste responsibility and telephone contacts',
+            url: lavignyMunicipalityUrl,
+          },
+          {
+            title: 'General privacy policy; incident retention/country/receipt unknown',
+            url: lavignyPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'rivaz-water') {
+      this.reportingService = 'Commune de Rivaz – Municipal en charge des eaux';
+      this.privacy =
+        'Local telephone-note preparation collects no reporter contacts or photos and makes no municipal transfer. Telephone reporter requirements and anonymous acceptance remain unverified. The water problem/emergency invitation is by telephone, but this local note excludes urgent situations, contamination, supply interruption, active leaks and flooding. The policy permits request processing and legal/service-provider sharing; retention, processing country and receipt remain unverified. No payload, sending, external completion, tracking or native/security client execution.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: rivazScope,
+        responsibility:
+          'Confirm a nonurgent maintenance fault of an actual communal drinking-water asset at its exact Rivaz point. Boundary and resident confirmation do not independently prove ownership; Chexbres/Puidoux sources do not expand scope.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title:
+              'Explicit water problem/emergency telephone referral; local urgent cases excluded',
+            url: rivazWaterUrl,
+          },
+          {
+            title: 'Current municipal industrial/water responsibility',
+            url: rivazMunicipalityUrl,
+          },
+          {
+            title: 'General privacy policy; incident retention/country/receipt unknown',
+            url: rivazPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'grandson-voirie') {
+      this.reportingService = 'Commune de Grandson – Service Travaux et environnement';
+      this.privacy =
+        'Local telephone-note preparation collects no reporter contacts or photos and makes no municipal transfer. Native reporter requirements, anonymous acceptance, incident privacy, retention, processing country and receipt remain unverified. The explicit fault invitation is by telephone; the published email is contextual. No payload, sending, external completion, tracking or native/security client execution.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: grandsonScope,
+        responsibility:
+          'Confirm the exact Grandson point and actual municipal maintenance responsibility; boundary and resident confirmation do not independently prove ownership.',
+        routing_note:
+          'Local telephone note only. No contacts or photos; no sending, external completion or tracking. Never automatically retry, recreate or switch channels after an uncertain result.',
+        sources: [
+          {
+            title: 'Explicit communal voirie fault invitation and maintenance scope',
+            url: grandsonWorksUrl,
+          },
+          {
+            title: 'Current municipal roads and lighting responsibility',
+            url: grandsonMunicipalityUrl,
+          },
+          {
+            title: 'Works contact and duty directory; native requirements unverified',
+            url: grandsonContactUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'essertines-voirie') {
+      this.reportingService = 'Commune d’Essertines-sur-Yverdon – Voirie';
+      this.privacy =
+        'Local text preparation keeps required private names, phone and email and optional postal contacts in Civic, outside AI. No photos or municipal transfer. A specific incident/contact privacy policy, retention period and processing country have not been qualified. Native protection, validation, recipient delivery and receipt remain unverified. No client, trap or native state is executed or reused; no payload, sending, external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: essertinesScope,
+        sources: [
+          {
+            title: 'Official technical-problem referral and selected Voirie contact recipient',
+            url: essertinesFormUrl,
+          },
+          { title: 'Municipal lighting and road responsibility', url: essertinesMunicipalityUrl },
+        ],
+      };
+    }
+    if (isEwrMunicipality(name)) {
+      this.reportingService = `EW Romanshorn – ${this.municipality} Strassenbeleuchtung`;
+      this.termsUrl = ewrPrivacyUrl;
+      this.privacy =
+        'Required private combined name, phone and email remain outside AI. No reporter address, photos or PDF email fallback. Native storage/processing consent required. Policy17October2024 covers communication/fault handling, service providers/partners/authorities and foreign processing with exceptions; purpose/legal/technical retention, business communication up to ten years, no fixed lamp period. No native client/protection execution, payload, sending or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: ewrScope(name),
+        sources: [
+          {
+            title: 'EWR public-lighting mandate for three municipalities',
+            url: 'https://ewr.ch/dienstleistungen/oeffentliche-beleuchtung/',
+          },
+          { title: 'Dedicated EWR lighting fault form', url: ewrFormUrl },
+          { title: 'EWR privacy policy', url: ewrPrivacyUrl },
+        ],
+      };
+    }
+    if (isReaMunicipality(name)) {
+      this.reportingService = `Regio Energie Amriswil – ${this.municipality} Strassenbeleuchtung`;
+      this.termsUrl = reaPrivacyUrl;
+      this.privacy =
+        'Optional reporter name, postcode, phone and email remain outside AI; no photos. Local preparation separates lamp number and reporter name despite their duplicate native binding. Policy processes enquiries and allows service-provider/partner/authority sharing and conditional foreign processing, with purpose/legal retention and no fixed lamp period or absolute transmission-security promise. No native client/anti-spam/state execution, payload, sending, status request or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: reaScope(name),
+        sources: [
+          { title: 'Official municipal utility referral', url: reaMunicipalities[name].referral },
+          { title: 'Dedicated REA lighting fault form', url: reaFormUrl },
+          { title: 'REA privacy policy 1 June 2026', url: reaPrivacyUrl },
+        ],
+      };
+    }
+    if (isEgsMunicipality(name)) {
+      this.reportingService = `Elektrizitäts-Genossenschaft Siggenthal – ${this.municipality} Strassenbeleuchtung`;
+      this.privacy =
+        'Local preparation keeps required private salutation, names, phone/email and optional company outside AI; no photos or postal contacts. Provider/partner/authority sharing and foreign-processing conditions apply, with no fixed lamp-report retention established. Native reCAPTCHA, phone geoIP, UUID/consent behavior, phone normalization and actual acceptance remain unverified. Civic performs no native initialization, code execution, payload or sending.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: egsScope(name),
+        sources: [
+          { title: 'Municipal EGS referral', url: egsMunicipalities[name].referral },
+          { title: 'Dedicated EGS two-municipality lamp form', url: egsFormUrl },
+          {
+            title: 'Official provider privacy PDF; native delivery details unresolved',
+            url: egsPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'eww-wettingen') {
+      this.reportingService = 'Energie Wettingen – Öffentliche Beleuchtung';
+      this.privacy =
+        'Local text-only preparation keeps private salutation, split names, email and optional phone/postal contacts outside AI. General inquiry/follow-up, existing customer-data and possible quality-review purposes; service-provider/partner/authority sharing and foreign safeguards, no fixed lamp/photo retention or publication promise. Native protection/fingerprint, tracking consent, upload MIME, email pattern and durable acceptance remain unverified. No native execution or sending.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: ewwScope,
+        sources: [
+          {
+            title: 'Official utility public-lighting mandate and sole municipal ownership',
+            url: ewwIdentityUrl,
+          },
+          { title: 'Dedicated ordinary lamp-fault form', url: ewwFormUrl },
+          { title: 'Provider privacy January2026', url: ewwPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'egm-muelligen') {
+      this.reportingService = 'EGM Mülligen – öffentliche Beleuchtung';
+      this.privacy =
+        'Text-only local preparation keeps required private split names/email/privacy agreement and optional company outside AI. Lamp street/postcode/locality describe the asset, not the reporter. No private postal/phone fields or attachments. General form policy lists contact fields absent from this selected form. Form-purpose processing, broader marketing/statistics with objection rights, partner/provider/authority and foreign sharing; no fixed lamp retention/publication promise. Native email confirmation, CAPTCHA, upload and durable acceptance remain unverified. No native state reuse, client execution or sending.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: egmScope,
+        sources: [
+          {
+            title: 'Operator explicit public-lighting mandate within Mülligen',
+            url: egmIdentityUrl,
+          },
+          { title: 'Dedicated ordinary lamp-fault form', url: egmFormUrl },
+          { title: 'Provider privacy policy', url: egmPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'ibw-wohlen-ag') {
+      this.reportingService = 'ibw – Öffentliche Beleuchtung Wohlen AG';
+      this.privacy =
+        'Local text-only preparation keeps required private split names/email/privacy acknowledgement and optional salutation/phone outside AI. No private postal fields or photos. General contact-policy postal fields do not occur in the actual lamp form. Form-purpose processing plus broader marketing/statistics with objection rights, group/provider/authority sharing and foreign safeguards; no fixed lamp-specific retention or publication promise. Native protection and actual receipt/reconciliation remain unverified; no client execution, state reuse or sending.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: ibwScope,
+        sources: [
+          { title: 'Official explicit Wohlen AG public-lighting mandate', url: ibwIdentityUrl },
+          { title: 'Dedicated ordinary lamp-fault form', url: ibwFormUrl },
+          { title: 'Complete provider privacy policy', url: ibwPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'swl-staufen') {
+      this.reportingService = 'SWL Energie AG – Staufen streetlighting';
+      this.privacy =
+        'Telephone-only local preparation keeps private names, salutation and phone outside AI. No reporter postal address, email, company or photos. SWL processes inquiries with contracted-provider/legal sharing exceptions and purpose/legal retention. Native form uses hCaptcha while its policy describes reCAPTCHA; protection data flow remains unverified. Local read acknowledgement is not a native consent checkbox. Nothing is sent; delivery and acceptance are unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: swlScope,
+        sources: [
+          { title: 'Explicit municipal broken-lamp referral', url: swlReferralUrl },
+          { title: 'Current municipal electricity and SWL referral', url: swlElectricityUrl },
+          { title: 'Native lamp fault form', url: swlLightingFormUrl },
+          {
+            title: 'Provider privacy; protection discrepancy unresolved',
+            url: swlLightingPrivacyUrl,
+          },
+        ],
+      };
+    }
+    if (name === 'zofingen-infrastructure') {
+      this.reportingService = 'Stadt Zofingen – Gemeindeinfrastruktur';
+      this.termsUrl = zofingenPrivacyUrl;
+      this.privacy =
+        'Private full name, daytime phone and email remain outside AI. Native photo optional; local preparation accepts no attachments. Policy stores enquiries/contact details for processing and follow-up, says no sharing without consent, and disclaims complete transmission security. No fixed incident retention; general account/newsletter/payment terms not incident terms. Local read acknowledgement is not a native consent checkbox. No client/state/protection execution or sending; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: zofingenScope,
+        sources: [
+          { title: 'Dedicated municipal infrastructure-damage form', url: zofingenFormUrl },
+          { title: 'Official municipal maintenance duties', url: zofingenReferralUrl },
+          { title: 'Municipal privacy policy', url: zofingenPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'tbw-weinfelden') {
+      this.reportingService = 'TBW – Weinfelden public streetlighting';
+      this.termsUrl = tbwPrivacyUrl;
+      this.privacy =
+        'Private salutation, names, street/house number, postcode/locality, mobile, email, optional phone and postbox remain outside AI. Native privacy acknowledgement required. No photos. Policy effective 22 September 2026 describes form handling/answers and hosting, with broader service/contract/legal sharing. Swiss website hosting is not an all-incident residency guarantee; possible EEA/worldwide processing. No fixed incident retention. Portal reCAPTCHA policy does not establish public contact-form behavior. No native state, trap/client execution, payload, sending or external completion; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: tbwScope,
+        sources: [
+          { title: 'Public TBW contact form', url: tbwFormUrl },
+          {
+            title: 'Explicit city lighting mandate and unlit-lamp reporting invitation',
+            url: tbwReferralUrl,
+          },
+          { title: 'TBW privacy policy', url: tbwPrivacyUrl },
+          {
+            title: 'City normal lighting shutdown hours',
+            url: 'https://www.weinfelden.ch/stadt/news/aktuell.html/310/news/9529/newsarchive/1',
+          },
+        ],
+      };
+    }
+    if (name === 'diessenhofen-stadtmelder') {
+      this.reportingService = 'Stadtgemeinde Diessenhofen – Stadtmelder';
+      this.privacy =
+        'Private names, street, optional house number, postcode/locality, email and optional phone remain outside AI. No photos. Policy stores contact-form enquiries for processing and follow-up; no fixed incident retention. Local policy-read acknowledgement is not native consent. No client/protection execution, payload, external completion or sending; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: diessenhofenScope,
+        sources: [
+          { title: 'Municipal general feedback form', url: diessenhofenFormUrl },
+          {
+            title: 'Official municipal public-space maintenance duties',
+            url: diessenhofenReferralUrl,
+          },
+          { title: 'Municipal privacy policy', url: diessenhofenPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'obermumpf-lighting') {
+      this.reportingService = 'Gemeinde Obermumpf – Strassenbeleuchtung';
+      this.privacy =
+        'Private names, full address, phone and email remain outside AI. Native lamp number is optional; no photos. Policy stores contact-form enquiries for processing and follow-up, with consent-based sharing and no guaranteed transmission security. No fixed lamp retention. Local read acknowledgement is not a native consent checkbox. No client/state/protection execution or sending; acceptance unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-20',
+        scope: obermumpfScope,
+        sources: [
+          { title: 'Dedicated municipal lamp form', url: obermumpfFormUrl },
+          {
+            title: 'Explicit municipal lamp-maintenance and reporting responsibility',
+            url: obermumpfReferralUrl,
+          },
+          { title: 'Municipal privacy policy', url: obermumpfPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'elektra-auw') {
+      this.reportingService = 'Elektra Genossenschaft Auw – public streetlighting';
+      this.privacy =
+        'Local preparation keeps private combined reporter name, address/locality and phone outside AI. No email or photos. Provider processing is for service purposes, with contracted-provider/business-partner/legal disclosure exceptions and possible foreign recipients. No fixed lamp retention or absolute confidentiality promise. Local privacy-read acknowledgement is not a native consent checkbox. No native client/state/nonce execution or transmission; delivery and acceptance remain unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: auwScope,
+        sources: [
+          { title: 'Official municipal Elektra referral', url: auwReferralUrl },
+          { title: 'Dedicated native street/pavement lamp fault form', url: auwFormUrl },
+          { title: 'Provider privacy PDF', url: auwPrivacyUrl },
+        ],
+      };
+    }
+    if (name === 'tbseon-egliswil') {
+      this.reportingService = 'Technische Betriebe Seon AG – Egliswil Strassenbeleuchtung';
+      this.privacy =
+        'Telephone-only local preparation keeps private names, address, postcode/locality and phone outside AI. No email or photos. Provider confidentiality is qualified by service-provider/legal sharing and required business-record retention; no fixed lamp retention or publication promise. Local privacy acknowledgement is not a native checkbox. Civic sends nothing during local preparation; actual delivery and acceptance remain unverified.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-19',
+        scope: tbseonScope,
+        sources: [
+          { title: 'Explicit municipal streetlight fault referral', url: tbseonReferralUrl },
+          { title: 'Native shared customer form, lamp branch', url: tbseonFormUrl },
+          { title: 'Provider privacy policy', url: tbseonPrivacyUrl },
+        ],
+      };
+    }
   }
   mapUrl(point: Point) {
     coordinates.parse(point);
@@ -357,6 +3305,11 @@ export class MunicipalFormClient implements ReportingAdapter {
       .replace('{latitude}', String(point.latitude));
   }
   fallbackUrl(_input: ReportInput) {
+    if (this.name === 'ostermundigen')
+      return (
+        Object.values(ostermundigenForms).find((f) => f.category === _input.category)?.url ??
+        this.reportingUrl
+      );
     return this.reportingUrl;
   }
   reportUrl(_id: string): string {
@@ -367,15 +3320,630 @@ export class MunicipalFormClient implements ReportingAdapter {
     return new CityClient(this.request).geocode(query);
   }
   categories() {
+    if (isEwrMunicipality(this.name)) return Promise.resolve(ewrCategories.map((c) => ({ ...c })));
+    if (isReaMunicipality(this.name)) return Promise.resolve(reaCategories.map((c) => ({ ...c })));
+    if (isSieMunicipality(this.name)) return Promise.resolve(sieCategories.map((c) => ({ ...c })));
+    if (isAvmMunicipality(this.name)) return Promise.resolve(avmCategories.map((c) => ({ ...c })));
+    if (this.name === 'chavannes-moudon-maintenance')
+      return Promise.resolve(chavannesMoudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'seic-duillier-lighting-note')
+      return Promise.resolve(duillierCategories.map((c) => ({ ...c })));
+    if (this.name === 'seic-prangins-lighting-note')
+      return Promise.resolve(pranginsCategories.map((c) => ({ ...c })));
+    if (this.name === 'seic-begnins-lighting-note')
+      return Promise.resolve(begninsCategories.map((c) => ({ ...c })));
+    if (this.name === 'coppet-lighting-note')
+      return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
+    if (this.name === 'jorat-menthue-molok-note')
+      return Promise.resolve(joratMenthueCategories.map((c) => ({ ...c })));
+    if (this.name === 'suscevaz-hornet-observation-note')
+      return Promise.resolve(suscevazCategories.map((c) => ({ ...c })));
+    if (this.name === 'orzens-hornet-observation-note')
+      return Promise.resolve(orzensCategories.map((c) => ({ ...c })));
+    if (this.name === 'simplon-evs-meter-note')
+      return Promise.resolve(simplonCategories.map((c) => ({ ...c })));
+    if (this.name === 'yvonand-hornet-nest-note')
+      return Promise.resolve(yvonandCategories.map((c) => ({ ...c })));
+    if (this.name === 'villars-epeney-meter-note')
+      return Promise.resolve(villarsEpeneyCategories.map((c) => ({ ...c })));
+    if (this.name === 'cuarny-water-quality-note')
+      return Promise.resolve(cuarnyCategories.map((c) => ({ ...c })));
+    if (this.name === 'labbaye-lighting-note')
+      return Promise.resolve(labbayeCategories.map((c) => ({ ...c })));
+    if (this.name === 'romainmotier-lighting-note')
+      return Promise.resolve(romainmotierCategories.map((c) => ({ ...c })));
+    if (this.name === 'founex-lighting-note')
+      return Promise.resolve(founexCategories.map((c) => ({ ...c })));
+    if (this.name === 'moudon-lighting-note')
+      return Promise.resolve(moudonCategories.map((c) => ({ ...c })));
+    if (this.name === 'bassins-water-enquiry')
+      return Promise.resolve(bassinsCategories.map((c) => ({ ...c })));
+    if (this.name === 'vucherens-water')
+      return Promise.resolve(vucherensCategories.map((c) => ({ ...c })));
+    if (this.name === 'dompierre-roads')
+      return Promise.resolve(dompierreCategories.map((c) => ({ ...c })));
+    if (this.name === 'saint-sulpice-lighting')
+      return Promise.resolve(saintSulpiceCategories.map((c) => ({ ...c })));
+    if (this.name === 'bussigny-lighting')
+      return Promise.resolve(bussignyCategories.map((c) => ({ ...c })));
+    if (this.name === 'lavigny-molok')
+      return Promise.resolve(lavignyCategories.map((c) => ({ ...c })));
+    if (this.name === 'rivaz-water') return Promise.resolve(rivazCategories.map((c) => ({ ...c })));
+    if (this.name === 'grandson-voirie')
+      return Promise.resolve(grandsonCategories.map((c) => ({ ...c })));
+    if (this.name === 'essertines-voirie')
+      return Promise.resolve(essertinesCategories.map((c) => ({ ...c })));
+    if (this.name === 'zofingen-infrastructure')
+      return Promise.resolve(zofingenCategories.map((c) => ({ ...c })));
+    if (this.name === 'tbw-weinfelden')
+      return Promise.resolve(tbwCategories.map((c) => ({ ...c })));
+    if (this.name === 'diessenhofen-stadtmelder')
+      return Promise.resolve(diessenhofenCategories.map((c) => ({ ...c })));
+    if (this.name === 'obermumpf-lighting')
+      return Promise.resolve(obermumpfCategories.map((c) => ({ ...c })));
+    if (this.name === 'elektra-auw') return Promise.resolve(auwCategories.map((c) => ({ ...c })));
+    if (this.name === 'swl-staufen') return Promise.resolve(swlCategories.map((c) => ({ ...c })));
+    if (this.name === 'tbseon-egliswil')
+      return Promise.resolve(tbseonCategories.map((c) => ({ ...c })));
+    // Published metadata only; EGS source reads require the exact point gate.
+    if (this.name === 'rwb-windisch') return Promise.resolve(rwbCategories.map((c) => ({ ...c })));
+    if (this.name === 'egm-muelligen') return Promise.resolve(egmCategories.map((c) => ({ ...c })));
+    if (this.name === 'ibw-wohlen-ag') return Promise.resolve(ibwCategories.map((c) => ({ ...c })));
+    if (this.name === 'eww-wettingen') return Promise.resolve(ewwCategories.map((c) => ({ ...c })));
+    if (isEgsMunicipality(this.name)) return Promise.resolve(egsCategories.map((c) => ({ ...c })));
     return this.loadCategories(false);
   }
   private async loadCategories(fresh: boolean): Promise<Category[]> {
+    if (isSieMunicipality(this.name)) assertSieSourcesAvailable(this.request);
+    if (isAvmMunicipality(this.name)) assertAvmSourcesAvailable(this.request);
+    if (this.name === 'chavannes-moudon-maintenance')
+      assertChavannesMoudonSourcesAvailable(this.request);
+    if (this.name === 'seic-duillier-lighting-note') assertDuillierSourcesAvailable(this.request);
+    if (this.name === 'seic-prangins-lighting-note') assertPranginsSourcesAvailable(this.request);
+    if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
+    if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
+    if (this.name === 'jorat-menthue-molok-note') assertJoratMenthueSourcesAvailable(this.request);
+    if (this.name === 'suscevaz-hornet-observation-note')
+      assertSuscevazSourcesAvailable(this.request, this.now);
+    if (this.name === 'orzens-hornet-observation-note') assertOrzensSourcesAvailable(this.request);
+    if (this.name === 'simplon-evs-meter-note') assertSimplonSourcesAvailable(this.request);
+    if (this.name === 'yvonand-hornet-nest-note') assertYvonandSourcesAvailable(this.request);
+    if (this.name === 'villars-epeney-meter-note')
+      assertVillarsEpeneySourcesAvailable(this.request);
+    if (this.name === 'cuarny-water-quality-note') assertCuarnySourcesAvailable(this.request);
+    if (this.name === 'labbaye-lighting-note') assertLabbayeSourcesAvailable(this.request);
+    if (this.name === 'romainmotier-lighting-note')
+      assertRomainmotierSourcesAvailable(this.request);
+    if (this.name === 'founex-lighting-note') assertFounexSourcesAvailable(this.request);
+    if (this.name === 'moudon-lighting-note') assertMoudonSourcesAvailable(this.request);
+    if (this.name === 'bassins-water-enquiry') assertBassinsSourcesAvailable(this.request);
+    if (this.name === 'vucherens-water') assertVucherensSourcesAvailable(this.request);
+    if (this.name === 'dompierre-roads') assertDompierreSourcesAvailable(this.request);
+    if (this.name === 'saint-sulpice-lighting') assertSaintSulpiceSourcesAvailable(this.request);
+    if (this.name === 'bussigny-lighting') assertBussignySourcesAvailable(this.request);
+    if (this.name === 'lavigny-molok') assertLavignySourcesAvailable(this.request);
+    if (this.name === 'rivaz-water') assertRivazSourcesAvailable(this.request);
+    if (this.name === 'grandson-voirie') assertGrandsonSourcesAvailable(this.request);
+    if (this.name === 'essertines-voirie') assertEssertinesSourcesAvailable(this.request);
+    if (isEwrMunicipality(this.name)) assertEwrSourcesAvailable(this.request);
+    if (isReaMunicipality(this.name)) assertReaSourcesAvailable(this.request);
+    if (this.name === 'zofingen-infrastructure') assertZofingenSourcesAvailable(this.request);
+    if (this.name === 'tbw-weinfelden') assertTbwSourcesAvailable(this.request);
+    if (this.name === 'diessenhofen-stadtmelder') assertDiessenhofenSourcesAvailable(this.request);
+    if (this.name === 'obermumpf-lighting') assertObermumpfSourcesAvailable(this.request);
+    if (this.name === 'elektra-auw') assertAuwSourcesAvailable(this.request);
+    if (this.name === 'swl-staufen') assertSwlSourcesAvailable(this.request);
+    if (this.name === 'tbseon-egliswil') assertTbseonSourcesAvailable(this.request);
+    if (this.name === 'rwb-windisch') assertRwbWindischSourcesAvailable(this.request);
+    if (this.name === 'egm-muelligen') assertEgmSourcesAvailable(this.request);
+    if (this.name === 'ibw-wohlen-ag') assertIbwSourcesAvailable(this.request, this.now);
+    if (this.name === 'eww-wettingen') assertEwwSourcesAvailable(this.request, this.now);
+    if (isEgsMunicipality(this.name)) assertEgsSourcesAvailable(this.request, this.now);
     if (this.retryAt > this.now()) throw changed();
     if (!fresh && this.cached && this.cached.expires > this.now())
       return structuredClone(this.cached.value);
     if (!this.pending)
       this.pending = (async () => {
         try {
+          if (
+            isEwrMunicipality(this.name) ||
+            isReaMunicipality(this.name) ||
+            this.name === 'zofingen-infrastructure' ||
+            this.name === 'tbw-weinfelden' ||
+            this.name === 'diessenhofen-stadtmelder' ||
+            this.name === 'obermumpf-lighting' ||
+            this.name === 'swl-staufen' ||
+            this.name === 'elektra-auw' ||
+            this.name === 'tbseon-egliswil' ||
+            this.name === 'egm-muelligen' ||
+            this.name === 'ibw-wohlen-ag' ||
+            this.name === 'eww-wettingen' ||
+            isEgsMunicipality(this.name) ||
+            this.name === 'ewn-neuenhof' ||
+            this.name === 'rwb-ennetbaden' ||
+            this.name === 'rwb-windisch' ||
+            this.name === 'hornet-aarau' ||
+            this.name === 'tbgraenichen' ||
+            this.name === 'tbs-suhr'
+          ) {
+            const value = await (
+              isEwrMunicipality(this.name)
+                ? loadEwrCategories
+                : isReaMunicipality(this.name)
+                  ? loadReaCategories
+                  : this.name === 'zofingen-infrastructure'
+                    ? loadZofingenCategories
+                    : this.name === 'tbw-weinfelden'
+                      ? loadTbwCategories
+                      : this.name === 'diessenhofen-stadtmelder'
+                        ? loadDiessenhofenCategories
+                        : this.name === 'obermumpf-lighting'
+                          ? loadObermumpfCategories
+                          : this.name === 'elektra-auw'
+                            ? loadAuwCategories
+                            : this.name === 'swl-staufen'
+                              ? loadSwlCategories
+                              : this.name === 'tbseon-egliswil'
+                                ? loadTbseonCategories
+                                : this.name === 'egm-muelligen'
+                                  ? loadEgmCategories
+                                  : this.name === 'ibw-wohlen-ag'
+                                    ? loadIbwCategories
+                                    : this.name === 'eww-wettingen'
+                                      ? loadEwwCategories
+                                      : isEgsMunicipality(this.name)
+                                        ? loadEgsCategories
+                                        : this.name === 'ewn-neuenhof'
+                                          ? loadEwnCategories
+                                          : this.name === 'rwb-windisch'
+                                            ? loadRwbWindischCategories
+                                            : this.name === 'rwb-ennetbaden'
+                                              ? loadRwbCategories
+                                              : this.name === 'hornet-aarau'
+                                                ? loadHornetCategories
+                                                : this.name === 'tbs-suhr'
+                                                  ? loadTbsCategories
+                                                  : loadTbgraenichenCategories
+            )(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (isSieMunicipality(this.name)) {
+            const value = await loadSieCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (isAvmMunicipality(this.name)) {
+            const value = await loadAvmCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'chavannes-moudon-maintenance') {
+            const value = await loadChavannesMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'seic-duillier-lighting-note') {
+            const value = await loadDuillierCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'seic-prangins-lighting-note') {
+            const value = await loadPranginsCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'seic-begnins-lighting-note') {
+            const value = await loadBegninsCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'coppet-lighting-note') {
+            const value = await loadCoppetCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'jorat-menthue-molok-note') {
+            const value = await loadJoratMenthueCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'suscevaz-hornet-observation-note') {
+            const value = await loadSuscevazCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'orzens-hornet-observation-note') {
+            const value = await loadOrzensCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'simplon-evs-meter-note') {
+            const value = await loadSimplonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'yvonand-hornet-nest-note') {
+            const value = await loadYvonandCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'villars-epeney-meter-note') {
+            const value = await loadVillarsEpeneyCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'cuarny-water-quality-note') {
+            const value = await loadCuarnyCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'labbaye-lighting-note') {
+            const value = await loadLabbayeCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'romainmotier-lighting-note') {
+            const value = await loadRomainmotierCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'founex-lighting-note') {
+            const value = await loadFounexCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'moudon-lighting-note') {
+            const value = await loadMoudonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'bassins-water-enquiry') {
+            const value = await loadBassinsCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'vucherens-water') {
+            const value = await loadVucherensCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'dompierre-roads') {
+            const value = await loadDompierreCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'saint-sulpice-lighting') {
+            const value = await loadSaintSulpiceCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'bussigny-lighting') {
+            const value = await loadBussignyCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'lavigny-molok') {
+            const value = await loadLavignyCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'rivaz-water') {
+            const value = await loadRivazCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'grandson-voirie') {
+            const value = await loadGrandsonCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'essertines-voirie') {
+            const value = await loadEssertinesCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'lungern') {
+            const value = await loadLungernCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'staefa') {
+            const value = await loadStaefaCategories(this.request, (delay) => {
+              this.retryAt = Math.max(
+                this.retryAt,
+                this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+              );
+            });
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'ostermundigen') {
+            const value: Category[] = [];
+            for (const kind of ['lighting', 'road'] as const) {
+              const response = await this.request(ostermundigenForms[kind].url, {
+                method: 'GET',
+                redirect: 'error',
+                signal: AbortSignal.timeout(20_000),
+                headers: {
+                  Accept: 'text/html',
+                  'User-Agent': 'Civic municipal form preparation (read-only)',
+                },
+              });
+              if (!response.ok) {
+                const header = response.headers.get('retry-after') ?? '';
+                const delay = /^\d+$/.test(header)
+                  ? Number(header) * 1000
+                  : Date.parse(header) - this.now();
+                if (Number.isFinite(delay) && delay > 0)
+                  this.retryAt = this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now());
+              }
+              value.push(...inspectOstermundigenForm(kind, await readHtml(response)));
+            }
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
           const response = await this.request(this.reportFormUrl, {
             method: 'GET',
             redirect: 'error',
@@ -415,6 +3983,84 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (municipality?.bfs_id !== this.bfsId)
       throw new Error('The exact location is outside this municipality.');
     const cats = await this.loadCategories(options.fresh === true);
+    if (this.name === 'swl-staufen') return swlRequirements();
+    if (isEwrMunicipality(this.name)) return ewrRequirements(this.name);
+    if (isReaMunicipality(this.name)) return reaRequirements(this.name);
+    if (this.name === 'zofingen-infrastructure') return zofingenRequirements();
+    if (this.name === 'tbw-weinfelden') return tbwRequirements();
+    if (this.name === 'diessenhofen-stadtmelder') return diessenhofenRequirements();
+    if (this.name === 'obermumpf-lighting') return obermumpfRequirements();
+    if (this.name === 'elektra-auw') return auwRequirements();
+    if (this.name === 'tbseon-egliswil') return tbseonRequirements();
+    if (this.name === 'egm-muelligen') return egmRequirements();
+    if (this.name === 'ibw-wohlen-ag') return ibwRequirements();
+    if (this.name === 'eww-wettingen') return ewwRequirements();
+    if (isEgsMunicipality(this.name)) return egsRequirements(this.name);
+    if (this.name === 'ewn-neuenhof') return ewnRequirements();
+    if (this.name === 'rwb-windisch') return rwbWindischRequirements();
+    if (this.name === 'rwb-ennetbaden') return rwbRequirements();
+    if (this.name === 'tbs-suhr') return tbsRequirements();
+    if (this.name === 'tbgraenichen') return tbgraenichenRequirements();
+    if (this.name === 'hornet-aarau') return hornetRequirements();
+    if (this.name === 'rabiosa-churwalden') return rabiosaRequirements();
+    if (this.name === 'ee-engiadina-scuol') return energiaEngiadinaRequirements();
+    if (this.name === 'thusis') return thusisRequirements();
+    if (this.name === 'falera') return faleraRequirements();
+    if (this.name === 'wil-lighting') return wilLightingRequirements();
+    if (isEwsennwaldMunicipality(this.name)) return ewsennwaldRequirements(this.bfsId);
+    if (this.name === 'ewbuchs') return ewbuchsRequirements();
+    if (this.name === 'stmargrethen') return stmargrethenRequirements();
+    if (this.name === 'waldstatt') return waldstattRequirements();
+    if (this.name === 'titterten') return tittertenRequirements();
+    if (this.name === 'wintersingen') return wintersingenRequirements();
+    if (this.name === 'therwil') return therwilRequirements();
+    if (this.name === 'reinach-bl') return reinachBlRequirements();
+    if (this.name === 'val-de-charmey') return valDeCharmeyRequirements();
+    if (this.name === 'lungern') return lungernRequirements();
+    if (isEbsMunicipality(this.name)) return ebsRequirements(this.name);
+    if (this.name === 'wuennewil-flamatt') return wuennewilRequirements();
+    if (this.name === 'erstfeld') return erstfeldRequirements();
+    if (isCkwMunicipality(this.name)) return ckwRequirements(this.name);
+    if (this.name === 'oberhofen' || this.name === 'steffisburg')
+      return netzulgRequirements(this.name);
+    if (this.name === 'buchsi') return buchsiRequirements();
+    if (this.name === 'dotzigen') return dotzigenRequirements();
+    if (this.name === 'bueren') return evbRequirements();
+    if (this.name === 'ostermundigen') return ostermundigenRequirements();
+    if (this.name === 'wohlen-be') return wohlenBeRequirements();
+    if (this.name === 'roggwil') return roggwilRequirements();
+    if (this.name === 'langenthal') return langenthalRequirements();
+    if (this.name === 'staefa') return staefaRequirements();
+    if (this.name === 'erlenbach' || this.name === 'zollikon')
+      return wazRequirements(this.municipality);
+    if (this.name === 'marthalen') return marthalenRequirements();
+    if (isSieMunicipality(this.name)) return sieRequirements(this.name);
+    if (isAvmMunicipality(this.name)) return avmRequirements(this.name);
+    if (this.name === 'chavannes-moudon-maintenance') return chavannesMoudonRequirements();
+    if (this.name === 'seic-duillier-lighting-note') return duillierRequirements();
+    if (this.name === 'seic-prangins-lighting-note') return pranginsRequirements();
+    if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
+    if (this.name === 'coppet-lighting-note') return coppetRequirements();
+    if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
+    if (this.name === 'suscevaz-hornet-observation-note') return suscevazRequirements();
+    if (this.name === 'orzens-hornet-observation-note') return orzensRequirements();
+    if (this.name === 'simplon-evs-meter-note') return simplonRequirements();
+    if (this.name === 'yvonand-hornet-nest-note') return yvonandRequirements();
+    if (this.name === 'villars-epeney-meter-note') return villarsEpeneyRequirements();
+    if (this.name === 'cuarny-water-quality-note') return cuarnyRequirements();
+    if (this.name === 'labbaye-lighting-note') return labbayeRequirements();
+    if (this.name === 'romainmotier-lighting-note') return romainmotierRequirements();
+    if (this.name === 'founex-lighting-note') return founexRequirements();
+    if (this.name === 'moudon-lighting-note') return moudonRequirements();
+    if (this.name === 'bassins-water-enquiry') return bassinsRequirements();
+    if (this.name === 'vucherens-water') return vucherensRequirements();
+    if (this.name === 'dompierre-roads') return dompierreRequirements();
+    if (this.name === 'saint-sulpice-lighting') return saintSulpiceRequirements();
+    if (this.name === 'bussigny-lighting') return bussignyRequirements();
+    if (this.name === 'lavigny-molok') return lavignyRequirements();
+    if (this.name === 'rivaz-water') return rivazRequirements();
+    if (this.name === 'grandson-voirie') return grandsonRequirements();
+    if (this.name === 'essertines-voirie') return essertinesRequirements();
     if (this.name === 'boenigen') return boenigenRequirements();
     if (this.name === 'gossau') return gossauRequirements();
     if (this.name === 'meggen')

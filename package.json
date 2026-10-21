@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.14",
+  "version": "0.4.0-rc.106",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -180,6 +180,302 @@
     "./boenigen-form": {
       "types": "./dist/boenigen-form.d.ts",
       "import": "./dist/boenigen-form.js"
+    },
+    "./marthalen-form": {
+      "types": "./dist/marthalen-form.d.ts",
+      "import": "./dist/marthalen-form.js"
+    },
+    "./waz-form": {
+      "types": "./dist/waz-form.d.ts",
+      "import": "./dist/waz-form.js"
+    },
+    "./staefa-form": {
+      "types": "./dist/staefa-form.d.ts",
+      "import": "./dist/staefa-form.js"
+    },
+    "./langenthal-form": {
+      "types": "./dist/langenthal-form.d.ts",
+      "import": "./dist/langenthal-form.js"
+    },
+    "./roggwil-form": {
+      "types": "./dist/roggwil-form.d.ts",
+      "import": "./dist/roggwil-form.js"
+    },
+    "./wohlen-be-form": {
+      "types": "./dist/wohlen-be-form.d.ts",
+      "import": "./dist/wohlen-be-form.js"
+    },
+    "./ostermundigen-form": {
+      "types": "./dist/ostermundigen-form.d.ts",
+      "import": "./dist/ostermundigen-form.js"
+    },
+    "./evb-form": {
+      "types": "./dist/evb-form.d.ts",
+      "import": "./dist/evb-form.js"
+    },
+    "./dotzigen-form": {
+      "types": "./dist/dotzigen-form.d.ts",
+      "import": "./dist/dotzigen-form.js"
+    },
+    "./buchsi-form": {
+      "types": "./dist/buchsi-form.d.ts",
+      "import": "./dist/buchsi-form.js"
+    },
+    "./netzulg-form": {
+      "types": "./dist/netzulg-form.d.ts",
+      "import": "./dist/netzulg-form.js"
+    },
+    "./ckw-form": {
+      "types": "./dist/ckw-form.d.ts",
+      "import": "./dist/ckw-form.js"
+    },
+    "./erstfeld-form": {
+      "types": "./dist/erstfeld-form.d.ts",
+      "import": "./dist/erstfeld-form.js"
+    },
+    "./ebs-form": {
+      "types": "./dist/ebs-form.d.ts",
+      "import": "./dist/ebs-form.js"
+    },
+    "./lungern-form": {
+      "types": "./dist/lungern-form.d.ts",
+      "import": "./dist/lungern-form.js"
+    },
+    "./wuennewil-form": {
+      "types": "./dist/wuennewil-form.d.ts",
+      "import": "./dist/wuennewil-form.js"
+    },
+    "./val-de-charmey-form": {
+      "types": "./dist/val-de-charmey-form.d.ts",
+      "import": "./dist/val-de-charmey-form.js"
+    },
+    "./reinach-bl-form": {
+      "types": "./dist/reinach-bl-form.d.ts",
+      "import": "./dist/reinach-bl-form.js"
+    },
+    "./therwil-form": {
+      "types": "./dist/therwil-form.d.ts",
+      "import": "./dist/therwil-form.js"
+    },
+    "./wintersingen-form": {
+      "types": "./dist/wintersingen-form.d.ts",
+      "import": "./dist/wintersingen-form.js"
+    },
+    "./titterten-form": {
+      "types": "./dist/titterten-form.d.ts",
+      "import": "./dist/titterten-form.js"
+    },
+    "./waldstatt-form": {
+      "types": "./dist/waldstatt-form.d.ts",
+      "import": "./dist/waldstatt-form.js"
+    },
+    "./stmargrethen-form": {
+      "types": "./dist/stmargrethen-form.d.ts",
+      "import": "./dist/stmargrethen-form.js"
+    },
+    "./ewbuchs-form": {
+      "types": "./dist/ewbuchs-form.d.ts",
+      "import": "./dist/ewbuchs-form.js"
+    },
+    "./ewsennwald-form": {
+      "types": "./dist/ewsennwald-form.d.ts",
+      "import": "./dist/ewsennwald-form.js"
+    },
+    "./wil-lighting-form": {
+      "types": "./dist/wil-lighting-form.d.ts",
+      "import": "./dist/wil-lighting-form.js"
+    },
+    "./thusis-form": {
+      "types": "./dist/thusis-form.d.ts",
+      "import": "./dist/thusis-form.js"
+    },
+    "./falera-form": {
+      "types": "./dist/falera-form.d.ts",
+      "import": "./dist/falera-form.js"
+    },
+    "./energia-engiadina-form": {
+      "types": "./dist/energia-engiadina-form.d.ts",
+      "import": "./dist/energia-engiadina-form.js"
+    },
+    "./rabiosa-form": {
+      "types": "./dist/rabiosa-form.d.ts",
+      "import": "./dist/rabiosa-form.js"
+    },
+    "./hornet-form": {
+      "types": "./dist/hornet-form.d.ts",
+      "import": "./dist/hornet-form.js"
+    },
+    "./tbgraenichen-form": {
+      "types": "./dist/tbgraenichen-form.d.ts",
+      "import": "./dist/tbgraenichen-form.js"
+    },
+    "./tbs-form": {
+      "types": "./dist/tbs-form.d.ts",
+      "import": "./dist/tbs-form.js"
+    },
+    "./rwb-form": {
+      "types": "./dist/rwb-form.d.ts",
+      "import": "./dist/rwb-form.js"
+    },
+    "./ewn-form": {
+      "types": "./dist/ewn-form.d.ts",
+      "import": "./dist/ewn-form.js"
+    },
+    "./egs-form": {
+      "types": "./dist/egs-form.d.ts",
+      "import": "./dist/egs-form.js"
+    },
+    "./eww-form": {
+      "types": "./dist/eww-form.d.ts",
+      "import": "./dist/eww-form.js"
+    },
+    "./ibw-form": {
+      "types": "./dist/ibw-form.d.ts",
+      "import": "./dist/ibw-form.js"
+    },
+    "./egm-form": {
+      "types": "./dist/egm-form.d.ts",
+      "import": "./dist/egm-form.js"
+    },
+    "./rwb-windisch-form": {
+      "types": "./dist/rwb-windisch-form.d.ts",
+      "import": "./dist/rwb-windisch-form.js"
+    },
+    "./tbseon-form": {
+      "types": "./dist/tbseon-form.d.ts",
+      "import": "./dist/tbseon-form.js"
+    },
+    "./swl-form": {
+      "types": "./dist/swl-form.d.ts",
+      "import": "./dist/swl-form.js"
+    },
+    "./auw-form": {
+      "types": "./dist/auw-form.d.ts",
+      "import": "./dist/auw-form.js"
+    },
+    "./obermumpf-form": {
+      "types": "./dist/obermumpf-form.d.ts",
+      "import": "./dist/obermumpf-form.js"
+    },
+    "./zofingen-form": {
+      "types": "./dist/zofingen-form.d.ts",
+      "import": "./dist/zofingen-form.js"
+    },
+    "./rea-form": {
+      "types": "./dist/rea-form.d.ts",
+      "import": "./dist/rea-form.js"
+    },
+    "./ewr-form": {
+      "types": "./dist/ewr-form.d.ts",
+      "import": "./dist/ewr-form.js"
+    },
+    "./diessenhofen-form": {
+      "types": "./dist/diessenhofen-form.d.ts",
+      "import": "./dist/diessenhofen-form.js"
+    },
+    "./tbw-form": {
+      "types": "./dist/tbw-form.d.ts",
+      "import": "./dist/tbw-form.js"
+    },
+    "./essertines-form": {
+      "types": "./dist/essertines-form.d.ts",
+      "import": "./dist/essertines-form.js"
+    },
+    "./grandson-form": {
+      "types": "./dist/grandson-form.d.ts",
+      "import": "./dist/grandson-form.js"
+    },
+    "./sie-form": {
+      "types": "./dist/sie-form.d.ts",
+      "import": "./dist/sie-form.js"
+    },
+    "./rivaz-form": {
+      "types": "./dist/rivaz-form.d.ts",
+      "import": "./dist/rivaz-form.js"
+    },
+    "./lavigny-form": {
+      "types": "./dist/lavigny-form.d.ts",
+      "import": "./dist/lavigny-form.js"
+    },
+    "./bussigny-form": {
+      "types": "./dist/bussigny-form.d.ts",
+      "import": "./dist/bussigny-form.js"
+    },
+    "./saint-sulpice-form": {
+      "types": "./dist/saint-sulpice-form.d.ts",
+      "import": "./dist/saint-sulpice-form.js"
+    },
+    "./avm-form": {
+      "types": "./dist/avm-form.d.ts",
+      "import": "./dist/avm-form.js"
+    },
+    "./chavannes-moudon-form": {
+      "types": "./dist/chavannes-moudon-form.d.ts",
+      "import": "./dist/chavannes-moudon-form.js"
+    },
+    "./dompierre-form": {
+      "types": "./dist/dompierre-form.d.ts",
+      "import": "./dist/dompierre-form.js"
+    },
+    "./moudon-form": {
+      "types": "./dist/moudon-form.d.ts",
+      "import": "./dist/moudon-form.js"
+    },
+    "./vucherens-form": {
+      "types": "./dist/vucherens-form.d.ts",
+      "import": "./dist/vucherens-form.js"
+    },
+    "./bassins-enquiry-form": {
+      "types": "./dist/bassins-enquiry-form.d.ts",
+      "import": "./dist/bassins-enquiry-form.js"
+    },
+    "./seic-lighting-form": {
+      "types": "./dist/seic-lighting-form.d.ts",
+      "import": "./dist/seic-lighting-form.js"
+    },
+    "./coppet-form": {
+      "types": "./dist/coppet-form.d.ts",
+      "import": "./dist/coppet-form.js"
+    },
+    "./founex-form": {
+      "types": "./dist/founex-form.d.ts",
+      "import": "./dist/founex-form.js"
+    },
+    "./romainmotier-form": {
+      "types": "./dist/romainmotier-form.d.ts",
+      "import": "./dist/romainmotier-form.js"
+    },
+    "./jorat-menthue-form": {
+      "types": "./dist/jorat-menthue-form.d.ts",
+      "import": "./dist/jorat-menthue-form.js"
+    },
+    "./labbaye-form": {
+      "types": "./dist/labbaye-form.d.ts",
+      "import": "./dist/labbaye-form.js"
+    },
+    "./cuarny-form": {
+      "types": "./dist/cuarny-form.d.ts",
+      "import": "./dist/cuarny-form.js"
+    },
+    "./orzens-form": {
+      "types": "./dist/orzens-form.d.ts",
+      "import": "./dist/orzens-form.js"
+    },
+    "./suscevaz-form": {
+      "types": "./dist/suscevaz-form.d.ts",
+      "import": "./dist/suscevaz-form.js"
+    },
+    "./villars-epeney-form": {
+      "types": "./dist/villars-epeney-form.d.ts",
+      "import": "./dist/villars-epeney-form.js"
+    },
+    "./yvonand-form": {
+      "types": "./dist/yvonand-form.d.ts",
+      "import": "./dist/yvonand-form.js"
+    },
+    "./simplon-form": {
+      "types": "./dist/simplon-form.d.ts",
+      "import": "./dist/simplon-form.js"
     }
   }
 }
