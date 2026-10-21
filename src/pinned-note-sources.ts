@@ -1,5 +1,10 @@
 import { createHash } from 'node:crypto';
-export type NoteSourcePin = Readonly<{ url: string; sha256: string; plain: boolean }>;
+export type NoteSourcePin = Readonly<{
+  url: string;
+  sha256: string;
+  plain: boolean;
+  pdf?: true;
+}>;
 /** Fixed, caller-trusted manifests only. Copy pins once so later mutations cannot
  * change the contract. Each verifier shares pacing and permanent failure state
  * across clients using the same fetch context. Remote code is never executed. */
@@ -16,6 +21,7 @@ export function createPinnedNoteVerifier(manifest: readonly NoteSourcePin[]) {
       url.href !== pin.url ||
       !/^[a-f0-9]{64}$/.test(pin.sha256) ||
       typeof pin.plain !== 'boolean' ||
+      (pin.pdf !== undefined && (pin.pdf !== true || pin.plain)) ||
       urls.has(pin.url)
     )
       throw new Error('Invalid note source manifest.');
@@ -24,10 +30,19 @@ export function createPinnedNoteVerifier(manifest: readonly NoteSourcePin[]) {
   const pins = Object.freeze(manifest.map((pin) => Object.freeze({ ...pin })));
   const changed = () =>
     new Error('The pinned note sources have changed or are unavailable. Preparation is paused.');
-  const hash = (s: string) => createHash('sha256').update(s).digest('hex');
-  function inspect(url: string, body: string): void {
+  const hash = (s: string | Uint8Array) => createHash('sha256').update(s).digest('hex');
+  function inspect(url: string, body: string | Uint8Array): void {
     const pin = pins.find((p) => p.url === url);
-    if (!pin || Buffer.byteLength(body) > 1_000_000 || hash(body) !== pin.sha256) throw changed();
+    if (
+      !pin ||
+      Buffer.byteLength(body) > 1_000_000 ||
+      (pin.pdf
+        ? !(body instanceof Uint8Array) ||
+          !Buffer.from(body.subarray(0, 5)).equals(Buffer.from('%PDF-', 'ascii'))
+        : typeof body !== 'string') ||
+      hash(body) !== pin.sha256
+    )
+      throw changed();
   }
   type Context = { tail: Promise<void>; next: number; stopped: boolean };
   const contexts = new WeakMap<typeof fetch, Context>();
@@ -62,7 +77,7 @@ export function createPinnedNoteVerifier(manifest: readonly NoteSourcePin[]) {
               redirect: 'error',
               signal: AbortSignal.timeout(20_000),
               headers: {
-                Accept: pin.plain ? 'text/plain' : 'text/html',
+                Accept: pin.pdf ? 'application/pdf' : pin.plain ? 'text/plain' : 'text/html',
                 'User-Agent': 'Civic source verification (read-only; no client execution)',
               },
             });
@@ -70,9 +85,13 @@ export function createPinnedNoteVerifier(manifest: readonly NoteSourcePin[]) {
               !response.ok ||
               response.redirected ||
               (response.url && response.url !== pin.url) ||
-              !(pin.plain ? /^text\/plain(?:;|$)/i : /^text\/html(?:;|$)/i).test(
-                response.headers.get('content-type') ?? '',
-              ) ||
+              !(
+                pin.pdf
+                  ? /^application\/pdf(?:;|$)/i
+                  : pin.plain
+                    ? /^text\/plain(?:;|$)/i
+                    : /^text\/html(?:;|$)/i
+              ).test(response.headers.get('content-type') ?? '') ||
               !response.body
             ) {
               const header = response.headers.get('retry-after') ?? '';
@@ -97,10 +116,12 @@ export function createPinnedNoteVerifier(manifest: readonly NoteSourcePin[]) {
             } finally {
               await reader.cancel().catch(() => {});
             }
-            const html = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(
-              Buffer.concat(chunks),
-            );
-            inspect(pin.url, html);
+            const bytes = Buffer.concat(chunks);
+            // PDFs are opaque pinned bytes: never parse or execute embedded content.
+            const body = pin.pdf
+              ? bytes
+              : new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(bytes);
+            inspect(pin.url, body);
           } catch {
             shared.stopped = true;
             throw changed();

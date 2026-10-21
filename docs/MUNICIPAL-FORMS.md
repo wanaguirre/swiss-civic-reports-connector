@@ -1874,3 +1874,40 @@ local invitation is independent, never a workaround or automatic channel change
 after an uncertain platform report. Never automatically retry, recreate or change
 channel; no office/member/substitute/phone/provider fallback. Release/canonical
 consumer delivery remains separate from this draft source implementation.
+
+## Suscévaz local suspected-hornet facts and announced merger
+
+`suscevaz-hornet-observation-note` (BFS5930, export `suscevaz-form`) prepares
+incomplete local French facts for an existing independently nonurgent suspected
+Asian-hornet individual/nest observation at the exact current municipality point.
+The actual municipal PDF asks announcements to the platform **and** commune.
+Local facts fulfill neither announcement and replace neither channel. Known
+platform restrictions remain binding; no platform contract or Aarau native fields
+are imported, and no automatic duplication or fallback occurs.
+
+The internal `species_observation` kind preserves uncertainty, with one local
+confirmation rather than a verified native requirement. No identification,
+safety/urgency/legal/removal conclusion or approach/capture/trapping/bait/removal
+advice. Immediate/personal danger, medical/sting concerns, removal requests,
+bees/other species and other services are excluded. No reporter contacts/photos,
+clinical/native fields, consent, email/call preparation, sending, external
+completion or tracking. General office correspondence does not qualify hornet
+transport. Identity/photo/privacy/retention/country/forwarding/guest/receipt remain
+unknown; no anonymity or hosting guarantee is inferred.
+
+Five URL/digest pins cover robots, home, current authority, greffe and the actual
+PDF notice. Optional PDF pins require `plain:false,pdf:true`, exact bytes and a
+strict `%PDF-` signature, PDF MIME and a streamed1MB bound; binary data are never
+UTF8-decoded, parsed or executed. Existing HTML/robots pins keep fatal UTF8 and
+exact-byte behavior. Ten-second shared pacing and permanent failures precede cached
+peers. Only factual URLs/digests and original scope text are distributed, not PDF
+or municipal page bodies.
+
+The announced1January2027 merger retires this profile at
+`2026-12-31T23:00:00Z` (Zurich midnight), before cached preparation, between paced
+reads and after verification. Retirement is irreversible for a fetch context,
+including after clock rollback. Baseline identities stay separate; no future
+merged identity/election result is inferred. Never automatically retry, recreate
+or change channel after uncertainty; no office/member/substitute/phone/provider
+fallback. Source implementation/local checks remain separate from exact public
+release, canonical consumer delivery and verified sending.

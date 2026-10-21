@@ -1,4 +1,15 @@
 import {
+  suscevazHomeUrl,
+  suscevazAdministrationUrl,
+  suscevazAuthorityUrl,
+  suscevazNoticeUrl,
+  suscevazScope,
+  suscevazCategories,
+  suscevazRequirements,
+  assertSuscevazSourcesAvailable,
+  loadSuscevazCategories,
+} from './suscevaz-form.js';
+import {
   orzensHomeUrl,
   orzensAdministrationUrl,
   orzensAuthorityUrl,
@@ -1221,6 +1232,13 @@ export const municipalForms = Object.freeze({
     formUrl: joratMenthueWasteUrl,
     reportingUrl: joratMenthueWasteUrl,
   }),
+  'suscevaz-hornet-observation-note': Object.freeze({
+    bfsId: 5930,
+    municipality: 'Suscevaz',
+    language: 'fr' as const,
+    formUrl: suscevazHomeUrl,
+    reportingUrl: suscevazHomeUrl,
+  }),
   'orzens-hornet-observation-note': Object.freeze({
     bfsId: 5925,
     municipality: 'Orzens',
@@ -1492,6 +1510,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Coppet requires its complete pinned public source manifest.');
   if (name === 'jorat-menthue-molok-note')
     throw new Error('JoratMenthue requires its complete pinned public source manifest.');
+  if (name === 'suscevaz-hornet-observation-note')
+    throw new Error('Suscevaz requires its complete pinned public source manifest.');
   if (name === 'orzens-hornet-observation-note')
     throw new Error('Orzens requires its complete pinned public source manifest.');
   if (name === 'cuarny-water-quality-note')
@@ -2470,6 +2490,36 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'suscevaz-hornet-observation-note') {
+      this.reportingService =
+        'Commune de Suscévaz – observation présumée de frelon asiatique, faits locaux';
+      this.privacy =
+        'Local suspected-observation facts only, no reporter contacts/photos/clinical/native fields/consent or municipal transfer. Official identity/photo/privacy/retention/country/forwarding/guest/receipt unknown. Neither platform nor commune announcement is fulfilled; no mail/call preparation,sending,external completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: suscevazScope,
+        responsibility:
+          'Exact current BFS5930 point and separate existing independently nonurgent suspected-observation confirmation. Specific municipal PDF asks platform AND commune announcements; local facts fulfill neither. No individual species expertise or removal mandate inferred. Profile retires at2026-12-31T23:00:00Z before cached preparation, reflecting the announced merger without changing baseline identities.',
+        routing_note:
+          'Local French facts worksheet for an existing independently nonurgent suspected Asian-hornet individual or nest observation at its exact current Suscévaz VD BFS5930 point. The actual municipal PDF asks for announcements to the platform AND commune. These local facts fulfill neither announcement, do not replace either and never automate duplication or channel change. The known platform restriction remains binding. Suspicion and uncertainty only: no identification guarantee, diagnosis, safety, urgency, legal or removal conclusion, or approach, capture, trapping, bait or removal advice. Excludes immediate or personal danger, medical/sting concerns, removal requests, bees/other species and other services. Exact point alone proves neither observation nor identity or safety. One local factual/nonurgent confirmation is not verified official requiredness. Internal species_observation imports no Aarau/native case kind or fields. No reporter contacts/photos/clinical/native fields/consent, mail/call preparation, sending, external completion or tracking. Official identity/photo/privacy/retention/country/forwarding/guest/receipt remain unqualified. General office correspondence is not a verified hornet transport. The announced2027 merger retires this profile at2026-12-31T23:00:00Z, before cached preparation. No merged identity or future election result inferred. Never automatically retry,recreate or change channel after uncertainty; no office, member, substitute, phone or provider fallback. This is not a complete official form.',
+        sources: [
+          { title: 'Official homepage and announced merger', url: suscevazHomeUrl },
+          {
+            title: 'Published separate current municipal responsibilities',
+            url: suscevazAuthorityUrl,
+          },
+          {
+            title: 'Greffe office context, not verified hornet transport',
+            url: suscevazAdministrationUrl,
+          },
+          {
+            title: 'Actual hornet PDF asks platform AND commune announcements',
+            url: suscevazNoticeUrl,
+          },
+        ],
+      };
+    }
     if (name === 'orzens-hornet-observation-note') {
       this.reportingService =
         'Commune d’Orzens – observation présumée de frelon asiatique, faits locaux';
@@ -3123,6 +3173,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
     if (this.name === 'jorat-menthue-molok-note')
       return Promise.resolve(joratMenthueCategories.map((c) => ({ ...c })));
+    if (this.name === 'suscevaz-hornet-observation-note')
+      return Promise.resolve(suscevazCategories.map((c) => ({ ...c })));
     if (this.name === 'orzens-hornet-observation-note')
       return Promise.resolve(orzensCategories.map((c) => ({ ...c })));
     if (this.name === 'cuarny-water-quality-note')
@@ -3182,6 +3234,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
     if (this.name === 'jorat-menthue-molok-note') assertJoratMenthueSourcesAvailable(this.request);
+    if (this.name === 'suscevaz-hornet-observation-note')
+      assertSuscevazSourcesAvailable(this.request, this.now);
     if (this.name === 'orzens-hornet-observation-note') assertOrzensSourcesAvailable(this.request);
     if (this.name === 'cuarny-water-quality-note') assertCuarnySourcesAvailable(this.request);
     if (this.name === 'labbaye-lighting-note') assertLabbayeSourcesAvailable(this.request);
@@ -3390,6 +3444,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'jorat-menthue-molok-note') {
             const value = await loadJoratMenthueCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'suscevaz-hornet-observation-note') {
+            const value = await loadSuscevazCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3759,6 +3827,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'coppet-lighting-note') return coppetRequirements();
     if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
+    if (this.name === 'suscevaz-hornet-observation-note') return suscevazRequirements();
     if (this.name === 'orzens-hornet-observation-note') return orzensRequirements();
     if (this.name === 'cuarny-water-quality-note') return cuarnyRequirements();
     if (this.name === 'labbaye-lighting-note') return labbayeRequirements();
