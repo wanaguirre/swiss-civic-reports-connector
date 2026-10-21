@@ -145,7 +145,10 @@ test('TB Seon telephone-only preparation preserves plate zeros/private contacts,
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const preview = await service.prepare(input);
   assert.equal(preview.report.extra_fields.lamp_plate_line_2, '0007');
   assert.equal(preview.report.extra_fields.lamp_plate_line_3, '002');

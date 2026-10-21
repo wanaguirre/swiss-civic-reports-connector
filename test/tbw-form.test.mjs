@@ -216,7 +216,10 @@ test('Municipal TBW Weinfelden text preparation keeps required mobile and option
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const optional = { ...input, phone: '', extra_fields: { ...input.extra_fields } };
   delete optional.extra_fields.contact_postbox;
   await service.prepare(optional);

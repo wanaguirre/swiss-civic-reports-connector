@@ -241,7 +241,10 @@ test('Sie local note rejects reporter contacts, photos, foreign categories and n
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [image.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [image.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const numbered = await service.prepare({
     ...input,
     extra_fields: { ...input.extra_fields, lamp_number: '000123' },
@@ -428,7 +431,10 @@ for (const [name, identity] of Object.entries(sieMunicipalities))
           .toBuffer()
       ).toString('base64'),
     });
-    await assert.rejects(service.prepare({ ...input, photo_ids: [image.photo_id] }), /photo/);
+    await assert.rejects(
+      service.prepare({ ...input, photo_ids: [image.metadata.id] }),
+      /This service accepts at most 0 photo\(s\)/,
+    );
     const p = await service.prepare({
       ...input,
       extra_fields: { ...input.extra_fields, lamp_number: '000123' },

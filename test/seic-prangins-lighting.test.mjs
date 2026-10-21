@@ -175,7 +175,10 @@ test('Prangins local note rejects reporter contacts, photos, foreign categories 
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [image.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [image.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const p = await service.prepare(input);
   assert.equal(p.municipality.bfs_id, 5725);
   assert.equal(p.submission_enabled, false);

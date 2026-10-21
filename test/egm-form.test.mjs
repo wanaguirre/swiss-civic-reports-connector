@@ -247,7 +247,10 @@ test('EGM private names/email/consent separate from lamp address; no phone/posta
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(svc.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+  await assert.rejects(
+    svc.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   await assert.rejects(
     svc.submit(p.preview_id, p.confirmation_token, true),
     /disabled|verification/i,

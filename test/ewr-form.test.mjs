@@ -200,6 +200,9 @@ test('EWR local preparation requires private contacts and real pole identity, se
           .toBuffer()
       ).toString('base64'),
     });
-    await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+    await assert.rejects(
+      service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+      /This service accepts at most 0 photo\(s\)/,
+    );
   }
 });

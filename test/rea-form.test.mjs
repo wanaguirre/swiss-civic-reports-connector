@@ -193,6 +193,9 @@ test('REA local preparation permits empty optional contacts, separates leading-z
           .toBuffer()
       ).toString('base64'),
     });
-    await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+    await assert.rejects(
+      service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+      /This service accepts at most 0 photo\(s\)/,
+    );
   }
 });

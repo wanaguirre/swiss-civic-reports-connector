@@ -126,7 +126,10 @@ test('ibw private fields, real numeric lamp zeros and frozen destination; mandat
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   await assert.rejects(
     service.submit(p.preview_id, p.confirmation_token, true),
     /disabled|verification/i,

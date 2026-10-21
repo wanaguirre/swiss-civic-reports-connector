@@ -272,7 +272,10 @@ test('Essertines frozen local preparation requires private contacts and municipa
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [image.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [image.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const preview = await service.prepare(input);
   assert.equal(preview.municipality.bfs_id, 5520);
   assert.equal(preview.submission_enabled, false);

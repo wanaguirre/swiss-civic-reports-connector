@@ -140,7 +140,10 @@ test('Municipal Zofingen infrastructure preparation preserves actual date and pr
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const noBuilding = { ...input, extra_fields: { ...input.extra_fields } };
   delete noBuilding.extra_fields.building;
   await service.prepare(noBuilding);

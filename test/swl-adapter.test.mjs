@@ -144,7 +144,10 @@ test('SWL telephone-only preparation preserves plate zeros/private contacts, rej
         .toBuffer()
     ).toString('base64'),
   });
-  await assert.rejects(service.prepare({ ...input, photo_ids: [photo.photo_id] }), /photo/);
+  await assert.rejects(
+    service.prepare({ ...input, photo_ids: [photo.metadata.id] }),
+    /This service accepts at most 0 photo\(s\)/,
+  );
   const preview = await service.prepare(input);
   assert.equal(preview.report.extra_fields.lamp_number, '0007');
   assert.equal(preview.report.extra_fields.nearest_house_number, '02a');
