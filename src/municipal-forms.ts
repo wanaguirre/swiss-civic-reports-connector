@@ -1,4 +1,17 @@
 import {
+  villarsEpeneyWaterUrl,
+  villarsEpeneyRegulationsUrl,
+  villarsEpeneyAnnexUrl,
+  villarsEpeneyAdministrationUrl,
+  villarsEpeneyAuthorityUrl,
+  villarsEpeneyHomeUrl,
+  villarsEpeneyScope,
+  villarsEpeneyCategories,
+  villarsEpeneyRequirements,
+  assertVillarsEpeneySourcesAvailable,
+  loadVillarsEpeneyCategories,
+} from './villars-epeney-form.js';
+import {
   suscevazHomeUrl,
   suscevazAdministrationUrl,
   suscevazAuthorityUrl,
@@ -1246,6 +1259,13 @@ export const municipalForms = Object.freeze({
     formUrl: orzensHomeUrl,
     reportingUrl: orzensHomeUrl,
   }),
+  'villars-epeney-meter-note': Object.freeze({
+    bfsId: 5935,
+    municipality: 'Villars-Epeney',
+    language: 'fr' as const,
+    formUrl: villarsEpeneyHomeUrl,
+    reportingUrl: villarsEpeneyHomeUrl,
+  }),
   'cuarny-water-quality-note': Object.freeze({
     bfsId: 5911,
     municipality: 'Cuarny',
@@ -1514,6 +1534,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Suscevaz requires its complete pinned public source manifest.');
   if (name === 'orzens-hornet-observation-note')
     throw new Error('Orzens requires its complete pinned public source manifest.');
+  if (name === 'villars-epeney-meter-note')
+    throw new Error('VillarsEpeney requires its complete pinned public source manifest.');
   if (name === 'cuarny-water-quality-note')
     throw new Error('Cuarny requires its complete pinned public source manifest.');
   if (name === 'labbaye-lighting-note')
@@ -2550,6 +2572,46 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'villars-epeney-meter-note') {
+      this.reportingService = 'Commune de Villars-Epeney – compteur communal, faits locaux';
+      this.privacy =
+        'Local subscriber/meter facts only; no contacts, account/customer/meter serial identifiers, photos, clinical/native fields, consent or municipal transfer. Official identity/privacy/retention/country/forwarding/guest/receipt unknown. This does not perform the published immediate notification, establish legal compliance or extend deadlines. No mail/call preparation, sending, completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: villarsEpeneyScope,
+        responsibility:
+          'Exact BFS5935 point plus separate confirmation of legitimate subscriber standing, actual communal water meter and an existing independently nonurgent mechanical defect. The published regulation distinguishes the rented communal meter from private pipes/valves; point alone proves neither ownership nor subscription. Generic Municipality notification is not an individual member mandate, verified transport or legal-compliance promise.',
+        routing_note:
+          'Local French facts worksheet for a legitimate subscriber’s actual communal water meter with an already observed, independently nonurgent mechanical defect at its exact Villars-Epeney VD BFS5935 point. Published regulation articles14–15 describe the communal rented meter and ask the subscriber to notify the Municipality immediately of damage. These local facts do not perform that notification, establish legal compliance or extend any deadline. Exact point alone proves neither subscription, meter ownership nor a defect. Require a separate local subscriber/actual-meter/nonurgent-facts confirmation; it is not verified official requiredness or account validation. Record existing observed facts only, without cause, diagnosis, safety, urgency, legal, accuracy, tariff or billing conclusions. Exclude active leaks, supply interruption/pressure or health/contamination concerns, private pipes/valves or other assets, billing/accuracy disputes, connection/subscription changes and requests to inspect, test, handle, unseal, dismantle or repair equipment. No new observation, reading, testing, photograph, manipulation or repair advice. No reporter contacts, account/customer/meter serial identifiers, photos, clinical/native fields, consent, client state, payload, mail/call preparation, sending, external completion or tracking. Official identity/photo/privacy/retention/country/forwarding/guest acceptance/receipt remain unqualified; no anonymous or Swiss-only guarantee. The undated roster is not a confirmed2031 composition or individual meter-intake mandate. The separately published2025 tariff annex is distinct from the old embedded annex; this worksheet makes no charge, liability or legal-entry promise. Never automatically retry, recreate or change channel after uncertainty; no office, member, substitute, phone, contractor or provider fallback. This is not a complete official form.',
+        sources: [
+          {
+            title: 'Official homepage and current appointment/postal context',
+            url: villarsEpeneyHomeUrl,
+          },
+          {
+            title: 'Administration context, not verified meter intake',
+            url: villarsEpeneyAdministrationUrl,
+          },
+          {
+            title: 'Undated published roles, not confirmed2031 mandate',
+            url: villarsEpeneyAuthorityUrl,
+          },
+          {
+            title: 'Current regulation index distinguishes2025 annex',
+            url: villarsEpeneyRegulationsUrl,
+          },
+          {
+            title: 'Actual meter ownership and notification provisions',
+            url: villarsEpeneyWaterUrl,
+          },
+          {
+            title: 'Separate actual2025 tariff annex; no billing promise',
+            url: villarsEpeneyAnnexUrl,
+          },
+        ],
+      };
+    }
     if (name === 'cuarny-water-quality-note') {
       this.reportingService = 'Commune de Cuarny – faits sur la qualité perçue de l’eau potable';
       this.privacy =
@@ -3177,6 +3239,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(suscevazCategories.map((c) => ({ ...c })));
     if (this.name === 'orzens-hornet-observation-note')
       return Promise.resolve(orzensCategories.map((c) => ({ ...c })));
+    if (this.name === 'villars-epeney-meter-note')
+      return Promise.resolve(villarsEpeneyCategories.map((c) => ({ ...c })));
     if (this.name === 'cuarny-water-quality-note')
       return Promise.resolve(cuarnyCategories.map((c) => ({ ...c })));
     if (this.name === 'labbaye-lighting-note')
@@ -3237,6 +3301,8 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'suscevaz-hornet-observation-note')
       assertSuscevazSourcesAvailable(this.request, this.now);
     if (this.name === 'orzens-hornet-observation-note') assertOrzensSourcesAvailable(this.request);
+    if (this.name === 'villars-epeney-meter-note')
+      assertVillarsEpeneySourcesAvailable(this.request);
     if (this.name === 'cuarny-water-quality-note') assertCuarnySourcesAvailable(this.request);
     if (this.name === 'labbaye-lighting-note') assertLabbayeSourcesAvailable(this.request);
     if (this.name === 'romainmotier-lighting-note')
@@ -3472,6 +3538,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'orzens-hornet-observation-note') {
             const value = await loadOrzensCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'villars-epeney-meter-note') {
+            const value = await loadVillarsEpeneyCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3829,6 +3909,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
     if (this.name === 'suscevaz-hornet-observation-note') return suscevazRequirements();
     if (this.name === 'orzens-hornet-observation-note') return orzensRequirements();
+    if (this.name === 'villars-epeney-meter-note') return villarsEpeneyRequirements();
     if (this.name === 'cuarny-water-quality-note') return cuarnyRequirements();
     if (this.name === 'labbaye-lighting-note') return labbayeRequirements();
     if (this.name === 'romainmotier-lighting-note') return romainmotierRequirements();

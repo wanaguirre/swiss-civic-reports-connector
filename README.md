@@ -724,3 +724,40 @@ merged identity/election result is inferred. Never automatically retry, recreate
 or change channel after uncertainty; no office/member/substitute/phone/provider
 fallback. Source implementation/local checks remain separate from exact public
 release, canonical consumer delivery and verified sending.
+
+## Villars-Epeney local communal-meter facts
+
+`villars-epeney-meter-note` (BFS5935, export `villars-epeney-form`) prepares an
+incomplete local French worksheet for a legitimate subscriber’s actual communal
+water meter with an already observed, independently nonurgent mechanical defect
+at its exact municipality point. Published articles14–15 describe the communal
+rented meter and ask subscribers to notify the Municipality immediately of damage.
+Local facts perform no notification, establish no legal compliance and extend no
+deadline. One local subscriber/actual-meter/nonurgent-facts confirmation is not an
+official field or account validation; point alone establishes neither ownership,
+subscription nor a defect.
+
+Exclude leaks, interruption/pressure or health/contamination concerns, private
+pipes/valves or other assets, billing/accuracy disputes, connection/subscription
+changes, and inspection/testing/handling/unsealing/dismantling/repair requests.
+No new observation, reading, test, photo, manipulation or repair advice. No cause,
+diagnosis, safety, urgency, legal, accuracy, tariff or billing conclusion. No reporter
+contacts, customer/account/meter serial identifiers, photos, clinical/native fields,
+consent, email/call preparation, sending, external completion or tracking. Official
+identity/privacy/retention/country/forwarding/guest/receipt remain unknown.
+
+Seven raw URL/digest pins cover robots, home, administration, the undated roster,
+current regulation index, actual water regulation and separate2025 tariff annex.
+The unchanged shared verifier checks PDF MIME, strict signature and exact binary
+bytes under a streamed1MB bound, never parsing or executing PDFs; HTML/robots keep
+fatal UTF8 and exact bytes. Ten-second shared pacing means sixty seconds cold;
+permanent failures precede cached peers. Source bodies stay private. The old
+embedded tariff annex is distinct from the published2025 annex, and no charge,
+liability or legal-entry promise is made. The undated roster does not confirm a
+2031 composition or individual intake mandate.
+
+Never automatically retry, recreate or change channel after uncertainty; no office,
+member, substitute, phone, contractor or provider fallback. Source implementation
+and local consumer tests remain separate from authorized public release, canonical
+consumer delivery and verified sending. All experimental/global send flags still
+refuse this unverified profile.
