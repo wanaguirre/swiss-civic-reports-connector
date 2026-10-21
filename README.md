@@ -622,3 +622,35 @@ sending/external completion/tracking. Identity/photo/privacy/retention/country/
 guest acceptance/receipt remain unknown; email exposes sender metadata. This
 is not a complete official form. Never automatically retry, recreate or change
 channel after uncertainty; no office/member/substitute/phone/provider fallback.
+
+## Cuarny local perceived-water-quality facts
+
+`cuarny-water-quality-note` (BFS5911, export `cuarny-form`) prepares an incomplete
+local French facts worksheet for an independently confirmed nonurgent observation
+about the perceived quality of actual Cuarny-supplied drinking water at its exact
+point. The water page explicitly invites these observations to Jérémie Cartier;
+the current2026–2031 authority page confirms his drinking-water portfolio.
+
+Confirm actual local supply and an existing nonurgent factual observation. The
+boundary does not prove supply, cause or safety. This is no diagnosis, clinical
+report, sampling/testing advice, cause/ownership/public-asset-fault claim, safety,
+drinkability or urgency conclusion. Health/contamination/illness concerns,
+emergencies, outages, active leaks/flooding, private-plumbing repairs, billing,
+new connections and other services are excluded. No clinical fields are requested.
+The confirmation and text limits are local rules, not official requirements.
+
+Five fixed raw URL/digest pins cover own robots, home, water invitation, current
+authority and administration. Shared ten-second pacing (forty seconds cold),
+1MB/MIME/UTF8 bounds and permanent failure before cached peers preserve the source
+contract. The water comes from Sagenord since2022 and local sources are under
+rehabilitation; neither establishes cause, ownership or completed works.
+General contact, native clients/state/schema and external providers remain unread.
+The published literal `(at)` email/hash link is not decoded, repaired or launched.
+No municipal HTML, clients, native values or private reports are distributed.
+
+No reporter contacts/photos/native consent/payload/mail preparation/calls/sending/
+external completion/tracking, including global experimental flags. Official
+identity/photo/privacy/retention/country/forwarding/guest acceptance/receipt remain
+unknown; no anonymous/Swiss-only/no-sharing guarantee. This is not a complete
+official form. Never automatically retry, recreate or change channel after
+uncertainty; no office/member/substitute/phone/provider fallback.

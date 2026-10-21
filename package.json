@@ -1,6 +1,6 @@
 {
   "name": "@wanaguirre/swiss-civic-reports",
-  "version": "0.4.0-rc.100",
+  "version": "0.4.0-rc.101",
   "repository": {
     "type": "git",
     "url": "https://github.com/wanaguirre/swiss-civic-reports-connector.git"
@@ -452,6 +452,10 @@
     "./labbaye-form": {
       "types": "./dist/labbaye-form.d.ts",
       "import": "./dist/labbaye-form.js"
+    },
+    "./cuarny-form": {
+      "types": "./dist/cuarny-form.d.ts",
+      "import": "./dist/cuarny-form.js"
     }
   }
 }

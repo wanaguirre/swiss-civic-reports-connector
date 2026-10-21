@@ -1,4 +1,15 @@
 import {
+  cuarnyWaterUrl,
+  cuarnyAdministrationUrl,
+  cuarnyAuthorityUrl,
+  cuarnyHomeUrl,
+  cuarnyScope,
+  cuarnyCategories,
+  cuarnyRequirements,
+  assertCuarnySourcesAvailable,
+  loadCuarnyCategories,
+} from './cuarny-form.js';
+import {
   labbayeLightingUrl,
   labbayeAdministrationUrl,
   labbayePresentationUrl,
@@ -1199,6 +1210,13 @@ export const municipalForms = Object.freeze({
     formUrl: joratMenthueWasteUrl,
     reportingUrl: joratMenthueWasteUrl,
   }),
+  'cuarny-water-quality-note': Object.freeze({
+    bfsId: 5911,
+    municipality: 'Cuarny',
+    language: 'fr' as const,
+    formUrl: cuarnyWaterUrl,
+    reportingUrl: cuarnyWaterUrl,
+  }),
   'labbaye-lighting-note': Object.freeze({
     bfsId: 5871,
     municipality: "L'Abbaye",
@@ -1456,6 +1474,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Coppet requires its complete pinned public source manifest.');
   if (name === 'jorat-menthue-molok-note')
     throw new Error('JoratMenthue requires its complete pinned public source manifest.');
+  if (name === 'cuarny-water-quality-note')
+    throw new Error('Cuarny requires its complete pinned public source manifest.');
   if (name === 'labbaye-lighting-note')
     throw new Error('Labbaye requires its complete pinned public source manifest.');
   if (name === 'romainmotier-lighting-note')
@@ -2430,6 +2450,35 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'cuarny-water-quality-note') {
+      this.reportingService = 'Commune de Cuarny – faits sur la qualité perçue de l’eau potable';
+      this.privacy =
+        'Local facts only; no reporter contacts/photos/clinical fields/native consent or transfer. Official identity/photo/privacy/retention/country/forwarding/guest acceptance/receipt unknown. No diagnosis, cause/safety/drinkability/urgency conclusion, sampling/testing advice, protected email decoding, native payload/mail preparation/calls/sending/completion/tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: cuarnyScope,
+        responsibility:
+          'Exact BFS5911 point and separate confirmation of actual Cuarny-supplied drinking water and an independently nonurgent factual perceived-quality observation. Explicit water-page invitation and current2026–2031 Jérémie Cartier portfolio agree. No inference of pipe ownership, cause, public-asset fault, safety, drinkability or urgency; boundary alone cannot prove supply. Sagenord origin and local-source rehabilitation do not establish observed cause or completed works.',
+        routing_note:
+          'Perceived-quality observations are invited to the responsible municipal water official. Local French facts only, not a complete official form. Published literal jeremie.cartier(at)cuarny.ch/hash link remains undecoded/unrepaired; no email/call preparation or sending. No contacts/photos/clinical fields/native consent/client/state/payload/completion/tracking. Official requirements/privacy/country/forwarding/guest/receipt unknown. General contact and providers remain unread; no fallback. Never automatically retry, recreate or change channel after uncertainty.',
+        sources: [
+          {
+            title: 'Explicit perceived-quality observation invitation and water-supply context',
+            url: cuarnyWaterUrl,
+          },
+          {
+            title: 'Actual2026–2031 water responsibility matches the invitation',
+            url: cuarnyAuthorityUrl,
+          },
+          {
+            title: 'Municipal office and separate administrative contacts',
+            url: cuarnyAdministrationUrl,
+          },
+          { title: 'Municipal identity and dated public notices', url: cuarnyHomeUrl },
+        ],
+      };
+    }
     if (name === 'labbaye-lighting-note') {
       this.reportingService = 'Commune de L’Abbaye – éclairage public';
       this.privacy =
@@ -3024,6 +3073,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(coppetCategories.map((c) => ({ ...c })));
     if (this.name === 'jorat-menthue-molok-note')
       return Promise.resolve(joratMenthueCategories.map((c) => ({ ...c })));
+    if (this.name === 'cuarny-water-quality-note')
+      return Promise.resolve(cuarnyCategories.map((c) => ({ ...c })));
     if (this.name === 'labbaye-lighting-note')
       return Promise.resolve(labbayeCategories.map((c) => ({ ...c })));
     if (this.name === 'romainmotier-lighting-note')
@@ -3079,6 +3130,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-begnins-lighting-note') assertBegninsSourcesAvailable(this.request);
     if (this.name === 'coppet-lighting-note') assertCoppetSourcesAvailable(this.request);
     if (this.name === 'jorat-menthue-molok-note') assertJoratMenthueSourcesAvailable(this.request);
+    if (this.name === 'cuarny-water-quality-note') assertCuarnySourcesAvailable(this.request);
     if (this.name === 'labbaye-lighting-note') assertLabbayeSourcesAvailable(this.request);
     if (this.name === 'romainmotier-lighting-note')
       assertRomainmotierSourcesAvailable(this.request);
@@ -3285,6 +3337,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'jorat-menthue-molok-note') {
             const value = await loadJoratMenthueCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'cuarny-water-quality-note') {
+            const value = await loadCuarnyCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3626,6 +3692,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'seic-begnins-lighting-note') return begninsRequirements();
     if (this.name === 'coppet-lighting-note') return coppetRequirements();
     if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
+    if (this.name === 'cuarny-water-quality-note') return cuarnyRequirements();
     if (this.name === 'labbaye-lighting-note') return labbayeRequirements();
     if (this.name === 'romainmotier-lighting-note') return romainmotierRequirements();
     if (this.name === 'founex-lighting-note') return founexRequirements();
