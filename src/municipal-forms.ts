@@ -1,4 +1,16 @@
 import {
+  yvonandHomeUrl,
+  yvonandAdministrationUrl,
+  yvonandNoticeUrl,
+  yvonandLeafletUrl,
+  yvonandAuthorityUrl,
+  yvonandScope,
+  yvonandCategories,
+  yvonandRequirements,
+  assertYvonandSourcesAvailable,
+  loadYvonandCategories,
+} from './yvonand-form.js';
+import {
   villarsEpeneyWaterUrl,
   villarsEpeneyRegulationsUrl,
   villarsEpeneyAnnexUrl,
@@ -1259,6 +1271,13 @@ export const municipalForms = Object.freeze({
     formUrl: orzensHomeUrl,
     reportingUrl: orzensHomeUrl,
   }),
+  'yvonand-hornet-nest-note': Object.freeze({
+    bfsId: 5939,
+    municipality: 'Yvonand',
+    language: 'fr' as const,
+    formUrl: yvonandNoticeUrl,
+    reportingUrl: yvonandNoticeUrl,
+  }),
   'villars-epeney-meter-note': Object.freeze({
     bfsId: 5935,
     municipality: 'Villars-Epeney',
@@ -1534,6 +1553,8 @@ export function inspectMunicipalForm(name: Name, html: string): Category[] {
     throw new Error('Suscevaz requires its complete pinned public source manifest.');
   if (name === 'orzens-hornet-observation-note')
     throw new Error('Orzens requires its complete pinned public source manifest.');
+  if (name === 'yvonand-hornet-nest-note')
+    throw new Error('Yvonand requires its complete pinned public source manifest.');
   if (name === 'villars-epeney-meter-note')
     throw new Error('VillarsEpeney requires its complete pinned public source manifest.');
   if (name === 'cuarny-water-quality-note')
@@ -2572,6 +2593,39 @@ export class MunicipalFormClient implements ReportingAdapter {
         ],
       };
     }
+    if (name === 'yvonand-hornet-nest-note') {
+      this.reportingService = 'Commune d’Yvonand – nid présumé de frelon asiatique, faits locaux';
+      this.privacy =
+        'Local suspected-nest facts only, no reporter contacts/photos/clinical/native fields/consent or transfer. Neither official announcement nor the published required photos are fulfilled. Identity/photo-transfer/privacy/retention/country/forwarding/guest/receipt unknown. No identification, safety, urgency, removal or cost promise; no mail/call preparation, sending, completion or tracking.';
+      this.guidance = {
+        ...this.guidance,
+        verified_on: '2026-10-21',
+        scope: yvonandScope,
+        responsibility:
+          'Exact BFS5939 point plus separate existing independently nonurgent suspected-NEST confirmation. Published municipal territory funding context proves neither identity, eligibility, removal nor payment. Platform AND commune announcement and source required photos remain unfulfilled; no individual member intake mandate inferred.',
+        routing_note:
+          'Local French facts worksheet for an existing independently nonurgent suspected Asian-hornet NEST at its exact Yvonand VD BFS5939 point. The municipal notice asks for a platform announcement AND commune information by email OR phone, accompanied by one or more photos. These local facts fulfill neither official announcement and leave the required photos unfulfilled; this is not a complete official form or an alternative channel. No email/call preparation, sending, external completion or tracking. Existing already observed facts only; no new approach, inspection, photograph, filming, testing, handling, capture, trapping, bait or removal advice. No identification guarantee, diagnosis, safety, urgency, medical, legal, eligibility, removal, reimbursement or cost conclusion. The published municipal funding statement is context, not a payment or removal promise. Excludes individual-only sightings, other species, immediate or personal danger, medical/sting concerns and removal requests. Exact point alone proves neither observation, species, ownership, safety nor eligibility; require a separate local existing-factual/nonurgent-suspected-nest confirmation, not verified official requiredness. Internal species_observation imports no native platform case kind or fields. No reporter contacts, account/customer identifiers, photos, clinical/native fields, consent, client state or payload collected. Official identity/photo-transfer/privacy/retention/country/forwarding/guest or anonymous acceptance/receipt remain unqualified. Known platform restrictions remain binding. The current2031 executive does not establish an individual member intake mandate. Never automatically retry, recreate or change channel after uncertainty; no office, member, substitute, phone, contractor or provider fallback.',
+        sources: [
+          { title: 'Official homepage confirms current2031 responsibilities', url: yvonandHomeUrl },
+          {
+            title: 'Administration contact context, not native requiredness',
+            url: yvonandAdministrationUrl,
+          },
+          {
+            title: 'Specific nest notice: platform AND commune, required photos',
+            url: yvonandNoticeUrl,
+          },
+          {
+            title: 'Actual opaque municipal leaflet, not identification advice',
+            url: yvonandLeafletUrl,
+          },
+          {
+            title: 'Published current executive, no individual intake mandate',
+            url: yvonandAuthorityUrl,
+          },
+        ],
+      };
+    }
     if (name === 'villars-epeney-meter-note') {
       this.reportingService = 'Commune de Villars-Epeney – compteur communal, faits locaux';
       this.privacy =
@@ -3239,6 +3293,8 @@ export class MunicipalFormClient implements ReportingAdapter {
       return Promise.resolve(suscevazCategories.map((c) => ({ ...c })));
     if (this.name === 'orzens-hornet-observation-note')
       return Promise.resolve(orzensCategories.map((c) => ({ ...c })));
+    if (this.name === 'yvonand-hornet-nest-note')
+      return Promise.resolve(yvonandCategories.map((c) => ({ ...c })));
     if (this.name === 'villars-epeney-meter-note')
       return Promise.resolve(villarsEpeneyCategories.map((c) => ({ ...c })));
     if (this.name === 'cuarny-water-quality-note')
@@ -3301,6 +3357,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'suscevaz-hornet-observation-note')
       assertSuscevazSourcesAvailable(this.request, this.now);
     if (this.name === 'orzens-hornet-observation-note') assertOrzensSourcesAvailable(this.request);
+    if (this.name === 'yvonand-hornet-nest-note') assertYvonandSourcesAvailable(this.request);
     if (this.name === 'villars-epeney-meter-note')
       assertVillarsEpeneySourcesAvailable(this.request);
     if (this.name === 'cuarny-water-quality-note') assertCuarnySourcesAvailable(this.request);
@@ -3538,6 +3595,20 @@ export class MunicipalFormClient implements ReportingAdapter {
           }
           if (this.name === 'orzens-hornet-observation-note') {
             const value = await loadOrzensCategories(
+              this.request,
+              (delay) => {
+                this.retryAt = Math.max(
+                  this.retryAt,
+                  this.now() + Math.min(delay, Number.MAX_SAFE_INTEGER - this.now()),
+                );
+              },
+              this.now,
+            );
+            this.cached = { value, expires: this.now() + 300_000 };
+            return value;
+          }
+          if (this.name === 'yvonand-hornet-nest-note') {
+            const value = await loadYvonandCategories(
               this.request,
               (delay) => {
                 this.retryAt = Math.max(
@@ -3909,6 +3980,7 @@ export class MunicipalFormClient implements ReportingAdapter {
     if (this.name === 'jorat-menthue-molok-note') return joratMenthueRequirements();
     if (this.name === 'suscevaz-hornet-observation-note') return suscevazRequirements();
     if (this.name === 'orzens-hornet-observation-note') return orzensRequirements();
+    if (this.name === 'yvonand-hornet-nest-note') return yvonandRequirements();
     if (this.name === 'villars-epeney-meter-note') return villarsEpeneyRequirements();
     if (this.name === 'cuarny-water-quality-note') return cuarnyRequirements();
     if (this.name === 'labbaye-lighting-note') return labbayeRequirements();

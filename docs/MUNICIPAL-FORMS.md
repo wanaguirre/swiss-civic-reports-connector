@@ -1948,3 +1948,35 @@ member, substitute, phone, contractor or provider fallback. Source implementatio
 and local consumer tests remain separate from authorized public release, canonical
 consumer delivery and verified sending. All experimental/global send flags still
 refuse this unverified profile.
+
+## Yvonand local suspected-nest facts
+
+`yvonand-hornet-nest-note` (BFS5939, export `yvonand-form`) prepares only local
+French facts for an existing independently nonurgent suspected Asian-hornet NEST
+at its exact municipality point. The published notice requires a platform
+announcement AND commune information by email OR phone, accompanied by one or more
+photos. This zero-attachment worksheet fulfills neither official announcement AND
+leaves required photos unfulfilled. It is not a complete official form or an
+alternative channel. One local factual/nonurgent/nest confirmation is not native
+requiredness. No individual-only sightings, other species, immediate/personal
+danger, medical/sting concerns or removal requests.
+
+Describe only already observed facts and uncertainty. No new approach, inspection,
+photo, filming, testing, handling, capture, trapping, bait or removal advice. No
+identification, diagnosis, safety, urgency, medical, legal, eligibility, removal,
+reimbursement or cost guarantee. The published municipal funding statement is
+context, not a payment or intervention promise. No reporter contacts, photos,
+clinical/native fields or consent; no mail/call preparation, sending, completion or
+tracking. Native identity/photo-transfer/privacy/retention/country/forwarding/guest/
+receipt remain unqualified. Known platform restrictions remain binding.
+
+Six raw pins cover robots, home, administration, specific municipal nest notice,
+actual opaque one-page PDF and current executive. The unchanged shared verifier
+keeps strict PDF MIME/signature/exact bytes under1MB, fatal UTF8 for HTML and
+permanent failure before cached peers; ten-second spacing means fifty seconds
+cold. No PDF parsing/code execution; no merger retirement inferred. Source bodies
+stay private. Internal species_observation is not a native platform case kind.
+Never automatically retry, recreate or change channel after uncertainty; no office,
+member, substitute, phone, contractor or provider fallback. Local source and
+consumer tests remain separate from exact approved public release, canonical
+consumer delivery and verified sending. All send flags refuse this profile.
