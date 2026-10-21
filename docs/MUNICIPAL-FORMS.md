@@ -1841,3 +1841,36 @@ identity/photo/privacy/retention/country/forwarding/guest acceptance/receipt rem
 unknown; no anonymous/Swiss-only/no-sharing guarantee. This is not a complete
 official form. Never automatically retry, recreate or change channel after
 uncertainty; no office/member/substitute/phone/provider fallback.
+
+## Orzens local suspected-hornet observation facts
+
+`orzens-hornet-observation-note` (BFS5925, export `orzens-form`) prepares only an
+incomplete local French facts worksheet for an existing, independently nonurgent
+suspected Asian-hornet individual/nest observation at its exact Orzens point.
+The specific municipal notice names Frédéric Burkhard for announcements/questions;
+the actual2026–2031 authority page confirms his current membership. His construction
+portfolio does not establish species expertise or a removal mandate.
+
+The required local confirmation preserves suspicion and uncertainty; it is not an
+official form requirement or identification/safety/urgency conclusion. No approach,
+capture, trap, bait or removal advice. Immediate/personal danger, medical or sting
+concerns, removal requests, bees/other species and other services are excluded.
+The existing internal `species_observation` kind imports no Aarau/native case kind,
+reporter/photo fields, consent, client state or payload.
+
+Five raw URL/digest pins cover own robots, specific home invitation, current
+authority, greffe and general privacy. The unchanged shared verifier enforces
+ten-second spacing (forty seconds cold),1MB/MIME/fatal UTF8 and permanent failure
+before cached peers. All source data remain private; only factual URLs/digests and
+original scope text are distributed. Generic contact and providers remain unread.
+
+No reporter contacts/photos/clinical/native fields or consent, mail/call preparation,
+sending, external completion or tracking, including experimental/global flags.
+General info-email policy describes one-year retention and Swiss hosting in that
+context; it does not qualify the individual recipient's identity/photo/privacy/
+retention/country/forwarding/guest/receipt contract. No anonymous or Swiss-only
+guarantee. Whitespace-bearing mailto is neither repaired nor launched. The specific
+local invitation is independent, never a workaround or automatic channel change
+after an uncertain platform report. Never automatically retry, recreate or change
+channel; no office/member/substitute/phone/provider fallback. Release/canonical
+consumer delivery remains separate from this draft source implementation.
